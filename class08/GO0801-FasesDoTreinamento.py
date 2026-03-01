@@ -166,3 +166,29 @@ class SimpleSOM:
             error = np.linalg.norm(x - bmu_weights)
             errors.append(error)
         return np.mean(errors)
+
+
+if __name__ == '__main__':
+    import numpy as np
+    np.random.seed(42)
+
+    # Gerar dados sintéticos: 3 clusters em 2D
+    n = 100
+    X = np.vstack([
+        np.random.randn(n, 2) + [2, 2],
+        np.random.randn(n, 2) + [-2, 2],
+        np.random.randn(n, 2) + [0, -2],
+    ])
+
+    print("=== Treinando SOM 5x5 em dados 2D ===")
+    som = SimpleSOM(map_height=5, map_width=5, input_dim=2,
+                    learning_rate=0.5, n_iterations=500)
+    som.fit(X, verbose=True)
+
+    print(f"\nErro de quantização final: {som.quantization_error(X):.4f}")
+
+    # Mapear amostras para a grade
+    coords = som.predict(X[:10])
+    print("\nCoordenadas BMU das 10 primeiras amostras:")
+    for i, (row, col) in enumerate(coords):
+        print(f"  Amostra {i}: neurônio ({row}, {col})")

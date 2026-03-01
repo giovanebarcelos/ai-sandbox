@@ -49,3 +49,29 @@ class ResidualBlock(nn.Module):
         out = self.relu(out)
 
         return out
+
+
+if __name__ == '__main__':
+    import torch
+
+    print("=== Demonstração do Bloco Residual ===")
+
+    # Caso 1: mesma dimensão (identity shortcut)
+    block_id = ResidualBlock(in_channels=64, out_channels=64)
+    x = torch.randn(1, 64, 56, 56)
+    out = block_id(x)
+    print(f"Identity shortcut:")
+    print(f"  Entrada:  {x.shape}")
+    print(f"  Saída:    {out.shape}")
+    print(f"  Erro L2 (residual vs entrada): {(out - x).norm().item():.4f}")
+
+    # Caso 2: mudança de dimensão (projection shortcut)
+    block_proj = ResidualBlock(in_channels=64, out_channels=128, stride=2)
+    out_proj = block_proj(x)
+    print(f"\nProjection shortcut (stride=2, 64→128ch):")
+    print(f"  Entrada:  {x.shape}")
+    print(f"  Saída:    {out_proj.shape}")
+
+    # Contar parâmetros
+    params = sum(p.numel() for p in block_proj.parameters())
+    print(f"  Parâmetros: {params:,}")

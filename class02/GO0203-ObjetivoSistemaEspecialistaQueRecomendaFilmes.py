@@ -69,3 +69,37 @@ class BaseConhecimento:
         """Verifica se classificação é permitida para idade"""
         mapping = {'L': 0, '10': 10, '12': 12, '14': 14, '16': 16, '18': 18}
         return idade_usuario >= mapping.get(class_filme, 0)
+
+
+if __name__ == '__main__':
+    # Demonstração do sistema especialista de recomendação de filmes
+    base = BaseConhecimento()
+
+    # Adicionar filmes ao catálogo
+    filmes = [
+        Filme("Toy Story", ["Animação", "Aventura"], 81, "L",
+              {"feliz", "empolgado"}, {"manhã", "tarde"}),
+        Filme("O Senhor dos Anéis", ["Aventura", "Fantasia"], 178, "12",
+              {"empolgado", "pensativo"}, {"tarde", "noite"}),
+        Filme("Interestelar", ["Ficção", "Drama"], 169, "10",
+              {"pensativo"}, {"noite", "madrugada"}),
+        Filme("Shrek", ["Animação", "Comédia"], 90, "L",
+              {"feliz"}, {"manhã", "tarde"}),
+    ]
+    for f in filmes:
+        base.adicionar_filme(f)
+
+    # Buscar filmes animados com duração máxima 120 min para criança de 8 anos
+    print("=== Filmes Animados para Família (até 120 min) ===")
+    resultados = base.buscar_por_criterios(
+        generos=["Animação"], duracao_max=120, classificacao_max=8
+    )
+    for f in resultados:
+        print(f"  - {f.titulo} ({f.duracao} min, {f.classificacao})")
+
+    # Perfil de usuário
+    usuario = PerfilUsuario("Maria", 35, ["Animação", "Comédia"])
+    usuario.definir_contexto("feliz", "família", 120, "manhã")
+    print(f"\nUsuário: {usuario.nome}, humor: {usuario.humor_atual}, "
+          f"momento: {usuario.momento}")
+    print(f"Filmes favoritos: {usuario.generos_favoritos}")

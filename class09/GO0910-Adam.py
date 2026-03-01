@@ -27,3 +27,22 @@ class AdamOptimizer:
         # Atualizar peso
         w -= self.lr * m_hat / (np.sqrt(v_hat) + self.epsilon)
         return w
+
+
+if __name__ == '__main__':
+    import numpy as np
+    np.random.seed(0)
+
+    print("=== Demonstração do Otimizador Adam ===")
+    # Minimizar f(w) = w^2 (gradiente = 2w)
+    w = np.array([5.0, -3.0, 2.0])
+    opt = AdamOptimizer(lr=0.1)
+
+    print(f"w inicial: {w}")
+    for step in range(1, 21):
+        grad = 2 * w        # f(w) = w² → grad = 2w
+        w = opt.update(w, grad)
+        if step % 5 == 0:
+            print(f"  Passo {step:2d}: w = {w}  ||w|| = {np.linalg.norm(w):.6f}")
+
+    print(f"w final (esperado ≈ 0): {w}")

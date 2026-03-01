@@ -74,3 +74,42 @@ def retrain_model():
 
 # Agendar execução (Airflow, Azure Functions, cron)
 # Ex: rodar toda segunda-feira 3am
+
+
+if __name__ == '__main__':
+    print("=== Pipeline de Retreino Completo (demonstração conceitual) ===")
+    print()
+    print("  Este pipeline usa MLflow e requer servidor MLflow configurado.")
+    print()
+    print("  Para executar localmente:")
+    print("    pip install mlflow scikit-learn pandas")
+    print("    mlflow server --backend-store-uri sqlite:///mlflow.db \\")
+    print("                  --default-artifact-root ./mlruns &")
+    print("    python", __file__)
+    print()
+
+    # Demo simplificado sem MLflow
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.datasets import load_iris
+    from sklearn.metrics import accuracy_score
+    from sklearn.model_selection import train_test_split
+
+    X, y = load_iris(return_X_y=True)
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+    # Simular "modelo atual em produção"
+    current_model = RandomForestClassifier(n_estimators=5, random_state=0).fit(X_train, y_train)
+    current_acc = accuracy_score(y_test, current_model.predict(X_test))
+    print(f"  Acurácia modelo atual: {current_acc:.4f}")
+
+    if current_acc < 0.90:
+        print("  ⚠️  Performance abaixo de 0.90 → retreinando...")
+        new_model = RandomForestClassifier(n_estimators=100, random_state=42).fit(X_train, y_train)
+        new_acc = accuracy_score(y_test, new_model.predict(X_test))
+        print(f"  Acurácia novo modelo: {new_acc:.4f}")
+        if new_acc > current_acc:
+            print("  ✅ Novo modelo melhor — seria promovido para produção!")
+        else:
+            print("  ❌ Novo modelo não melhorou.")
+    else:
+        print("  ✅ Modelo atual performando bem.")

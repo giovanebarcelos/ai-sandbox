@@ -37,3 +37,29 @@ def partially_mapped_crossover(parent1, parent2):
                 child[i] = mapping[child[i]]
 
     return child
+
+
+if __name__ == '__main__':
+    import numpy as np
+    np.random.seed(0)
+
+    print("=== Operadores de Crossover para Problemas de Permutação ===")
+
+    # Exemplo: rota de TSP com 8 cidades (0–7)
+    parent1 = [0, 1, 2, 3, 4, 5, 6, 7]
+    parent2 = [3, 5, 7, 0, 2, 6, 4, 1]
+
+    print(f"  parent1: {parent1}")
+    print(f"  parent2: {parent2}")
+
+    # OX (Order Crossover)
+    filho_ox = order_crossover(parent1, parent2)
+    print(f"\n  OX filho:  {filho_ox}")
+    assert len(set(filho_ox)) == 8, "OX: permutação inválida!"
+    print("    ✅ Permutação válida (sem repetição)")
+
+    # PMX (Partially Mapped Crossover)
+    filho_pmx = partially_mapped_crossover(parent1, parent2)
+    print(f"\n  PMX filho: {filho_pmx}")
+    assert len(set(filho_pmx)) == 8, "PMX: permutação inválida!"
+    print("    ✅ Permutação válida (sem repetição)")

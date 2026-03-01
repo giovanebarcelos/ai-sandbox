@@ -30,3 +30,33 @@ class ChemotherapyEnv:
 
 # Treinar com DQN ou PPO
 # Política aprendida: Dose alta no início, reduzir gradualmente
+
+
+if __name__ == '__main__':
+    print("=== Simulação de Dosagem Dinâmica de Quimioterapia ===")
+
+    # Perfil básico de paciente
+    patient_profile = {"peso": 70, "idade": 55, "estadio": 3}
+    env = ChemotherapyEnv(patient_profile)
+
+    print(f"  Células cancerígenas iniciais: {env.cancer_cells:.2e}")
+    print(f"  Saúde inicial: {env.patient_health}")
+    print()
+
+    # Protocolo fixo: dose moderada (50%)
+    total_reward = 0
+    for ciclo in range(1, 9):
+        dose = 0.5  # 50% da dose máxima
+        state, reward, done = env.step(dose)
+        total_reward += reward
+        print(f"  Ciclo {ciclo}: células={env.cancer_cells:.2e}, "
+              f"toxicidade={env.toxicity:.1f}, saúde={env.patient_health:.1f}, "
+              f"reward={reward:+.1f}")
+        if done:
+            if env.cancer_cells < 1e6:
+                print("  ✅ Tratamento bem-sucedido!")
+            else:
+                print("  ❌ Paciente não sobreviveu.")
+            break
+
+    print(f"\n  Recompensa total: {total_reward:.1f}")

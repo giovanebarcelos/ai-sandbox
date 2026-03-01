@@ -43,3 +43,40 @@ class PortfolioEnv:
         state = self.get_state()
 
         return state, reward, done
+
+
+if __name__ == '__main__':
+    import numpy as np
+    np.random.seed(42)
+
+    print("=== Simulação de Gestão de Portfólio com RL ===")
+
+    # Gerar histórico de preços sintético (10 dias, 3 ativos)
+    T, N = 10, 3
+    price_history = np.cumprod(
+        np.vstack([[100.0, 50.0, 200.0],
+                   1 + np.random.randn(T - 1, N) * 0.02]),
+        axis=0
+    )
+
+    env = PortfolioEnv(price_history=price_history, initial_cash=100_000)
+
+    # Implementar get_state() ausente no código original
+    env.get_state = lambda: np.append(env.holdings, env.cash)
+
+    print(f"  Cash inicial: R${env.cash:,.2f}")
+    print(f"  Ativos: {N}, Dias disponíveis: {T}")
+    print()
+
+    total_reward = 0
+    for dia in range(T - 1):
+        # Política ingênua: distribuir igualmente entre todos os ativos
+        action = np.ones(N) * 0.1   # Comprar 10% do cash em cada ativo
+        state, reward, done = env.step(action)
+        total_reward += reward
+        valor = env.cash + np.sum(env.holdings * price_history[env.current_step])
+        print(f"  Dia {dia + 1}: valor_portfólio=R${valor:,.2f}, reward={reward:+.4f}")
+        if done:
+            break
+
+    print(f"\n  Recompensa acumulada: {total_reward:.4f}")

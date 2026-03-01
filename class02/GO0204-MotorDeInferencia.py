@@ -140,3 +140,74 @@ class SistemaRecomendacao:
             return 'noite'
         else:
             return 'madrugada'
+
+
+if __name__ == '__main__':
+    # Nota: Este arquivo usa as classes de GO0203 (Filme, PerfilUsuario, BaseConhecimento).
+    # Para executar completo, importe GO0203 ou combine os dois arquivos.
+
+    # Demo com stubs para classes dependentes
+    from datetime import datetime
+    from typing import Dict, List
+
+    # Criando base de conhecimento inline para demo
+    class Filme:
+        def __init__(self, titulo, generos, duracao, classificacao, humor, momento):
+            self.titulo = titulo
+            self.generos = generos
+            self.duracao = duracao
+            self.classificacao = classificacao
+            self.humor = humor
+            self.momento = momento
+
+    class PerfilUsuario:
+        def __init__(self, nome, idade, generos_favoritos):
+            self.nome = nome
+            self.idade = idade
+            self.generos_favoritos = generos_favoritos
+            self.humor_atual = None
+            self.acompanhantes = None
+            self.tempo_disponivel = None
+            self.momento = None
+        def definir_contexto(self, humor, acompanhantes, tempo, momento=None):
+            self.humor_atual = humor
+            self.acompanhantes = acompanhantes
+            self.tempo_disponivel = tempo
+            self.momento = momento
+
+    class BaseConhecimento:
+        def __init__(self):
+            self.filmes = []
+        def adicionar_filme(self, f):
+            self.filmes.append(f)
+        def buscar_por_criterios(self, **criterios):
+            resultados = []
+            for filme in self.filmes:
+                ok = True
+                if 'duracao_max' in criterios and filme.duracao > criterios['duracao_max']:
+                    ok = False
+                if 'humor' in criterios and criterios['humor'] not in filme.humor:
+                    ok = False
+                if 'momento' in criterios and criterios['momento'] not in filme.momento:
+                    ok = False
+                if ok:
+                    resultados.append(filme)
+            return resultados
+
+    base = BaseConhecimento()
+    base.adicionar_filme(Filme("Toy Story", ["Animação", "Aventura"], 81, "L",
+                               {"feliz", "empolgado"}, {"manhã", "tarde"}))
+    base.adicionar_filme(Filme("Vingadores", ["Ação", "Aventura"], 149, "12",
+                               {"empolgado"}, {"tarde", "noite"}))
+    base.adicionar_filme(Filme("Comédia Romântica", ["Comédia", "Romance"], 95, "12",
+                               {"feliz"}, {"tarde"}))
+
+    sistema = SistemaRecomendacao(base)
+
+    usuario = PerfilUsuario("Carlos", 20, ["Ação", "Aventura"])
+    usuario.definir_contexto("empolgado", "amigos", 180, "noite")
+
+    print(f"=== Recomendações para {usuario.nome} ===")
+    recomendacoes = sistema.recomendar(usuario, top_n=3)
+    for filme, score in recomendacoes:
+        sistema.explicar_recomendacao(filme, usuario, score)

@@ -26,3 +26,24 @@ class BatchNorm:
         # Escalar e deslocar
         out = self.gamma * x_norm + self.beta
         return out
+
+
+if __name__ == '__main__':
+    import numpy as np
+    np.random.seed(42)
+
+    print("=== Demonstração de Batch Normalization ===")
+    bn = BatchNorm(num_features=8)
+
+    # Dados com média≠0 e variância≠1
+    X = np.random.randn(32, 8) * 5 + 3
+    print(f"Entrada:  média={X.mean():.3f}, std={X.std():.3f}")
+
+    out_train = bn.forward(X, training=True)
+    print(f"Treino:   média={out_train.mean():.3f}, std={out_train.std():.3f}")
+
+    out_eval = bn.forward(X, training=False)
+    print(f"Avaliação:média={out_eval.mean():.3f}, std={out_eval.std():.3f}")
+
+    print(f"\nRunning mean (primeiros 3): {bn.running_mean[:3]}")
+    print(f"Running var  (primeiros 3): {bn.running_var[:3]}")

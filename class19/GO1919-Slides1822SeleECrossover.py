@@ -30,3 +30,38 @@ def swap_mutation_tsp(individual, mutation_rate=0.2):
         i, j = np.random.choice(len(mutated), 2, replace=False)
         mutated[i], mutated[j] = mutated[j], mutated[i]
     return mutated
+
+
+if __name__ == '__main__':
+    import numpy as np
+    np.random.seed(5)
+
+    print("=== Seleção por Torneio + OX + Swap para TSP ===")
+
+    # TSP com 6 cidades geradas aleatoriamente
+    n_cities = 6
+    cities = np.random.rand(n_cities, 2) * 100
+
+    # Função de fitness TSP (distância total — menor é melhor → usamos -distância)
+    def fitness_tsp(route, cities):
+        dist = 0
+        for i in range(len(route)):
+            a, b = cities[route[i]], cities[route[(i+1) % len(route)]]
+            dist += np.linalg.norm(a - b)
+        return -dist  # negativo para maximizar
+
+    # População inicial de 8 rotas aleatórias
+    populacao = [list(np.random.permutation(n_cities)) for _ in range(8)]
+
+    melhor_antes = max(populacao, key=lambda r: fitness_tsp(r, cities))
+    print(f"  Melhor rota antes (distância): {-fitness_tsp(melhor_antes, cities):.2f}")
+    print(f"  Rota: {melhor_antes}")
+
+    # Um passo de evolução
+    selecionados = tournament_selection_tsp(populacao, cities, k=3)
+    filho = order_crossover(selecionados[0], selecionados[1])
+    filho_mut = swap_mutation_tsp(filho, mutation_rate=0.3)
+
+    dist_filho = -fitness_tsp(filho_mut, cities)
+    print(f"\n  Filho após OX + swap: {filho_mut}")
+    print(f"  Distância do filho: {dist_filho:.2f}")
