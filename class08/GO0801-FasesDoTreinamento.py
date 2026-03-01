@@ -1,0 +1,168 @@
+# GO0801-FasesDoTreinamento
+# IMPLEMENTAÇÃO SIMPLES DE SOM DO ZERO
+
+import numpy as np
+import matplotlib.pyplot as plt
+
+class SimpleSOM:
+    """
+    Self-Organizing Map (SOM) simples
+    """
+    def __init__(self, map_height, map_width, input_dim, 
+                 learning_rate=0.5, sigma=None, n_iterations=1000):
+        """
+        Parâmetros:
+        -----------
+        map_height : int
+            Altura da grade (número de linhas)
+        map_width : int
+            Largura da grade (número de colunas)
+        input_dim : int
+            Dimensão do vetor de entrada
+        learning_rate : float
+            Taxa de aprendizado inicial
+        sigma : float
+            Raio inicial de vizinhança (se None, usa max(height, width)/2)
+        n_iterations : int
+            Número de iterações de treinamento
+        """
+        self.map_height = map_height
+        self.map_width = map_width
+        self.input_dim = input_dim
+        self.n_iterations = n_iterations
+        self.learning_rate_0 = learning_rate
+
+        # Raio inicial
+        if sigma is None:
+            self.sigma_0 = max(map_height, map_width) / 2.0
+        else:
+            self.sigma_0 = sigma
+
+        # Inicializar pesos aleatoriamente
+        # Shape: (map_height, map_width, input_dim)
+        self.weights = np.random.randn(map_height, map_width, input_dim)
+
+        # Normalizar pesos
+        for i in range(map_height):
+            for j in range(map_width):
+                self.weights[i, j] = self.weights[i, j] / np.linalg.norm(self.weights[i, j])
+
+        # Criar grade de coordenadas dos neurônios
+        self.neuron_coords = np.array(
+            [[np.array([i, j]) for j in range(map_width)] 
+             for i in range(map_height)]
+        )
+
+    def _decay_function(self, t):
+        """
+        Calcula learning rate e sigma para iteração t
+        """
+        # Decaimento exponencial
+        learning_rate = self.learning_rate_0 * np.exp(-t / self.n_iterations)
+        sigma = self.sigma_0 * np.exp(-t / self.n_iterations)
+        return learning_rate, sigma
+
+    def _find_bmu(self, x):
+        """
+        Encontra Best Matching Unit (BMU) para entrada x
+
+        Returns:
+        --------
+        (i, j) : tuple
+            Coordenadas do BMU na grade
+        """
+        # Calcular distâncias euclidianas para todos neurônios
+        distances = np.linalg.norm(self.weights - x, axis=2)
+
+        # Encontrar índice do mínimo
+        bmu_idx = np.unravel_index(np.argmin(distances), distances.shape)
+
+        return bmu_idx
+
+    def _neighborhood_function(self, bmu_coords, sigma):
+        """
+        Calcula função de vizinhança gaussiana
+
+        Returns:
+        --------
+        neighborhood : np.array shape (map_height, map_width)
+            Valores de influência para cada neurônio
+        """
+        # Distância de cada neurônio ao BMU
+        distances_sq = np.sum(
+            (self.neuron_coords - bmu_coords) ** 2, 
+            axis=2
+        )
+
+        # Função gaussiana
+        neighborhood = np.exp(-distances_sq / (2 * sigma**2))
+
+        return neighborhood
+
+    def _update_weights(self, x, bmu_coords, learning_rate, sigma):
+        """
+        Atualiza pesos de todos neurônios
+        """
+        # Calcular influência de vizinhança
+        neighborhood = self._neighborhood_function(bmu_coords, sigma)
+
+        # Expandir dimensões para broadcasting
+        neighborhood = neighborhood[:, :, np.newaxis]
+
+        # Atualizar pesos
+        # w(t+1) = w(t) + α(t) * h(t) * (x - w(t))
+        self.weights += learning_rate * neighborhood * (x - self.weights)
+
+    def fit(self, X, verbose=True):
+        """
+        Treinar SOM com dados X
+
+        Parameters:
+        -----------
+        X : np.array shape (n_samples, input_dim)
+            Dados de treinamento
+        """
+        n_samples = X.shape[0]
+
+        for t in range(self.n_iterations):
+            # Decaimento dos parâmetros
+            learning_rate, sigma = self._decay_function(t)
+
+            # Selecionar amostra aleatória
+            idx = np.random.randint(0, n_samples)
+            x = X[idx]
+
+            # 1. Encontrar BMU
+            bmu_coords = self._find_bmu(x)
+
+            # 2. Atualizar pesos
+            self._update_weights(x, bmu_coords, learning_rate, sigma)
+
+            # Progresso
+            if verbose and (t % 100 == 0 or t == self.n_iterations - 1):
+                print(f"Iteração {t+1}/{self.n_iterations} - "
+                      f"α={learning_rate:.4f}, σ={sigma:.4f}")
+
+    def predict(self, X):
+        """
+        Mapeia amostras para coordenadas na grade
+
+        Returns:
+        --------
+        coords : np.array shape (n_samples, 2)
+            Coordenadas (i, j) do BMU para cada amostra
+        """
+        coords = np.array([self._find_bmu(x) for x in X])
+        return coords
+
+    def quantization_error(self, X):
+        """
+        Calcula erro de quantização (distância média ao BMU)
+        """
+        errors = []
+        for x in X:
+            bmu_coords = self._find_bmu(x)
+            bmu_weights = self.weights[bmu_coords[0], bmu_coords[1]]
+            error = np.linalg.norm(x - bmu_weights)
+            errors.append(error)
+        return np.mean(errors)
