@@ -59,21 +59,21 @@ Panorama da IA moderna, comparação de abordagens (simbólica vs conexionista) 
 
 | Código | Descrição |
 |--------|-----------|
-| GO0101 | Simulador do Teste de Turing |
-| GO0102 | Análise de viés em sistemas de IA |
-| GO0103 | Benchmarks de Inteligência Artificial |
-| GO0104 | Classificador simples (regras vs ML) |
-| GO0105–06 | Programação tradicional por regras vs Machine Learning |
-| GO0107 | Modelo pré-treinado MobileNetV2 |
-| GO0108 | Sistema de recomendação em 30 minutos |
-| GO0113 | Experimento: capacidades e limitações de LLMs |
-| GO0114 | Agente autônomo — robô aspirador |
-| GO0115 | Simulador de dilemas éticos em IA |
-| GO0116 | Comparação IA simbólica vs conexionista |
-| GO0117 | Avaliador interativo de AGI |
-| GO0118 | XAI — técnicas de interpretabilidade |
-| GO0119 | Impacto da IA no trabalho (simulador) |
-| GO0122 | Gerador de roadmap pessoal de carreira |
+| [GO0101](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0101-SimuladorDoTesteDeTuring.py) | Simulador do Teste de Turing |
+| [GO0102](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0102-AnaliseDeViesEmSistemasDeIA.py) | Análise de viés em sistemas de IA |
+| [GO0103](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0103-BenchmarksDeInteligenciaArtificial.py) | Benchmarks de Inteligência Artificial |
+| [GO0104](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0104-CodigoClassificadorSimples.py) | Classificador simples (regras vs ML) |
+| [GO0105–06](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class01/) | Programação tradicional por regras vs Machine Learning |
+| [GO0107](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0107-UsandoModeloPretreinadoMobilenetv2.py) | Modelo pré-treinado MobileNetV2 |
+| [GO0108](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0108-SistemaDeRecomendacao30Min.py) | Sistema de recomendação em 30 minutos |
+| [GO0113](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0113-ExperimentoCapacidadesELimitacoesDeLlms.py) | Experimento: capacidades e limitações de LLMs |
+| [GO0114](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0114-AgenteDeIaAutonomoRoboAspirador.py) | Agente autônomo — robô aspirador |
+| [GO0115](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0115-SimuladorDeDilemasEticosEmIa.py) | Simulador de dilemas éticos em IA |
+| [GO0116](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0116-ComparacaoIaSimbolicaVsConexionista.py) | Comparação IA simbólica vs conexionista |
+| [GO0117](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0117-AgiArtificialGeneralIntelligenceAvaliadorInterativo.py) | Avaliador interativo de AGI |
+| [GO0118](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0118-XaiExplainableAiTecnicasDeInterpretabilidade.py) | XAI — técnicas de interpretabilidade |
+| [GO0119](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0119-ImpactoDaIaNoTrabalhoSimulador.py) | Impacto da IA no trabalho (simulador) |
+| [GO0122](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class01/GO0122-GeradorDeRoadmapPessoalCarreira.py) | Gerador de roadmap pessoal de carreira |
 
 ---
 
@@ -83,19 +83,19 @@ Sistemas especialistas, motores de inferência, grafos de conhecimento e racioc�
 
 | Código | Descrição |
 |--------|-----------|
-| GO0201 | Fatores de certeza (CF) |
-| GO0203 | Sistema especialista de recomendação de filmes |
-| GO0204–05 | Motor de inferência e execução |
-| GO0208 | Grafo de conhecimento médico |
-| GO0210 | Motor de inferência com forward chaining |
-| GO0211 | Prolog simplificado em Python |
-| GO0212 | Lógica fuzzy para decisões |
-| GO0213 | Raciocínio estruturado |
-| GO0214 | CSP — Constraint Satisfaction Problems |
-| GO0215 | STRIPS Planning |
-| GO0216 | Redes semânticas |
-| GO0217 | Raciocínio bayesiano |
-| GO0218 | Sistemas de produção |
+| [GO0201](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0201-InovacaoFatoresDeCerteza00A.py) | Fatores de certeza (CF) |
+| [GO0203](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0203-ObjetivoSistemaEspecialistaQueRecomendaFilmes.py) | Sistema especialista de recomendação de filmes |
+| [GO0204–05](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class02/) | Motor de inferência e execução |
+| [GO0208](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0208-GrafoConhecimentoMedico.py) | Grafo de conhecimento médico |
+| [GO0210](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0210-MotorDeInferenciaComForwardChaining.py) | Motor de inferência com forward chaining |
+| [GO0211](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0211-PrologSimplesEmPython.py) | Prolog simplificado em Python |
+| [GO0212](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0212-LogicaFuzzyParaDecisoes.py) | Lógica fuzzy para decisões |
+| [GO0213](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0213-RaciocinioEstruturado.py) | Raciocínio estruturado |
+| [GO0214](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0214-ConstraintSatisfactionProblemsCSP.py) | CSP — Constraint Satisfaction Problems |
+| [GO0215](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0215-STRIPSPlanning.py) | STRIPS Planning |
+| [GO0216](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0216-RedesSemanticas.py) | Redes semânticas |
+| [GO0217](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0217-Bayes.py) | Raciocínio bayesiano |
+| [GO0218](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0218-ProductionSystems.py) | Sistemas de produção |
 
 ---
 
@@ -105,13 +105,13 @@ Algoritmos de busca cega e heurística para resolução de problemas em grafos e
 
 | Código | Descrição |
 |--------|-----------|
-| GO0301 | Representação de estados de busca |
-| GO0306 | Heurísticas comuns (Manhattan, Euclidiana) |
-| GO0307 | Visualização de labirinto e solução |
-| GO0311 | Comparação empírica BFS vs A* |
-| GO0312 | Busca de Dijkstra em grafo ponderado |
-| GO0313 | Puzzle das 8 peças com A* |
-| GO0314 | Busca bidirecional |
+| [GO0301](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0301-RepresentacaoDeCadaPassoDaBusca.py) | Representação de estados de busca |
+| [GO0306](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0306-HeuristicasComuns.py) | Heurísticas comuns (Manhattan, Euclidiana) |
+| [GO0307](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0307-24VisualizacaoDoLabirintoESolucao.py) | Visualização de labirinto e solução |
+| [GO0311](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0311-BfsVsAAnaliseEmpirica.py) | Comparação empírica BFS vs A* |
+| [GO0312](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0312-BuscaDijkstraGrafoPonderado.py) | Busca de Dijkstra em grafo ponderado |
+| [GO0313](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0313-PuzzleOitoComAEstrela.py) | Puzzle das 8 peças com A* |
+| [GO0314](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0314-BuscaBidirecional.py) | Busca bidirecional |
 
 ---
 
@@ -121,14 +121,14 @@ Fundamentos do ML supervisionado com scikit-learn: pipeline, validação e diagn
 
 | Código | Descrição |
 |--------|-----------|
-| GO0403 | Pipeline completo — flores Iris |
-| GO0404 | Learning curves — diagnóstico de overfitting/underfitting |
-| GO0405 | Validação cruzada com scikit-learn |
-| GO0406 | Otimização de hiperparâmetros com GridSearch |
-| GO0407 | Pipeline completo de Machine Learning |
-| GO0412–20 | Exercícios: EDA, preprocessamento, feature engineering, data leakage |
-| GO0418–20 | Exercícios avançados: pipeline automatizado, curvas de aprendizado |
-| GO0422 | Detecção de spam (abordagem tradicional) |
+| [GO0403](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class04/GO0403-CompletoClassificacaoDeFloresIris.py) | Pipeline completo — flores Iris |
+| [GO0404](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class04/GO0404-LearningCurvesDiagnosticoDeOverfittingunderfitting.py) | Learning curves — diagnóstico de overfitting/underfitting |
+| [GO0405](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class04/GO0405-ValidacaoCruzadaComSklearn.py) | Validação cruzada com scikit-learn |
+| [GO0406](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class04/GO0406-OtimizacaoDeHiperparametrosComGridSearch.py) | Otimização de hiperparâmetros com GridSearch |
+| [GO0407](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class04/GO0407-PipelineCompletoDeMachineLearning.py) | Pipeline completo de Machine Learning |
+| [GO0412–20](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class04/) | Exercícios: EDA, preprocessamento, feature engineering, data leakage |
+| [GO0418–20](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class04/) | Exercícios avançados: pipeline automatizado, curvas de aprendizado |
+| [GO0422](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class04/GO0422-DetectarSpamTradicional.py) | Detecção de spam (abordagem tradicional) |
 
 ---
 
@@ -138,18 +138,18 @@ KNN, árvores de decisão, Naive Bayes, métricas de avaliação, ensemble e des
 
 | Código | Descrição |
 |--------|-----------|
-| GO0501 | KNN do zero |
-| GO0502 | Árvore de decisão com scikit-learn |
-| GO0503 | Naive Bayes com scikit-learn |
-| GO0504 | Matriz de confusão e análise |
-| GO0505 | ROC Curve e AUC |
-| GO0506 | Ajuste de threshold de decisão |
-| GO0507 | Métricas para problemas multiclasse |
-| GO0508–12 | Prática MNIST: preparação, treino, análise de erros, otimização |
-| GO0509 | Diagnóstico de diabetes com Ensemble |
-| GO0510 | Classificação de imagens com Transfer Learning |
-| GO0521–27 | Random Forest, XGBoost, SMOTE, Imbalanced-learn |
-| GO0540 | Dataset de crédito — classificação real |
+| [GO0501](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0501-KnearestNeighborsDoZero.py) | KNN do zero |
+| [GO0502](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0502-ArvoreDeDecisaoComSklearn.py) | Árvore de decisão com scikit-learn |
+| [GO0503](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0503-NaiveBayesComSklearn.py) | Naive Bayes com scikit-learn |
+| [GO0504](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0504-MatrizDeConfusaoAnalise.py) | Matriz de confusão e análise |
+| [GO0505](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0505-RocCurveEAuc.py) | ROC Curve e AUC |
+| [GO0506](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0506-AjustandoThresholdDeDecisao.py) | Ajuste de threshold de decisão |
+| [GO0507](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0507-MetricasParaProblemasMulticlasse.py) | Métricas para problemas multiclasse |
+| [GO0508–12](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class05/) | Prática MNIST: preparação, treino, análise de erros, otimização |
+| [GO0509](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0509-DiagnosticoDiabetesEnsemble.py) | Diagnóstico de diabetes com Ensemble |
+| [GO0510](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0510-ClassificacaoImagensTransferLearning.py) | Classificação de imagens com Transfer Learning |
+| [GO0521–27](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class05/) | Random Forest, XGBoost, SMOTE, Imbalanced-learn |
+| [GO0540](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class05/GO0540-DatasetCredit.py) | Dataset de crédito — classificação real |
 
 ---
 
@@ -159,15 +159,15 @@ Regressão linear, polinomial e regularizada; feature engineering e análise de 
 
 | Código | Descrição |
 |--------|-----------|
-| GO0601 | Regressão linear e múltipla |
-| GO0602 | Regressão polinomial |
-| GO0603 | Validação cruzada para regressão |
-| GO0604 | Regularização Ridge (L2) |
-| GO0605 | Regularização Lasso (L1) |
-| GO0606 | ElasticNet (L1 + L2) |
-| GO0607–08 | Feature engineering e análise de resíduos |
-| GO0609–14 | Atividade prática: previsão de preços, EDA, treinamento, validação |
-| GO0618–21 | Coeficientes padronizados, importância de features, learning curves |
+| [GO0601](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0601-RegressaoLinearEMultipla.py) | Regressão linear e múltipla |
+| [GO0602](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0602-RegressaoPolinomial.py) | Regressão polinomial |
+| [GO0603](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0603-ValidacaoCruzadaParaRegressao.py) | Validação cruzada para regressão |
+| [GO0604](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0604-RegularizacaoRidgeL2.py) | Regularização Ridge (L2) |
+| [GO0605](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0605-RegularizacaoLassoL1.py) | Regularização Lasso (L1) |
+| [GO0606](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0606-ElasticNetL1L2.py) | ElasticNet (L1 + L2) |
+| [GO0607–08](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/) | Feature engineering e análise de resíduos |
+| [GO0609–14](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/) | Atividade prática: previsão de preços, EDA, treinamento, validação |
+| [GO0618–21](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/) | Coeficientes padronizados, importância de features, learning curves |
 
 ---
 
@@ -177,12 +177,12 @@ Aprendizado não supervisionado: K-Means, DBSCAN e clustering hierárquico.
 
 | Código | Descrição |
 |--------|-----------|
-| GO0701 | Visualização do processo de clustering |
-| GO0702 | Gráfico do cotovelo (elbow method) |
-| GO0703 | DBSCAN com scikit-learn |
-| GO0704 | Dendrograma de corte |
-| GO0706 | Segmentação de clientes para marketing |
-| GO0707–09 | Pipeline: normalização, análise de clusters, estratégias de marketing |
+| [GO0701](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class07/GO0701-VisualizacaoDoProcesso.py) | Visualização do processo de clustering |
+| [GO0702](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class07/GO0702-GraficoDoCotovelo.py) | Gráfico do cotovelo (elbow method) |
+| [GO0703](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class07/GO0703-DbscanComSklearn.py) | DBSCAN com scikit-learn |
+| [GO0704](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class07/GO0704-DeCorte.py) | Dendrograma de corte |
+| [GO0706](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class07/GO0706-SegmentacaoDeClientesParaMarketing.py) | Segmentação de clientes para marketing |
+| [GO0707–09](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class07/) | Pipeline: normalização, análise de clusters, estratégias de marketing |
 
 ---
 
@@ -192,12 +192,12 @@ Self-Organizing Maps com MiniSom para clustering, visualização e detecção de
 
 | Código | Descrição |
 |--------|-----------|
-| GO0801 | Fases do treinamento SOM |
-| GO0802 | Uso de cores/canais RGB |
-| GO0805 | SOM com MiniSom |
-| GO0806–07 | SOM em negócios e detecção de anomalias |
-| GO0809–14 | Atividade: dataset de vinhos — treino, visualizações, análise de clusters |
-| GO0815 | Hiperparâmetros do SOM |
+| [GO0801](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class08/GO0801-FasesDoTreinamento.py) | Fases do treinamento SOM |
+| [GO0802](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class08/GO0802-8DeUsoCoresRgb.py) | Uso de cores/canais RGB |
+| [GO0805](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class08/GO0805-11SomComMinisomBiblioteca.py) | SOM com MiniSom |
+| [GO0806–07](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class08/) | SOM em negócios e detecção de anomalias |
+| [GO0809–14](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class08/) | Atividade: dataset de vinhos — treino, visualizações, análise de clusters |
+| [GO0815](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class08/GO0815-Hiperparametros.py) | Hiperparâmetros do SOM |
 
 ---
 
@@ -207,14 +207,14 @@ Perceptron, backpropagation, funções de ativação, regularização e iniciali
 
 | Código | Descrição |
 |--------|-----------|
-| GO0901–03 | Uso moderno, resumo e treinamento de redes neurais |
-| GO0905 | Checklist de debugging de redes neurais |
-| GO0906–08 | MNIST Parte 2: arquitetura, treinamento, análise de erros |
-| GO0909 | Dropout como regularização padrão |
-| GO0910 | Otimizador Adam |
-| GO0914 | Algoritmo de treinamento completo |
-| GO0925–29 | Inicialização de pesos, batch norm, verificação de gradientes e ativações |
-| GO0930–32 | MLP com scikit-learn e TensorFlow |
+| [GO0901–03](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class09/) | Uso moderno, resumo e treinamento de redes neurais |
+| [GO0905](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class09/GO0905-ChecklistDeDebugging.py) | Checklist de debugging de redes neurais |
+| [GO0906–08](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class09/) | MNIST Parte 2: arquitetura, treinamento, análise de erros |
+| [GO0909](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class09/GO0909-3DropoutPadraoEmDeepLearning.py) | Dropout como regularização padrão |
+| [GO0910](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class09/GO0910-Adam.py) | Otimizador Adam |
+| [GO0914](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class09/GO0914-AlgoritmoTreinamentoCompleto.py) | Algoritmo de treinamento completo |
+| [GO0925–29](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class09/) | Inicialização de pesos, batch norm, verificação de gradientes e ativações |
+| [GO0930–32](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class09/) | MLP com scikit-learn e TensorFlow |
 
 ---
 
@@ -224,16 +224,16 @@ Redes densas profundas com Keras/TensorFlow: callbacks, regularização, salvame
 
 | Código | Descrição |
 |--------|-----------|
-| GO1001–08 | MLP com TensorFlow/Keras |
-| GO1009 | Classificação binária completa |
-| GO1012 | Callbacks (EarlyStopping, ModelCheckpoint) |
-| GO1013 | History e visualização de treinamento |
-| GO1021–26 | Salvar modelo completo, pesos, JSON |
-| GO1034–35 | Data pipeline (load, preprocess) |
-| GO1037–39 | Tensorboard e logging |
-| GO1044 | Custom Callback |
-| GO1050–51 | Learning rate scheduling e cosine annealing |
-| GO1054 | Saliency map |
+| [GO1001–08](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class10/) | MLP com TensorFlow/Keras |
+| [GO1009](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class10/GO1009-ClassificacaoBinaria.py) | Classificação binária completa |
+| [GO1012](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class10/GO1012-Callbacks.py) | Callbacks (EarlyStopping, ModelCheckpoint) |
+| [GO1013](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class10/GO1013-History.py) | History e visualização de treinamento |
+| [GO1021–26](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class10/) | Salvar modelo completo, pesos, JSON |
+| [GO1034–35](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class10/) | Data pipeline (load, preprocess) |
+| [GO1037–39](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class10/) | Tensorboard e logging |
+| [GO1044](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class10/GO1044-CustomCallback.py) | Custom Callback |
+| [GO1050–51](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class10/) | Learning rate scheduling e cosine annealing |
+| [GO1054](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class10/GO1054-GetSaliencyMap.py) | Saliency map |
 
 ---
 
@@ -243,12 +243,12 @@ Conjuntos fuzzy, funções de pertinência, sistemas de inferência e controle f
 
 | Código | Descrição |
 |--------|-----------|
-| GO1101–07 | Implementações de conjuntos e operadores fuzzy |
-| GO1108 | Sistema de controle fuzzy |
-| GO1109 | Operadores customizados |
-| GO1112 | Projeto: controlador de temperatura |
-| GO1113–16 | Implementação conceitual, treinamento híbrido, convergência |
-| GO1121 | Simpful — biblioteca de lógica fuzzy |
+| [GO1101–07](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class11/) | Implementações de conjuntos e operadores fuzzy |
+| [GO1108](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class11/GO1108-SistemaDeControle.py) | Sistema de controle fuzzy |
+| [GO1109](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class11/GO1109-OperadoresCustomizados.py) | Operadores customizados |
+| [GO1112](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class11/GO1112-ProjetoControladorDeTemperaturaParte.py) | Projeto: controlador de temperatura |
+| [GO1113–16](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class11/) | Implementação conceitual, treinamento híbrido, convergência |
+| [GO1121](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class11/GO1121-Simpful.py) | Simpful — biblioteca de lógica fuzzy |
 
 ---
 
@@ -258,25 +258,25 @@ Arquiteturas CNN clássicas e modernas, transfer learning, visualização e téc
 
 | Código | Descrição |
 |--------|-----------|
-| GO1201 | CNN no MNIST (passo a passo) |
-| GO1202 | Data augmentation |
-| GO1203 | Transfer learning com ResNet50 |
-| GO1204–05 | Visualização de filtros, feature maps e GradCAM |
-| GO1209 | Neural Style Transfer |
-| GO1210 | CNN feature visualization |
-| GO1211 | Mixed Precision Training |
-| GO1212 | Model pruning |
-| GO1213 | SSD — Single Shot Detector |
-| GO1214 | Super-resolução de imagens |
-| GO1215 | CycleGAN |
-| GO1216 | Segmentação semântica com U-Net |
-| GO1217 | Robustez adversarial |
-| GO1218 | AutoAugment |
-| GO1219 | Knowledge Distillation |
-| GO1220 | EfficientNet / NAS |
-| GO1221 | Mask R-CNN — Instance Segmentation |
-| GO1222 | 3D CNN para classificação de vídeo |
-| GO1236–41 | AlexNet, VGG16, ResNet (residual block), arquiteturas CNN |
+| [GO1201](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1201-CnnMnistPassoAPasso.py) | CNN no MNIST (passo a passo) |
+| [GO1202](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1202-DataAugmentationMelhorandoGeneralizacao.py) | Data augmentation |
+| [GO1203](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1203-11cTransferLearningResnet50.py) | Transfer learning com ResNet50 |
+| [GO1204–05](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class12/) | Visualização de filtros, feature maps e GradCAM |
+| [GO1209](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1209-35gNeuralStyleTransferArteCom.py) | Neural Style Transfer |
+| [GO1210](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1210-35hCnnFeatureVisualizationEntendendoFiltros.py) | CNN feature visualization |
+| [GO1211](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1211-35iMixedPrecisionTrainingAceleracaoCom.py) | Mixed Precision Training |
+| [GO1212](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1212-35jCnnModelPruningCompressaoInteligente.py) | Model pruning |
+| [GO1213](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1213-35kSingleShotDetectorSsdObject.py) | SSD — Single Shot Detector |
+| [GO1214](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1214-35lImageSuperresolutionAumentarResolucao.py) | Super-resolução de imagens |
+| [GO1215](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1215-35mCycleganStyleTransferSemPares.py) | CycleGAN |
+| [GO1216](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1216-35nSemanticSegmentationUnetSegmentacaoPixel.py) | Segmentação semântica com U-Net |
+| [GO1217](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1217-35oAdversarialRobustnessDefesaContraAtaques.py) | Robustez adversarial |
+| [GO1218](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1218-35pAutoaugmentDataAugmentationAutomatico.py) | AutoAugment |
+| [GO1219](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1219-35qKnowledgeDistillationComprimirConhecimento.py) | Knowledge Distillation |
+| [GO1220](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1220-35rEfficientnetNeuralArchitectureSearch.py) | EfficientNet / NAS |
+| [GO1221](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1221-35sMaskRcnnInstanceSegmentation.py) | Mask R-CNN — Instance Segmentation |
+| [GO1222](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1222-35t3dCnnVideoClassification.py) | 3D CNN para classificação de vídeo |
+| [GO1236–41](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class12/) | AlexNet, VGG16, ResNet (residual block), arquiteturas CNN |
 
 ---
 
@@ -286,15 +286,15 @@ Transfer learning avançado, YOLO, detecção de objetos, métricas de CV e depl
 
 | Código | Descrição |
 |--------|-----------|
-| GO1301–03 | Transfer learning: carregar, descongelar, fine-tune |
-| GO1304–10 | YOLO com Ultralytics: inferência, tracking, vídeo, câmera |
-| GO1312 | Learning rate scheduling |
-| GO1313 | Deploy de YOLO com FastAPI |
-| GO1317–19 | IoU: GIoU, DIoU, CIoU |
-| GO1323–24 | Cálculo de AP (11 pontos e todos os pontos) |
-| GO1331 | Converter anotações COCO → YOLO |
-| GO1333–35 | Análise de área, remoção de background, sobreposição |
-| GO1337–39 | Export: TFLite, ONNX, TensorRT |
+| [GO1301–03](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class13a/) | Transfer learning: carregar, descongelar, fine-tune |
+| [GO1304–10](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class13a/) | YOLO com Ultralytics: inferência, tracking, vídeo, câmera |
+| [GO1312](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class13a/GO1312-LearningRateScheduling.py) | Learning rate scheduling |
+| [GO1313](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class13a/GO1313-FastapiUltralytics.py) | Deploy de YOLO com FastAPI |
+| [GO1317–19](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class13a/) | IoU: GIoU, DIoU, CIoU |
+| [GO1323–24](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class13a/) | Cálculo de AP (11 pontos e todos os pontos) |
+| [GO1331](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class13a/GO1331-CocoToYoloSeg.py) | Converter anotações COCO → YOLO |
+| [GO1333–35](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class13a/) | Análise de área, remoção de background, sobreposição |
+| [GO1337–39](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class13a/) | Export: TFLite, ONNX, TensorRT |
 
 ---
 
@@ -304,19 +304,19 @@ Redes recorrentes e LSTM para séries temporais, NLP e geração de sequências.
 
 | Código | Descrição |
 |--------|-----------|
-| GO1401 | SimpleRNN no Keras |
-| GO1402 | LSTM no Keras |
-| GO1403 | Previsão de consumo de energia com LSTM |
-| GO1404–05 | Text classification e análise de sentimento (IMDB) com LSTM |
-| GO1406 | LSTM bidirecional |
-| GO1409 | Seq2Seq (sequence-to-sequence) |
-| GO1410 | Geração de texto com LSTM (character-level) |
-| GO1414–15 | LSTM Encoder-Decoder e com atenção |
-| GO1417 | Previsão de séries temporais avançada |
-| GO1420 | Encoder-Decoder para tradução |
-| GO1422 | Geração de música com LSTM |
-| GO1425–30 | NER, QA, extração de speech features, sumarização, tradução, sistemas dialogais |
-| GO1433–35 | Análise médica de séries temporais, visualização de atenção, trading bot |
+| [GO1401](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1401-5SimpleRnnEmKeras.py) | SimpleRNN no Keras |
+| [GO1402](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1402-12LstmEmKeras.py) | LSTM no Keras |
+| [GO1403](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1403-PrevisaoDeConsumoDeEnergiaComLSTM.py) | Previsão de consumo de energia com LSTM |
+| [GO1404–05](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class14/) | Text classification e análise de sentimento (IMDB) com LSTM |
+| [GO1406](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1406-LstmBidirecionalContextoFuturoEPassado.py) | LSTM bidirecional |
+| [GO1409](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1409-15c24SequencetosequenceTra.py) | Seq2Seq (sequence-to-sequence) |
+| [GO1410](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1410-GeracaoDeTextoComLstmCharacterlevel.py) | Geração de texto com LSTM (character-level) |
+| [GO1414–15](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class14/) | LSTM Encoder-Decoder e com atenção |
+| [GO1417](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1417-36bOpcionalPrevisaoDeSeriesTemporais.py) | Previsão de séries temporais avançada |
+| [GO1420](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1420-36eOpcionalEncoderdecoderLstmParaTraducao.py) | Encoder-Decoder para tradução |
+| [GO1422](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class14/GO1422-36gMusicGenerationComLstmComposicao.py) | Geração de música com LSTM |
+| [GO1425–30](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class14/) | NER, QA, extração de speech features, sumarização, tradução, sistemas dialogais |
+| [GO1433–35](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class14/) | Análise médica de séries temporais, visualização de atenção, trading bot |
 
 ---
 
@@ -326,22 +326,22 @@ Processamento de linguagem natural clássico e com deep learning.
 
 | Código | Descrição |
 |--------|-----------|
-| GO1501–02 | Tokenização e normalização de texto |
-| GO1503 | Pipeline completo de normalização |
-| GO1504–05 | Stemming e lemmatização |
-| GO1506–07 | Bag of Words (BoW) |
-| GO1509 | N-gramas |
-| GO1514–15 | Word2Vec |
-| GO1516–17 | FastText e análise de subpalavras |
-| GO1518 | Similaridade entre palavras |
-| GO1520 | Embeddings em deep learning |
-| GO1521 | Projeto: análise de sentimento |
-| GO1522–24 | POS tagging e NER (completo com spaCy) |
-| GO1525–26 | Classificação de texto com deep learning e CNN |
-| GO1527–28 | Topic modeling com LDA |
-| GO1529–31 | Sumarização, Question Answering |
-| GO1532 | Tradução neural com MarianMT |
-| GO1534–41 | Classificador de notícias, dataset IMDB, sistemas completos |
+| [GO1501–02](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | Tokenização e normalização de texto |
+| [GO1503](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class15/GO1503-4aCompleteTextNormalizationPipeline.py) | Pipeline completo de normalização |
+| [GO1504–05](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | Stemming e lemmatização |
+| [GO1506–07](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | Bag of Words (BoW) |
+| [GO1509](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class15/GO1509-8Ngrams.py) | N-gramas |
+| [GO1514–15](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | Word2Vec |
+| [GO1516–17](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | FastText e análise de subpalavras |
+| [GO1518](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class15/GO1518-15SimilaridadeEntrePalavras.py) | Similaridade entre palavras |
+| [GO1520](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class15/GO1520-16EmbeddingsEmDeepLearning.py) | Embeddings em deep learning |
+| [GO1521](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class15/GO1521-17Projeto1AnaliseDeSentimento.py) | Projeto: análise de sentimento |
+| [GO1522–24](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | POS tagging e NER (completo com spaCy) |
+| [GO1525–26](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | Classificação de texto com deep learning e CNN |
+| [GO1527–28](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | Topic modeling com LDA |
+| [GO1529–31](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | Sumarização, Question Answering |
+| [GO1532](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class15/GO1532-TraducaoNeuralMarianMT.py) | Tradução neural com MarianMT |
+| [GO1534–41](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class15/) | Classificador de notícias, dataset IMDB, sistemas completos |
 
 ---
 
@@ -351,25 +351,25 @@ Arquitetura Transformer, BERT, GPT-2, T5, fine-tuning, LoRA, quantização e seg
 
 | Código | Descrição |
 |--------|-----------|
-| GO1601 | Visualização e análise de attention |
-| GO1602 | T5 — Multitask Learning |
-| GO1603 | Chain-of-Thought Prompting |
-| GO1604 | Fine-tuning end-to-end com BERT |
-| GO1605 | Benchmarking e seleção de LLMs |
-| GO1606 | LLMs multimodais — visão + linguagem |
-| GO1607 | HuggingFace Transformers — guia prático |
-| GO1609 | Comparação avançada de tokenizadores |
-| GO1611 | Projeto: Chatbot com GPT-2 |
-| GO1612 | Zero-shot e few-shot classification |
-| GO1613 | Model distillation |
-| GO1614 | Estratégias avançadas de sampling |
-| GO1615 | LoRA — Low-Rank Adaptation |
-| GO1616–17 | Quantização básica e técnicas avançadas |
-| GO1619–20 | Embeddings e busca semântica |
-| GO1621 | Estratégias para contextos longos |
-| GO1622 | Calculadora de custo de LLMs |
-| GO1623–25 | Detecção de alucinação, viés e defesa contra prompt injection |
-| GO1627–36 | Exercícios avançados: self-attention, positional encoding, BERT vs GPT, fine-tuning, QA, geração de texto, sentence embeddings, MLM, LoRA, análise de attention weights |
+| [GO1601](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1601-6aAttentionVisualizationAnalysis.py) | Visualização e análise de attention |
+| [GO1602](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1602-13aT5MultitaskLearning.py) | T5 — Multitask Learning |
+| [GO1603](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1603-13bChainofthoughtPrompting.py) | Chain-of-Thought Prompting |
+| [GO1604](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1604-14aBertFinetuningEndtoend.py) | Fine-tuning end-to-end com BERT |
+| [GO1605](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1605-15aLlmBenchmarkingModelSelection.py) | Benchmarking e seleção de LLMs |
+| [GO1606](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1606-16aMultimodalLlmsVisionLanguage.py) | LLMs multimodais — visão + linguagem |
+| [GO1607](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1607-17HuggingFaceTransformers.py) | HuggingFace Transformers — guia prático |
+| [GO1609](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1609-18aAdvancedTokenizationComparison.py) | Comparação avançada de tokenizadores |
+| [GO1611](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1611-21ProjetoChatbotComGpt2.py) | Projeto: Chatbot com GPT-2 |
+| [GO1612](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1612-21aZeroshotFewshotClassification.py) | Zero-shot e few-shot classification |
+| [GO1613](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1613-21bModelDistillation.py) | Model distillation |
+| [GO1614](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1614-21cAdvancedSamplingStrategies.py) | Estratégias avançadas de sampling |
+| [GO1615](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1615-22LoraLowrankAdaptation.py) | LoRA — Low-Rank Adaptation |
+| [GO1616–17](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class16/) | Quantização básica e técnicas avançadas |
+| [GO1619–20](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class16/) | Embeddings e busca semântica |
+| [GO1621](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1621-29aLongContextHandlingStrategies.py) | Estratégias para contextos longos |
+| [GO1622](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1622-30aLlmCostOptimizationCalculator.py) | Calculadora de custo de LLMs |
+| [GO1623–25](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class16/) | Detecção de alucinação, viés e defesa contra prompt injection |
+| [GO1627–36](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class16/) | Exercícios avançados: self-attention, positional encoding, BERT vs GPT, fine-tuning, QA, geração de texto, sentence embeddings, MLM, LoRA, análise de attention weights |
 
 ---
 
@@ -379,19 +379,19 @@ Execução local de LLMs, pipelines RAG, vector stores e aplicações conversaci
 
 | Código | Descrição |
 |--------|-----------|
-| GO1701 | Vector stores |
-| GO1704–05 | Metadata filtering, query routing e estratégias de chunking |
-| GO1706 | Projeto: Chatbot RAG com Ollama |
-| GO1707 | Monitoramento e observabilidade em produção |
-| GO1708–10 | Query expansion, GraphRAG, otimização de custo |
-| GO1712 | Agents com RAG |
-| GO1713–15 | Streamlit UI, app RAG production-ready, QA e teste |
-| GO1716 | Proteção contra prompt injection |
-| GO1717 | Busca híbrida: BM25 + vector search |
-| GO1718 | Métricas de avaliação de RAG |
-| GO1719 | Streaming de respostas |
-| GO1721 | Sistemas de memória conversacional |
-| GO1723 | Comparação de vector stores: FAISS vs alternativas |
+| [GO1701](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1701-10VectorStores.py) | Vector stores |
+| [GO1704–05](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class17/) | Metadata filtering, query routing e estratégias de chunking |
+| [GO1706](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1706-19ProjetoChatbotRagComOllama.py) | Projeto: Chatbot RAG com Ollama |
+| [GO1707](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1707-19aProductionMonitoringObservability.py) | Monitoramento e observabilidade em produção |
+| [GO1708–10](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class17/) | Query expansion, GraphRAG, otimização de custo |
+| [GO1712](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1712-24AgentsComRag.py) | Agents com RAG |
+| [GO1713–15](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class17/) | Streamlit UI, app RAG production-ready, QA e teste |
+| [GO1716](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1716-29aPromptInjectionProtection.py) | Proteção contra prompt injection |
+| [GO1717](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1717-30aHybridSearchBm25VectorSearch.py) | Busca híbrida: BM25 + vector search |
+| [GO1718](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1718-30bRagEvaluationMetrics.py) | Métricas de avaliação de RAG |
+| [GO1719](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1719-30cStreamingResponses.py) | Streaming de respostas |
+| [GO1721](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1721-30dConversationalMemorySystems.py) | Sistemas de memória conversacional |
+| [GO1723](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1723-34aVectorStoreComparisonFaissVs.py) | Comparação de vector stores: FAISS vs alternativas |
 
 ---
 
@@ -401,14 +401,14 @@ Q-Learning, DQN e algoritmos de RL moderno com Gymnasium.
 
 | Código | Descrição |
 |--------|-----------|
-| GO1806 | Grid World com Q-Learning |
-| GO1809 | DQN — setup |
-| GO1815 | Ambientes Gymnasium |
-| GO1817 | Projeto DQN no CartPole |
-| GO1818 | Manipulação robótica, AlphaZero simplificado, data center, gestão de portfólio, recomendação |
-| GO1819 | DQN no CartPole (exercício) |
-| GO1820 | Comparação de algoritmos no LunarLander |
-| GO1822–39 | Snippets: discretização, reward shaping, Q-tables, políticas |
+| [GO1806](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class18/GO1806-9aGridWorldQlearning.py) | Grid World com Q-Learning |
+| [GO1809](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class18/GO1809-15DqnSetup.py) | DQN — setup |
+| [GO1815](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class18/GO1815-24AmbientesGymnasium.py) | Ambientes Gymnasium |
+| [GO1817](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class18/GO1817-26ProjetoDqnCartpoleSetup.py) | Projeto DQN no CartPole |
+| [GO1818](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class18/GO1818-30DosagemDinamica.py) | Manipulação robótica, AlphaZero simplificado, data center, gestão de portfólio, recomendação |
+| [GO1819](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class18/GO1819-Exercicio2DqnNoCartpole.py) | DQN no CartPole (exercício) |
+| [GO1820](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class18/GO1820-Exercicio3CompararAlgoritmosNoLunarlander.py) | Comparação de algoritmos no LunarLander |
+| [GO1822–39](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class18/) | Snippets: discretização, reward shaping, Q-tables, políticas |
 
 ---
 
@@ -418,21 +418,21 @@ Algoritmos evolutivos, bio-inspirados e otimização combinatória.
 
 | Código | Descrição |
 |--------|-----------|
-| GO1906 | Geração de população inicial |
-| GO1907 | Projeto: maximizar função matemática com AG |
-| GO1908 | Seleção por torneio e roleta |
-| GO1909 | Função de Rosenbrock |
-| GO1918 | Projeto TSP — Travelling Salesman Problem |
-| GO1919 | Neuroevolução de redes neurais |
-| GO1920 | Differential Evolution do zero |
-| GO1921 | Particle Swarm Optimization (PSO) completo |
-| GO1922 | Ant Colony Optimization (ACO) para TSP |
-| GO1923 | CMA-ES com biblioteca |
-| GO1924 | Genetic Programming — regressão simbólica |
-| GO1925 | Benchmark comparativo de algoritmos |
-| GO1926–28 | Exercícios: função multimodal, problema da mochila, tuning de hiperparâmetros |
-| GO1929–30 | TSP com AG e Simulated Annealing |
-| GO1931 | Otimização multiobjetivo |
+| [GO1906](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1906-6PopulacaoInicial.py) | Geração de população inicial |
+| [GO1907](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1907-9ProjetoMaximizarFuncaoMatematica.py) | Projeto: maximizar função matemática com AG |
+| [GO1908](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1908-10SelecaoTorneioERoleta.py) | Seleção por torneio e roleta |
+| [GO1909](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1909-14aAvancadoFuncaoDeRosenbrock.py) | Função de Rosenbrock |
+| [GO1918](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1918-Slides1822ProjetoTspTravelingSalesman.py) | Projeto TSP — Travelling Salesman Problem |
+| [GO1919](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1919-Slides1822SeleECrossover.py) | Neuroevolução de redes neurais |
+| [GO1920](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1920-DifferentialEvolutionDoZero.py) | Differential Evolution do zero |
+| [GO1921](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1921-ParticleSwarmOptimizationCompleta.py) | Particle Swarm Optimization (PSO) completo |
+| [GO1922](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1922-AntColonyOptimizationCompletaTSP.py) | Ant Colony Optimization (ACO) para TSP |
+| [GO1923](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1923-CMAESBiblioteca.py) | CMA-ES com biblioteca |
+| [GO1924](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1924-GeneticProgrammingSymbolicRegression.py) | Genetic Programming — regressão simbólica |
+| [GO1925](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1925-BenchmarkComparativoAlgoritmos.py) | Benchmark comparativo de algoritmos |
+| [GO1926–28](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class19/) | Exercícios: função multimodal, problema da mochila, tuning de hiperparâmetros |
+| [GO1929–30](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class19/) | TSP com AG e Simulated Annealing |
+| [GO1931](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1931-OtimizacaoMultiobjetivoMinimizeF1EF2.py) | Otimização multiobjetivo |
 
 ---
 
@@ -442,17 +442,17 @@ Ciclo de vida de modelos em produção: rastreamento, API, monitoramento e CI/CD
 
 | Código | Descrição |
 |--------|-----------|
-| GO2001–04 | MLflow: tracking, UI, autolog, model registry |
-| GO2005–07 | FastAPI: projeto Iris API, salvar/rodar modelo, testes |
-| GO2008–09 | Azure Machine Learning — treinamento e inferência |
-| GO2013 | Pipeline de retreino completo |
-| GO2015 | Boas práticas de MLOps |
-| GO2017 | Hyperparameter tuning avançado |
-| GO2018 | Optuna — framework moderno de otimização |
-| GO2019 | Learning rate scheduling |
-| GO2020 | Model monitoring e drift detection |
-| GO2021–22 | Testes automatizados com pytest |
-| GO2023 | Flask + Prometheus para métricas |
+| [GO2001–04](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class20/) | MLflow: tracking, UI, autolog, model registry |
+| [GO2005–07](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class20/) | FastAPI: projeto Iris API, salvar/rodar modelo, testes |
+| [GO2008–09](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class20/) | Azure Machine Learning — treinamento e inferência |
+| [GO2013](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class20/GO2013-33PipelineDeRetreinoCompleto.py) | Pipeline de retreino completo |
+| [GO2015](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class20/GO2015-34BoasPraticasMlops.py) | Boas práticas de MLOps |
+| [GO2017](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class20/GO2017-26HyperparameterTuningAvancadoDaAula.py) | Hyperparameter tuning avançado |
+| [GO2018](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class20/GO2018-27OptunaFrameworkModernoDeOtimizacao.py) | Optuna — framework moderno de otimização |
+| [GO2019](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class20/GO2019-28LearningRateSchedulingDaAula.py) | Learning rate scheduling |
+| [GO2020](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2020-15CLIMETexto.py) | Model monitoring e drift detection |
+| [GO2021–22](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class20/) | Testes automatizados com pytest |
+| [GO2023](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class20/GO2023-FlaskPrometheus_Flask_Exporter.py) | Flask + Prometheus para métricas |
 
 ---
 
@@ -462,19 +462,19 @@ GANs, VAEs, Stable Diffusion, XAI e tópicos avançados de ética e segurança e
 
 | Código | Descrição |
 |--------|-----------|
-| GO2020 | SHAP na prática; LIME para texto |
-| GO2101 | GAN para MNIST |
-| GO2102 | GAN completo com monitoramento |
-| GO2103 | Stable Diffusion com Diffusers (HuggingFace) |
-| GO2104 | VAE — Variational Autoencoder para MNIST |
-| GO2105 | Stable Diffusion — geração avançada de imagens |
-| GO2106 | VAE fine-tuning para dataset específico |
-| GO2107–08 | XAI: GradCAM, SHAP e LIME |
-| GO2109 | Fairness e mitigação de viés |
-| GO2110 | Ataques adversariais e defesas |
-| GO2111 | Differential Privacy |
-| GO2112–16 | Exercícios avançados: GAN do zero, VAE, LIME, Stable Diffusion, pipeline MLOps completo |
-| GO2121–23 | StarCoder, LLaMA, Mistral em execução local |
+| [GO2020](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2020-15CLIMETexto.py) | SHAP na prática; LIME para texto |
+| [GO2101](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2101-GanParaMnist.py) | GAN para MNIST |
+| [GO2102](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2102-715GanCompletoComMonitoram.py) | GAN completo com monitoramento |
+| [GO2103](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2103-StableDiffusionComDiffusersHuggingFace.py) | Stable Diffusion com Diffusers (HuggingFace) |
+| [GO2104](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2104-VaeVariationalAutoencoderParaMnist.py) | VAE — Variational Autoencoder para MNIST |
+| [GO2105](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2105-StableDiffusionGeracaoAvancadaDeImagens.py) | Stable Diffusion — geração avançada de imagens |
+| [GO2106](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2106-VaeCustomFinetuningParaDatasetEspecifico.py) | VAE fine-tuning para dataset específico |
+| [GO2107–08](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class21/) | XAI: GradCAM, SHAP e LIME |
+| [GO2109](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2109-FairnessEMitigacaoDeVies.py) | Fairness e mitigação de viés |
+| [GO2110](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2110-1816AdversarialAttacksEDef.py) | Ataques adversariais e defesas |
+| [GO2111](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2111-1827DifferentialPrivacy.py) | Differential Privacy |
+| [GO2112–16](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class21/) | Exercícios avançados: GAN do zero, VAE, LIME, Stable Diffusion, pipeline MLOps completo |
+| [GO2121–23](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class21/) | StarCoder, LLaMA, Mistral em execução local |
 
 ---
 
