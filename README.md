@@ -1,6 +1,6 @@
 # ai-sandbox
 
-Repositório de código-fonte da disciplina **Inteligência Artificial** — Pós-Graduação FAPA (2026).
+Repositório de código-fonte da disciplina **Inteligência Artificial** (2026).
 
 Contém **691 scripts Python** organizados por aula, cobrindo desde os fundamentos de IA até tópicos avançados como LLMs, IA generativa e MLOps.
 
