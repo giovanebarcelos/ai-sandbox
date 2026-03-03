@@ -2,7 +2,7 @@
 
 Repositório de código-fonte da disciplina **Inteligência Artificial** (2026).
 
-Contém **691 scripts Python** organizados por aula, cobrindo desde os fundamentos de IA até tópicos avançados como LLMs, IA generativa e MLOps.
+Contém **711 scripts Python** organizados por aula, cobrindo desde os fundamentos de IA até tópicos avançados como LLMs, IA generativa e MLOps.
 
 ---
 
@@ -77,13 +77,14 @@ Panorama da IA moderna, comparação de abordagens (simbólica vs conexionista) 
 
 ---
 
-### Aula 02 — Representação do Conhecimento `class02/` · 21 scripts
+### Aula 02 — Representação do Conhecimento `class02/` · 22 scripts
 
 Sistemas especialistas, motores de inferência, grafos de conhecimento e raciocínio incerto.
 
 | Código | Descrição |
 |--------|-----------|
 | [GO0201](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0201-InovacaoFatoresDeCerteza00A.py) | Fatores de certeza (CF) |
+| [GO0202A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0202A-Neo4jEKnowledgeGraphs.py) | Neo4j e Knowledge Graphs |
 | [GO0203](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0203-ObjetivoSistemaEspecialistaQueRecomendaFilmes.py) | Sistema especialista de recomendação de filmes |
 | [GO0204–05](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class02/) | Motor de inferência e execução |
 | [GO0208](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class02/GO0208-GrafoConhecimentoMedico.py) | Grafo de conhecimento médico |
@@ -99,7 +100,7 @@ Sistemas especialistas, motores de inferência, grafos de conhecimento e racioc�
 
 ---
 
-### Aula 03 — Resolução de Problemas & Busca `class03/` · 14 scripts
+### Aula 03 — Resolução de Problemas & Busca `class03/` · 15 scripts
 
 Algoritmos de busca cega e heurística para resolução de problemas em grafos e labirintos.
 
@@ -112,6 +113,7 @@ Algoritmos de busca cega e heurística para resolução de problemas em grafos e
 | [GO0312](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0312-BuscaDijkstraGrafoPonderado.py) | Busca de Dijkstra em grafo ponderado |
 | [GO0313](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0313-PuzzleOitoComAEstrela.py) | Puzzle das 8 peças com A* |
 | [GO0314](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0314-BuscaBidirecional.py) | Busca bidirecional |
+| [GO0327A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class03/GO0327A-MCTSAlphaGoSimplificado.py) | MCTS AlphaGo simplificado |
 
 ---
 
@@ -252,7 +254,7 @@ Conjuntos fuzzy, funções de pertinência, sistemas de inferência e controle f
 
 ---
 
-### Aula 12 — CNNs — Redes Convolucionais `class12/` · 60 scripts
+### Aula 12 — CNNs — Redes Convolucionais `class12/` · 62 scripts
 
 Arquiteturas CNN clássicas e modernas, transfer learning, visualização e técnicas avançadas.
 
@@ -262,6 +264,8 @@ Arquiteturas CNN clássicas e modernas, transfer learning, visualização e téc
 | [GO1202](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1202-DataAugmentationMelhorandoGeneralizacao.py) | Data augmentation |
 | [GO1203](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1203-11cTransferLearningResnet50.py) | Transfer learning com ResNet50 |
 | [GO1204–05](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class12/) | Visualização de filtros, feature maps e GradCAM |
+| [GO1208A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1208A-VisionTransformersViT.py) | Vision Transformers (ViT) |
+| [GO1208B](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1208B-ViTPretreinadoHuggingFace.py) | ViT pré-treinado com HuggingFace |
 | [GO1209](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1209-35gNeuralStyleTransferArteCom.py) | Neural Style Transfer |
 | [GO1210](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1210-35hCnnFeatureVisualizationEntendendoFiltros.py) | CNN feature visualization |
 | [GO1211](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class12/GO1211-35iMixedPrecisionTrainingAceleracaoCom.py) | Mixed Precision Training |
@@ -345,7 +349,7 @@ Processamento de linguagem natural clássico e com deep learning.
 
 ---
 
-### Aula 16 — Transformers & LLMs `class16/` · 43 scripts
+### Aula 16 — Transformers & LLMs `class16/` · 44 scripts
 
 Arquitetura Transformer, BERT, GPT-2, T5, fine-tuning, LoRA, quantização e segurança.
 
@@ -367,13 +371,14 @@ Arquitetura Transformer, BERT, GPT-2, T5, fine-tuning, LoRA, quantização e seg
 | [GO1616–17](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class16/) | Quantização básica e técnicas avançadas |
 | [GO1619–20](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class16/) | Embeddings e busca semântica |
 | [GO1621](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1621-29aLongContextHandlingStrategies.py) | Estratégias para contextos longos |
+| [GO1234A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1234A-ScalingLawsLLMs.py) | Scaling Laws para LLMs |
 | [GO1622](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class16/GO1622-30aLlmCostOptimizationCalculator.py) | Calculadora de custo de LLMs |
 | [GO1623–25](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class16/) | Detecção de alucinação, viés e defesa contra prompt injection |
 | [GO1627–36](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class16/) | Exercícios avançados: self-attention, positional encoding, BERT vs GPT, fine-tuning, QA, geração de texto, sentence embeddings, MLM, LoRA, análise de attention weights |
 
 ---
 
-### Aula 17 — LLMs Locais, Ollama & RAG `class17/` · 37 scripts
+### Aula 17 — LLMs Locais, Ollama & RAG `class17/` · 39 scripts
 
 Execução local de LLMs, pipelines RAG, vector stores e aplicações conversacionais.
 
@@ -392,6 +397,8 @@ Execução local de LLMs, pipelines RAG, vector stores e aplicações conversaci
 | [GO1719](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1719-30cStreamingResponses.py) | Streaming de respostas |
 | [GO1721](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1721-30dConversationalMemorySystems.py) | Sistemas de memória conversacional |
 | [GO1723](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1723-34aVectorStoreComparisonFaissVs.py) | Comparação de vector stores: FAISS vs alternativas |
+| [GO1345A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1345A-LoraQLoraFineTuning.py) | QLoRA fine-tuning com quantização 4-bit |
+| [GO1345B](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class17/GO1345B-UsarModeloLoRAFineTunado.py) | Usar modelo LoRA fine-tunado |
 
 ---
 
@@ -427,9 +434,21 @@ Algoritmos evolutivos, bio-inspirados e otimização combinatória.
 | [GO1920](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1920-DifferentialEvolutionDoZero.py) | Differential Evolution do zero |
 | [GO1921](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1921-ParticleSwarmOptimizationCompleta.py) | Particle Swarm Optimization (PSO) completo |
 | [GO1922](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1922-AntColonyOptimizationCompletaTSP.py) | Ant Colony Optimization (ACO) para TSP |
+| [GO1920A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1920A-DEHyperparameterTuningAutoML.py) | DE para hyperparameter tuning AutoML |
+| [GO1920B](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1920B-DEOtimizacaoCircuitosEletricos.py) | DE para otimização de circuitos elétricos |
+| [GO1920C](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1920C-DEOtimizacaoEstrutursMecanicas.py) | DE para otimização de estruturas mecânicas |
+| [GO1921A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1921A-PSOTreinarRedesNeurais.py) | PSO para treinar redes neurais |
+| [GO1921B](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1921B-PSOOtimizacaoSistemasEnergeticos.py) | PSO para otimização de sistemas energéticos |
+| [GO1922A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1922A-ACORoteamentoLogistica.py) | ACO para roteamento de logística |
+| [GO1922B](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1922B-ACORoteamentoRedesTelecom.py) | ACO para roteamento de redes telecom |
 | [GO1923](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1923-CMAESBiblioteca.py) | CMA-ES com biblioteca |
+| [GO1923A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1923A-OpenAIEvolutionStrategiesRL.py) | OpenAI Evolution Strategies para RL |
+| [GO1923B](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1923B-CMAESControleRobotico.py) | CMA-ES para controle robótico |
 | [GO1924](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1924-GeneticProgrammingSymbolicRegression.py) | Genetic Programming — regressão simbólica |
+| [GO1924A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1924A-NEATJogarFlappyBird.py) | NEAT para jogar Flappy Bird |
 | [GO1925](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1925-BenchmarkComparativoAlgoritmos.py) | Benchmark comparativo de algoritmos |
+| [GO1925A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1925A-NSGAIIMultiObjetivo.py) | NSGA-II multi-objetivo |
+| [GO1925B](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1925B-NSGAIIPortfolioFinanceiro.py) | NSGA-II para portfolio financeiro |
 | [GO1926–28](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class19/) | Exercícios: função multimodal, problema da mochila, tuning de hiperparâmetros |
 | [GO1929–30](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class19/) | TSP com AG e Simulated Annealing |
 | [GO1931](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class19/GO1931-OtimizacaoMultiobjetivoMinimizeF1EF2.py) | Otimização multiobjetivo |
@@ -456,9 +475,9 @@ Ciclo de vida de modelos em produção: rastreamento, API, monitoramento e CI/CD
 
 ---
 
-### Aula 21 — IA Generativa & Futuro `class21/` · 25 scripts
+### Aula 21 — IA Generativa & Futuro `class21/` · 26 scripts
 
-GANs, VAEs, Stable Diffusion, XAI e tópicos avançados de ética e segurança em IA.
+GANs, VAEs, Stable Diffusion, XAI, Small Language Models e tópicos avançados de ética e segurança em IA.
 
 | Código | Descrição |
 |--------|-----------|
@@ -474,6 +493,7 @@ GANs, VAEs, Stable Diffusion, XAI e tópicos avançados de ética e segurança e
 | [GO2110](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2110-1816AdversarialAttacksEDef.py) | Ataques adversariais e defesas |
 | [GO2111](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO2111-1827DifferentialPrivacy.py) | Differential Privacy |
 | [GO2112–16](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class21/) | Exercícios avançados: GAN do zero, VAE, LIME, Stable Diffusion, pipeline MLOps completo |
+| [GO1456A](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class21/GO1456A-SmallLanguageModelsSlms.py) | Small Language Models (SLMs) — Phi-3 Mini |
 | [GO2121–23](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class21/) | StarCoder, LLaMA, Mistral em execução local |
 
 ---
@@ -524,8 +544,8 @@ python3 GO0501-KnearestNeighborsDoZero.py
 | Aula | Tema | Scripts |
 |------|------|--------:|
 | 01 | Introdução à IA & Ética | 22 |
-| 02 | Representação do Conhecimento | 21 |
-| 03 | Resolução de Problemas & Busca | 14 |
+| 02 | Representação do Conhecimento | 22 |
+| 03 | Resolução de Problemas & Busca | 15 |
 | 04 | Introdução ao Machine Learning | 32 |
 | 05 | Algoritmos de Classificação | 43 |
 | 06 | Regressão & Validação | 36 |
@@ -534,17 +554,17 @@ python3 GO0501-KnearestNeighborsDoZero.py
 | 09 | Fundamentos de Redes Neurais | 30 |
 | 10 | MLP — Redes Multicamadas | 53 |
 | 11 | Lógica Fuzzy | 21 |
-| 12 | CNNs — Redes Convolucionais | 60 |
+| 12 | CNNs — Redes Convolucionais | 62 |
 | 13 | Visão Computacional & Reconhecimento de Padrões | 44 |
 | 14 | RNN / LSTM | 41 |
 | 15 | Introdução ao NLP | 42 |
-| 16 | Transformers & LLMs | 43 |
-| 17 | LLMs Locais, Ollama & RAG | 37 |
+| 16 | Transformers & LLMs | 44 |
+| 17 | LLMs Locais, Ollama & RAG | 39 |
 | 18 | Reinforcement Learning | 45 |
-| 19 | Algoritmos Genéticos & Metaheurísticas | 33 |
+| 19 | Algoritmos Genéticos & Metaheurísticas | 44 |
 | 20 | MLOps & Deploy | 20 |
-| 21 | IA Generativa & Futuro | 25 |
-| **Total** | | **691** |
+| 21 | IA Generativa & Futuro | 26 |
+| **Total** | | **711** |
 
 ---
 
