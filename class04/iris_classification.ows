@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='utf-8'?>
+<scheme version="2.0" title="Iris Classification" description="Exemplo básico de classificação com dataset Iris">
+    <nodes>
+        <node id="0" name="Datasets" qualified_name="Orange.widgets.data.owdatasets.OWDataSets" project_name="Orange3" version="" title="Datasets" position="(150, 200)" />
+        <node id="1" name="Data Table" qualified_name="Orange.widgets.data.owtable.OWTable" project_name="Orange3" version="" title="Data Table" position="(300, 100)" />
+        <node id="2" name="Scatter Plot" qualified_name="Orange.widgets.visualize.owscatterplot.OWScatterPlot" project_name="Orange3" version="" title="Scatter Plot" position="(300, 300)" />
+        <node id="3" name="kNN" qualified_name="Orange.widgets.model.owknn.OWKNNLearner" project_name="Orange3" version="" title="kNN" position="(300, 450)" />
+        <node id="4" name="Tree" qualified_name="Orange.widgets.model.owtree.OWTreeLearner" project_name="Orange3" version="" title="Decision Tree" position="(400, 450)" />
+        <node id="5" name="Test and Score" qualified_name="Orange.widgets.evaluate.owtestandscore.OWTestAndScore" project_name="Orange3" version="" title="Test and Score" position="(500, 300)" />
+        <node id="6" name="Confusion Matrix" qualified_name="Orange.widgets.evaluate.owconfusionmatrix.OWConfusionMatrix" project_name="Orange3" version="" title="Confusion Matrix" position="(700, 300)" />
+    </nodes>
+    <links>
+        <link id="0" source_node_id="0" sink_node_id="1" source_channel="Data" sink_channel="Data" enabled="true" />
+        <link id="1" source_node_id="0" sink_node_id="2" source_channel="Data" sink_channel="Data" enabled="true" />
+        <link id="2" source_node_id="0" sink_node_id="5" source_channel="Data" sink_channel="Data" enabled="true" />
+        <link id="3" source_node_id="3" sink_node_id="5" source_channel="Learner" sink_channel="Learner" enabled="true" />
+        <link id="4" source_node_id="4" sink_node_id="5" source_channel="Learner" sink_channel="Learner" enabled="true" />
+        <link id="5" source_node_id="5" sink_node_id="6" source_channel="Evaluation Results" sink_channel="Evaluation Results" enabled="true" />
+    </links>
+    <annotations>
+        <text id="0" type="text/plain" rect="(50, 50, 200, 40)" font-family="Helvetica" font-size="14">1. Selecione "iris" no widget Datasets</text>
+        <text id="1" type="text/plain" rect="(450, 150, 200, 40)" font-family="Helvetica" font-size="14">2. Compare kNN vs Decision Tree</text>
+        <text id="2" type="text/plain" rect="(650, 200, 200, 40)" font-family="Helvetica" font-size="14">3. Veja erros na Confusion Matrix</text>
+    </annotations>
+    <thumbnail />
+    <node_properties>
+    </node_properties>
+    <session_state>
+        <window_groups />
+    </session_state>
+</scheme>
