@@ -52,7 +52,8 @@ if __name__ == "__main__":
         plt.title(title)
         plt.legend(loc='best')
         plt.grid(True, alpha=0.3)
-        plt.ylim([0.5, 1.05])
+        y_min = max(0.0, min(train_mean.min(), val_mean.min()) - 0.1)
+        plt.ylim([y_min, 1.05])
         plt.show()
 
     # ───────────────────────────────────────────────────────────────────
