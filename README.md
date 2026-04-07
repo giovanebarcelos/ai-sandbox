@@ -155,21 +155,24 @@ KNN, árvores de decisão, Naive Bayes, métricas de avaliação, ensemble e des
 
 ---
 
-### Aula 06 — Regressão & Validação `class06/` · 36 scripts
+### Aula 06 — Regressão & Validação `class06/` · 38 scripts
 
 Regressão linear, polinomial e regularizada; feature engineering e análise de resíduos.
 
-| Código                                                                                                            | Descrição                                                           |
-| ----------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------- |
-| [GO0601](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0601-RegressaoLinearEMultipla.py)      | Regressão linear e múltipla                                         |
-| [GO0602](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0602-RegressaoPolinomial.py)           | Regressão polinomial                                                |
-| [GO0603](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0603-ValidacaoCruzadaParaRegressao.py) | Validação cruzada para regressão                                    |
-| [GO0604](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0604-RegularizacaoRidgeL2.py)          | Regularização Ridge (L2)                                            |
-| [GO0605](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0605-RegularizacaoLassoL1.py)          | Regularização Lasso (L1)                                            |
-| [GO0606](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0606-ElasticNetL1L2.py)                | ElasticNet (L1 + L2)                                                |
-| [GO0607–08](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/)                                     | Feature engineering e análise de resíduos                           |
-| [GO0609–14](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/)                                     | Atividade prática: previsão de preços, EDA, treinamento, validação  |
-| [GO0618–21](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/)                                     | Coeficientes padronizados, importância de features, learning curves |
+| Código                                                                                                                       | Descrição                                                                  |
+| ---------------------------------------------------------------------------------------------------------------------------- | -------------------------------------------------------------------------- |
+| [GO0601](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0601-RegressaoLinearEMultipla.py)                 | Regressão linear e múltipla                                                |
+| [GO0602](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0602-RegressaoPolinomial.py)                      | Regressão polinomial                                                       |
+| [GO0603](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0603-ValidacaoCruzadaParaRegressao.py)            | Validação cruzada para regressão                                           |
+| [GO0604](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0604-RegularizacaoRidgeL2.py)                     | Regularização Ridge (L2)                                                   |
+| [GO0605](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0605-RegularizacaoLassoL1.py)                     | Regularização Lasso (L1)                                                   |
+| [GO0606](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0606-ElasticNetL1L2.py)                           | ElasticNet (L1 + L2)                                                       |
+| [GO0607–08](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/)                                                | Feature engineering e análise de resíduos                                  |
+| [GO0609–14](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/)                                                | Atividade prática: previsão de preços, EDA, treinamento, validação         |
+| [GO0615](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0615-25ResumoDaAula.py)                           | Resumo completo da Aula 06                                                 |
+| [GO0618–21](https://github.com/giovanebarcelos/ai-sandbox/tree/main/class06/)                                                | Coeficientes padronizados, importância de features, learning curves        |
+| [GO0637](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/GO0637-AtividadesAula06-Solucao.py)                 | Solução completa das 3 atividades práticas da Aula 06                      |
+| [alugueis_sp.csv](https://github.com/giovanebarcelos/ai-sandbox/blob/main/class06/alugueis_sp.csv)                           | Dataset: 300 imóveis SP (área, quartos, bairro → aluguel)                  |
 
 ---
 
