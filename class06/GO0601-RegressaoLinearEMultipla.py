@@ -49,6 +49,17 @@ print(f"RMSE: {rmse:.2f} (erro médio em mil reais)")
 print(f"MAE:  {mae:.2f}")
 print(f"R²:   {r2:.4f} ({r2*100:.2f}% da variância explicada)")
 
+print("\n" + "="*100)
+print("INTERPRETAÇÃO DAS MÉTRICAS — REGRESSÃO LINEAR SIMPLES")
+print("="*100)
+print(f"{'Métrica':<6} {'Valor':>8}  {'Interpretação prática (preço de imóveis)':<55}  {'O que é bom/ruim'}")
+print("-"*100)
+print(f"{'MSE':<6} {mse:>8.2f}  {'Média dos erros quadrados. Penaliza fortemente erros grandes.':<55}  Quanto menor, melhor. Difícil interpretar sozinho porque está em (mil reais)².")
+print(f"{'RMSE':<6} {rmse:>8.2f}  {'Erro médio típico do modelo, em mil reais.':<55}  Em média, o modelo erra cerca de R$ {rmse*1000:,.0f} por previsão (para mais ou para menos).")
+print(f"{'MAE':<6} {mae:>8.2f}  {'Erro absoluto médio. Trata todos os erros de forma igual.':<55}  Em média, o modelo erra R$ {mae*1000:,.0f} por imóvel. Menos sensível a outliers.")
+print(f"{'R²':<6} {r2:>8.4f}  {f'{r2*100:.2f}% da variância no preço é explicada pela área.':<55}  Excelente para regressão linear simples. Quanto mais próximo de 1, melhor.")
+print("="*100)
+
 # Visualização
 plt.figure(figsize=(10, 6))
 plt.scatter(area, preco, alpha=0.5, label='Dados reais')
