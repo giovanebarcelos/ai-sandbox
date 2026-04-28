@@ -2,6 +2,9 @@
 # USANDO BIBLIOTECA MINISOM (PRODUÇÃO)
 # Instalar: pip install minisom
 
+import subprocess, sys
+subprocess.check_call([sys.executable, "-m", "pip", "install", "minisom", "-q"])
+
 from minisom import MiniSom
 import numpy as np
 import matplotlib.pyplot as plt
