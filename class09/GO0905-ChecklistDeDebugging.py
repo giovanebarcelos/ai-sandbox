@@ -17,7 +17,7 @@ print("="*70)
 print("\n1. Carregando dataset MNIST...")
 # MNIST: 70,000 imagens 28×28 pixels de dígitos 0-9
 mnist = fetch_openml('mnist_784', version=1, parser='auto')
-X = mnist.data.astype('float32') / 255.0  # Normalizar para [0, 1]
+X = mnist.data.to_numpy().astype('float32') / 255.0  # Normalizar para [0, 1]
 y = mnist.target.to_numpy().astype(int)
 print(f"✅ Dataset carregado!")
 print(f"   Shape: {X.shape}")
