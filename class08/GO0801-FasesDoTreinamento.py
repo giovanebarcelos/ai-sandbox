@@ -167,6 +167,61 @@ class SimpleSOM:
             errors.append(error)
         return np.mean(errors)
 
+    def plot(self, X, labels=None, title="SOM — Neurônios sobre os Dados"):
+        """
+        Visualiza os neurônios do SOM sobre os dados originais (apenas 2D).
+
+        Parameters:
+        -----------
+        X : np.array shape (n_samples, 2)
+            Dados de entrada (devem ser 2-dimensionais)
+        labels : array-like, opcional
+            Rótulos de classe para colorir os pontos
+        title : str
+            Título do gráfico
+        """
+        if self.input_dim != 2:
+            print("plot() só suporta dados 2D.")
+            return
+
+        fig, ax = plt.subplots(figsize=(7, 6))
+
+        # ── dados originais ──────────────────────────────────────────
+        if labels is not None:
+            scatter = ax.scatter(X[:, 0], X[:, 1], c=labels,
+                                 cmap='tab10', alpha=0.4, s=20,
+                                 label="Amostras")
+        else:
+            ax.scatter(X[:, 0], X[:, 1], color='steelblue',
+                       alpha=0.4, s=20, label="Amostras")
+
+        # ── grade do SOM (linhas entre neurônios vizinhos) ───────────
+        W = self.weights  # shape (H, W, 2)
+        # Conexões horizontais
+        for i in range(self.map_height):
+            for j in range(self.map_width - 1):
+                ax.plot([W[i, j, 0], W[i, j+1, 0]],
+                        [W[i, j, 1], W[i, j+1, 1]],
+                        'k-', linewidth=0.8, alpha=0.5)
+        # Conexões verticais
+        for i in range(self.map_height - 1):
+            for j in range(self.map_width):
+                ax.plot([W[i, j, 0], W[i+1, j, 0]],
+                        [W[i, j, 1], W[i+1, j, 1]],
+                        'k-', linewidth=0.8, alpha=0.5)
+
+        # ── neurônios ────────────────────────────────────────────────
+        neurons = W.reshape(-1, 2)
+        ax.scatter(neurons[:, 0], neurons[:, 1],
+                   color='black', s=60, zorder=5, label="Neurônios")
+
+        ax.set_title(title)
+        ax.set_xlabel("x₁")
+        ax.set_ylabel("x₂")
+        ax.legend(loc="upper right")
+        plt.tight_layout()
+        plt.show()
+
 
 if __name__ == '__main__':
     import numpy as np
@@ -192,3 +247,9 @@ if __name__ == '__main__':
     print("\nCoordenadas BMU das 10 primeiras amostras:")
     for i, (row, col) in enumerate(coords):
         print(f"  Amostra {i}: neurônio ({row}, {col})")
+
+    # Rótulos dos 3 clusters (0, 1, 2)
+    labels = np.array([0]*n + [1]*n + [2]*n)
+
+    # Visualizar neurônios do SOM sobre os dados
+    som.plot(X, labels=labels, title="SOM 5×5 — Neurônios sobre os 3 Clusters")
