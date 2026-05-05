@@ -1,6 +1,8 @@
 # GO0914-AlgoritmoTreinamentoCompleto
 # IMPLEMENTAÇÃO DO ALGORITMO DE TREINAMENTO COMPLETO
 import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 
 def sigmoid(z):
     """Função de ativação sigmoid"""
@@ -204,3 +206,60 @@ if __name__ == "__main__":
         print(f"{xi[0]:2.0f}  {xi[1]:2.0f}  |   {yi[0]}    | {pred[0]:.4f}")
 
     print(f"\n✅ Treinamento concluído! Loss final: {losses[-1]:.6f}")
+
+    # ── VISUALIZAÇÕES ──────────────────────────────────────────────────────────
+    fig = plt.figure(figsize=(14, 5))
+    fig.suptitle("GO0914 – Rede Neural: XOR", fontsize=14, fontweight='bold')
+    gs = gridspec.GridSpec(1, 2, figure=fig, wspace=0.35)
+
+    # 1. CURVA DE APRENDIZADO ──────────────────────────────────────────────────
+    ax1 = fig.add_subplot(gs[0])
+    ax1.plot(losses, color='steelblue', linewidth=1.5)
+    ax1.set_title("Curva de Aprendizado")
+    ax1.set_xlabel("Época")
+    ax1.set_ylabel("Loss (MSE)")
+    ax1.set_yscale('log')
+    ax1.grid(True, linestyle='--', alpha=0.5)
+    ax1.annotate(
+        f"Loss final\n{losses[-1]:.6f}",
+        xy=(len(losses) - 1, losses[-1]),
+        xytext=(len(losses) * 0.6, losses[0] * 0.3),
+        arrowprops=dict(arrowstyle='->', color='gray'),
+        fontsize=9, color='steelblue'
+    )
+
+    # 2. FRONTEIRA DE DECISÃO ──────────────────────────────────────────────────
+    ax2 = fig.add_subplot(gs[1])
+    res = 300
+    xx, yy = np.meshgrid(np.linspace(-0.2, 1.2, res), np.linspace(-0.2, 1.2, res))
+    grid = np.c_[xx.ravel(), yy.ravel()]
+    activations_grid, _ = forward_propagation(grid, weights, biases)
+    Z = activations_grid[-1].reshape(xx.shape)
+
+    ax2.contourf(xx, yy, Z, levels=50, cmap='RdYlGn', alpha=0.8)
+    ax2.contour(xx, yy, Z, levels=[0.5], colors='black', linewidths=1.5, linestyles='--')
+
+    cores = ['tomato' if yi[0] == 0 else 'seagreen' for yi in y]
+    rotulos = ['Classe 0' if yi[0] == 0 else 'Classe 1' for yi in y]
+    for xi, ci, ri in zip(X, cores, rotulos):
+        ax2.scatter(xi[0], xi[1], color=ci, s=150, edgecolors='black', linewidths=1.5, zorder=5)
+
+    # Legenda manual
+    from matplotlib.patches import Patch
+    ax2.legend(handles=[
+        Patch(color='seagreen', label='Classe 1 (saída=1)'),
+        Patch(color='tomato',   label='Classe 0 (saída=0)'),
+    ], fontsize=8, loc='upper right')
+
+    ax2.set_title("Fronteira de Decisão – XOR")
+    ax2.set_xlabel("x₁")
+    ax2.set_ylabel("x₂")
+
+    # Anotar predições em cada ponto
+    for xi, pred in zip(X, predictions):
+        ax2.annotate(f"{pred[0]:.2f}", xy=(xi[0], xi[1]),
+                     xytext=(xi[0] + 0.06, xi[1] + 0.06), fontsize=8)
+
+    plt.savefig("GO0914-graficos.png", dpi=150, bbox_inches='tight')
+    print("📊 Gráficos salvos em GO0914-graficos.png")
+    plt.show()
