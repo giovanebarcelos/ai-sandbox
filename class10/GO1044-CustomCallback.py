@@ -29,4 +29,25 @@ if __name__ == '__main__':
     y = np.random.randint(0, 3, 100)
 
     print("Treinando com CustomCallback (salva a cada 5 épocas)...")
-    model.fit(X, y, epochs=11, callbacks=[CustomCallback()], verbose=1)
+    history = model.fit(X, y, epochs=11, callbacks=[CustomCallback()], verbose=1)
+
+    # Gráfico das curvas de loss e accuracy registradas pelo CustomCallback
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    axes[0].plot(history.history['loss'], marker='o', markersize=4, label='Loss')
+    axes[0].set_title('Loss por Época — CustomCallback')
+    axes[0].set_xlabel('Época')
+    axes[0].set_ylabel('Loss')
+    axes[0].legend()
+    axes[1].plot(history.history['accuracy'], marker='o', markersize=4,
+                 color='#2ECC71', label='Accuracy')
+    axes[1].set_title('Accuracy por Época — CustomCallback')
+    axes[1].set_xlabel('Época')
+    axes[1].set_ylabel('Accuracy')
+    axes[1].legend()
+    plt.tight_layout()
+    plt.savefig('GO1044-custom-callback.png', dpi=100, bbox_inches='tight')
+    plt.close()

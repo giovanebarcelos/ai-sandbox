@@ -30,4 +30,30 @@ model.compile(
     loss='sparse_categorical_crossentropy',
     metrics=['accuracy']
 )
-model.fit(X_train, y_train, epochs=10)
+# model.fit(X_train, y_train, epochs=10)
+
+if __name__ == "__main__":
+    import numpy as np
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    # Usa dados sintéticos 224×224×3 (100 amostras) para treinar com base VGG16 congelada
+    np.random.seed(42)
+    X_synthetic = np.random.rand(100, 224, 224, 3).astype('float32')
+    y_synthetic = np.random.randint(0, 2, 100)
+
+    history = model.fit(X_synthetic, y_synthetic, epochs=3,
+                        validation_split=0.2, verbose=1)
+
+    # Gráfico das curvas de loss do transfer learning com VGG16
+    plt.figure(figsize=(7, 4))
+    plt.plot(history.history['loss'], label='Treino')
+    plt.plot(history.history['val_loss'], label='Validação')
+    plt.title('Loss — Transfer Learning VGG16 (base congelada)')
+    plt.xlabel('Época')
+    plt.ylabel('Loss')
+    plt.legend()
+    plt.tight_layout()
+    plt.savefig('GO1045-transfer-learning.png', dpi=100, bbox_inches='tight')
+    plt.close()

@@ -31,3 +31,25 @@ model.fit(X_train, y_train, epochs=5, validation_split=0.2)
 # 6. Avaliar
 test_loss, test_acc = model.evaluate(X_test, y_test)
 print(f'Test accuracy: {test_acc:.4f}')
+
+# Gráfico de curvas de loss e accuracy com subplots(1,2)
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
+
+fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+axes[0].plot(history.history['loss'], label='Treino')
+axes[0].plot(history.history['val_loss'], label='Validação')
+axes[0].set_title('Loss por Época')
+axes[0].set_xlabel('Época')
+axes[0].set_ylabel('Loss')
+axes[0].legend()
+axes[1].plot(history.history['accuracy'], label='Treino')
+axes[1].plot(history.history['val_accuracy'], label='Validação')
+axes[1].set_title('Accuracy por Época')
+axes[1].set_xlabel('Época')
+axes[1].set_ylabel('Accuracy')
+axes[1].legend()
+plt.tight_layout()
+plt.savefig('GO1008-history.png', dpi=100, bbox_inches='tight')
+plt.close()

@@ -10,3 +10,43 @@ from tensorflow.keras.preprocessing import sequence
 # Padding (mesmo tamanho)
 X_train = sequence.pad_sequences(X_train, maxlen=200)
 X_test = sequence.pad_sequences(X_test, maxlen=200)
+
+if __name__ == "__main__":
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+    from tensorflow.keras.models import Sequential
+    from tensorflow.keras.layers import Dense, Embedding, GlobalAveragePooling1D
+
+    # Constrói modelo com Embedding + GlobalAveragePooling para classificação de sentimento
+    model = Sequential([
+        Embedding(input_dim=10000, output_dim=16, input_length=200),
+        GlobalAveragePooling1D(),
+        Dense(16, activation='relu'),
+        Dense(1, activation='sigmoid')
+    ])
+    model.compile(optimizer='adam',
+                  loss='binary_crossentropy',
+                  metrics=['accuracy'])
+
+    history = model.fit(X_train, y_train, epochs=3,
+                        batch_size=512,
+                        validation_split=0.1, verbose=1)
+
+    # Gráfico das curvas de loss e accuracy no dataset IMDB
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    axes[0].plot(history.history['loss'], label='Treino')
+    axes[0].plot(history.history['val_loss'], label='Validação')
+    axes[0].set_title('Loss — IMDB Sentiment')
+    axes[0].set_xlabel('Época')
+    axes[0].set_ylabel('Loss')
+    axes[0].legend()
+    axes[1].plot(history.history['accuracy'], label='Treino')
+    axes[1].plot(history.history['val_accuracy'], label='Validação')
+    axes[1].set_title('Accuracy — IMDB Sentiment')
+    axes[1].set_xlabel('Época')
+    axes[1].set_ylabel('Accuracy')
+    axes[1].legend()
+    plt.tight_layout()
+    plt.savefig('GO1041-imdb-history.png', dpi=100, bbox_inches='tight')
+    plt.close()

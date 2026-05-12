@@ -52,3 +52,38 @@ if __name__ == "__main__":
     reais = np.argmax(y_test[:5], axis=1)
     print(f"  Predito: {preds.tolist()}")
     print(f"  Real:    {reais.tolist()}")
+
+    # Gráfico 1: curvas de loss e accuracy (treino vs validação) por época
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    fig, axes = plt.subplots(1, 2, figsize=(12, 4))
+    axes[0].plot(history.history['loss'], label='Treino')
+    axes[0].plot(history.history['val_loss'], label='Validação')
+    axes[0].set_title('Loss por Época')
+    axes[0].set_xlabel('Época')
+    axes[0].set_ylabel('Loss')
+    axes[0].legend()
+    axes[1].plot(history.history['accuracy'], label='Treino')
+    axes[1].plot(history.history['val_accuracy'], label='Validação')
+    axes[1].set_title('Accuracy por Época')
+    axes[1].set_xlabel('Época')
+    axes[1].set_ylabel('Accuracy')
+    axes[1].legend()
+    plt.tight_layout()
+    plt.savefig('GO1002-history.png', dpi=100, bbox_inches='tight')
+    plt.close()
+
+    # Gráfico 2: grade 2×5 com 10 imagens do teste e suas predições vs rótulos reais
+    all_preds = np.argmax(model.predict(X_test[:10], verbose=0), axis=1)
+    all_reais = np.argmax(y_test[:10], axis=1)
+    X_test_orig = X_test[:10].reshape(-1, 28, 28)
+    fig2, axes2 = plt.subplots(2, 5, figsize=(12, 5))
+    for i, ax in enumerate(axes2.flat):
+        ax.imshow(X_test_orig[i], cmap='gray')
+        ax.set_title(f"Pred:{all_preds[i]} / Real:{all_reais[i]}", fontsize=9)
+        ax.axis('off')
+    plt.tight_layout()
+    plt.savefig('GO1002-predictions.png', dpi=100, bbox_inches='tight')
+    plt.close()

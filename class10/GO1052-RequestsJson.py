@@ -5,11 +5,48 @@ import requests
 import json
 
 # Preparar dados
-data = {"instances": X_test[:5].tolist()}
+# data = {"instances": X_test[:5].tolist()}
 
 # Fazer request
-url = 'http://localhost:8501/v1/models/my_model:predict'
-response = requests.post(url, json=data)
+# url = 'http://localhost:8501/v1/models/my_model:predict'
+# response = requests.post(url, json=data)
 
 # Parse resultado
-predictions = response.json()['predictions']
+# predictions = response.json()['predictions']
+
+if __name__ == "__main__":
+    import numpy as np
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    # Simula a resposta do TF Serving com probabilidades fictícias para 5 exemplos
+    np.random.seed(42)
+    n_examples = 5
+    n_classes  = 10
+    raw = np.random.rand(n_examples, n_classes)
+    predictions_simulated = raw / raw.sum(axis=1, keepdims=True)
+    predicted_classes = np.argmax(predictions_simulated, axis=1)
+
+    simulated_response = {
+        'predictions': predictions_simulated.tolist()
+    }
+    print("Resposta simulada do TF Serving:")
+    print(json.dumps(
+        {'predictions': [[round(v, 4) for v in p] for p in simulated_response['predictions']]},
+        indent=2
+    ))
+
+    # Gráfico de barras das probabilidades preditas para os 5 exemplos simulados
+    fig, axes = plt.subplots(1, n_examples, figsize=(14, 4))
+    for i, ax in enumerate(axes):
+        ax.bar(range(n_classes), predictions_simulated[i], color='#3498DB')
+        ax.set_title(f'Ex {i} → cls {predicted_classes[i]}', fontsize=9)
+        ax.set_xticks(range(n_classes))
+        ax.set_xlabel('Classe')
+        if i == 0:
+            ax.set_ylabel('Probabilidade')
+    plt.suptitle('TF Serving — Probabilidades Preditas (Simulado)', fontsize=11)
+    plt.tight_layout()
+    plt.savefig('GO1052-tf-serving-preds.png', dpi=100, bbox_inches='tight')
+    plt.close()

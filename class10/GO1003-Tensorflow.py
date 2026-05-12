@@ -7,3 +7,30 @@ a = tf.constant([1, 2, 3])
 b = tf.constant([4, 5, 6])
 c = a + b
 print(c)  # Sem sessões! Sem placeholders! Só código normal!
+
+if __name__ == "__main__":
+    import numpy as np
+    import matplotlib
+    matplotlib.use('Agg')
+    import matplotlib.pyplot as plt
+
+    # Operações sobre tensores a=[1,2,3], b=[4,5,6] e sua soma
+    a_vals = a.numpy()
+    b_vals = b.numpy()
+    c_vals = c.numpy()
+
+    # Gráfico de barras agrupadas mostrando os valores de a, b e a+b lado a lado
+    x = np.arange(len(a_vals))
+    width = 0.25
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.bar(x - width, a_vals, width, label='a = [1,2,3]')
+    ax.bar(x,         b_vals, width, label='b = [4,5,6]')
+    ax.bar(x + width, c_vals, width, label='a+b = [5,7,9]')
+    ax.set_xticks(x)
+    ax.set_xticklabels(['índice 0', 'índice 1', 'índice 2'])
+    ax.set_title('Operações com Tensores (TF Eager)')
+    ax.set_ylabel('Valor')
+    ax.legend()
+    plt.tight_layout()
+    plt.savefig('GO1003-tensors.png', dpi=100, bbox_inches='tight')
+    plt.close()
