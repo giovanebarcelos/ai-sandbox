@@ -9,10 +9,8 @@
 # plot_model(model, to_file='model.png', show_shapes=True,
 #            show_layer_names=True, rankdir='TB')
 
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib
-    import matplotlib.pyplot as plt
+import matplotlib
+import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
@@ -20,6 +18,10 @@ try:
     get_ipython().run_line_magic('matplotlib', 'inline')
 except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
+if __name__ == "__main__":
+    import numpy as np
+
     from tensorflow.keras import Input, Model
     from tensorflow.keras.layers import Dense, Flatten
     from tensorflow.keras.utils import plot_model

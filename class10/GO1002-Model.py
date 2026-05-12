@@ -7,6 +7,16 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense
 from tensorflow.keras.utils import to_categorical
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 if __name__ == "__main__":
     # Carregar MNIST
     (X_train, y_train), (X_test, y_test) = keras.datasets.mnist.load_data()
@@ -54,15 +64,6 @@ if __name__ == "__main__":
     print(f"  Real:    {reais.tolist()}")
 
     # Gráfico 1: curvas de loss e accuracy (treino vs validação) por época
-    import matplotlib
-    import matplotlib.pyplot as plt
-
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
     axes[0].plot(history.history['loss'], label='Treino')

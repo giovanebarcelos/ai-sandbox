@@ -1,6 +1,12 @@
 # GO1015-Codigo
 # Plota lado a lado as curvas de loss e acurácia (treino vs. validação) ao longo
 # das épocas, com linha vertical indicando a melhor época salva pelo checkpoint.
+
+from tensorflow import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Flatten, Dense
+from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
+
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -10,10 +16,6 @@ try:
     get_ipython().run_line_magic('matplotlib', 'inline')
 except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
-from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Flatten, Dense
-from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 
 if __name__ == "__main__":
     # Carregar e normalizar MNIST para ter um history real de treino

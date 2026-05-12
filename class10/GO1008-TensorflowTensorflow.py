@@ -6,6 +6,17 @@ from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Flatten, Dense
 
 # 1. Carregar dados
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 (X_train, y_train), (X_test, y_test) = keras.datasets.mnist.load_data()
 
 # 2. Normalizar (0-255 → 0-1)
@@ -33,15 +44,6 @@ test_loss, test_acc = model.evaluate(X_test, y_test)
 print(f'Test accuracy: {test_acc:.4f}')
 
 # Gráfico de curvas de loss e accuracy com subplots(1,2)
-import matplotlib
-import matplotlib.pyplot as plt
-
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 fig, axes = plt.subplots(1, 2, figsize=(12, 4))
 axes[0].plot(history.history['loss'], label='Treino')

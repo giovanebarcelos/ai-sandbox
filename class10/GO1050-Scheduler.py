@@ -36,10 +36,8 @@ reduce_lr = ReduceLROnPlateau(
 )
 # model.fit(X_train, y_train, validation_data=(X_val, y_val), callbacks=[reduce_lr])
 
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib
-    import matplotlib.pyplot as plt
+import matplotlib
+import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
@@ -47,6 +45,9 @@ try:
     get_ipython().run_line_magic('matplotlib', 'inline')
 except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
+if __name__ == "__main__":
+    import numpy as np
 
     # Plota os 3 schedules de LR ao longo de 50 épocas em um mesmo gráfico
     epochs = np.arange(50)

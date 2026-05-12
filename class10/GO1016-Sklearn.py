@@ -2,6 +2,13 @@
 # Gera predições no conjunto de teste, calcula a matriz de confusão com sklearn
 # e a visualiza como heatmap com seaborn para analisar erros por classe.
 import numpy as np
+
+import seaborn as sns
+from sklearn.metrics import confusion_matrix, classification_report
+from tensorflow import keras
+from tensorflow.keras.models import Sequential
+from tensorflow.keras.layers import Flatten, Dense
+
 import matplotlib
 import matplotlib.pyplot as plt
 
@@ -11,11 +18,6 @@ try:
     get_ipython().run_line_magic('matplotlib', 'inline')
 except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
-import seaborn as sns
-from sklearn.metrics import confusion_matrix, classification_report
-from tensorflow import keras
-from tensorflow.keras.models import Sequential
-from tensorflow.keras.layers import Flatten, Dense
 
 if __name__ == "__main__":
     # Treinar modelo MNIST para gerar predições reais

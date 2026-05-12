@@ -8,10 +8,8 @@ b = tf.constant([4, 5, 6])
 c = a + b
 print(c)  # Sem sessões! Sem placeholders! Só código normal!
 
-if __name__ == "__main__":
-    import numpy as np
-    import matplotlib
-    import matplotlib.pyplot as plt
+import matplotlib
+import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
@@ -19,6 +17,9 @@ try:
     get_ipython().run_line_magic('matplotlib', 'inline')
 except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
+if __name__ == "__main__":
+    import numpy as np
 
     # Operações sobre tensores a=[1,2,3], b=[4,5,6] e sua soma
     a_vals = a.numpy()

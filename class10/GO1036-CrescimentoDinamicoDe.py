@@ -14,10 +14,8 @@
 #     [tf.config.LogicalDeviceConfiguration(memory_limit=4096)]
 # )
 
-if __name__ == "__main__":
-    import tensorflow as tf
-    import matplotlib
-    import matplotlib.pyplot as plt
+import matplotlib
+import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
@@ -25,6 +23,9 @@ try:
     get_ipython().run_line_magic('matplotlib', 'inline')
 except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
+if __name__ == "__main__":
+    import tensorflow as tf
 
     # Lista GPUs disponíveis e imprime informações sobre os dispositivos físicos
     gpus = tf.config.list_physical_devices('GPU')

@@ -8,6 +8,15 @@ class CustomCallback(keras.callbacks.Callback):
         if logs.get('loss') != logs.get('loss'):  # NaN check
             self.model.stop_training = True
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == '__main__':
     import numpy as np
@@ -32,15 +41,6 @@ if __name__ == '__main__':
     history = model.fit(X, y, epochs=11, callbacks=[CustomCallback()], verbose=1)
 
     # Gráfico das curvas de loss e accuracy registradas pelo CustomCallback
-    import matplotlib
-    import matplotlib.pyplot as plt
-
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
     axes[0].plot(history.history['loss'], marker='o', markersize=4, label='Loss')
