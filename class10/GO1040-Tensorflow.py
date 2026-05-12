@@ -7,7 +7,6 @@ from tensorflow.keras.datasets import fashion_mnist
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.layers import Dense, Flatten
@@ -24,8 +23,7 @@ if __name__ == "__main__":
         ax.axis('off')
     plt.suptitle('Amostras do Fashion-MNIST', fontsize=12)
     plt.tight_layout()
-    plt.savefig('GO1040-fashion-samples.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()
 
     # Normaliza e treina modelo para obter curvas de histórico
     X_train_n = X_train / 255.0
@@ -57,5 +55,4 @@ if __name__ == "__main__":
     axes[1].set_ylabel('Accuracy')
     axes[1].legend()
     plt.tight_layout()
-    plt.savefig('GO1040-history.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

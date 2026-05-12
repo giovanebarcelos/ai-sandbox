@@ -12,7 +12,6 @@ callback = LearningRateScheduler(cosine_annealing)
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Plota a curva do cosine annealing ao longo de 100 épocas
@@ -26,5 +25,4 @@ if __name__ == "__main__":
     plt.xlabel('Época')
     plt.ylabel('Learning Rate')
     plt.tight_layout()
-    plt.savefig('GO1051-cosine-annealing.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

@@ -2,7 +2,6 @@
 # Plota lado a lado as curvas de loss e acurácia (treino vs. validação) ao longo
 # das épocas, com linha vertical indicando a melhor época salva pelo checkpoint.
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras.models import Sequential
@@ -57,6 +56,4 @@ if __name__ == "__main__":
     ax2.grid(True)
 
     plt.tight_layout()
-    plt.savefig('GO1015-history.png', dpi=100, bbox_inches='tight')
-    plt.close()
-    print("Gráfico salvo em GO1015-history.png")
+    plt.show()

@@ -35,7 +35,6 @@ model.compile(
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Usa dados sintéticos 224×224×3 (100 amostras) para treinar com base VGG16 congelada
@@ -55,5 +54,4 @@ if __name__ == "__main__":
     plt.ylabel('Loss')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('GO1045-transfer-learning.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

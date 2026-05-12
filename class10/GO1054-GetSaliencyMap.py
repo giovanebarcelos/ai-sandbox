@@ -26,7 +26,6 @@ def get_saliency_map(model, image, class_idx):
 if __name__ == '__main__':
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')  # Sem janela (compatível com Colab)
     import matplotlib.pyplot as plt
 
     print("=== Demonstração de Saliency Map ===")
@@ -55,6 +54,4 @@ if __name__ == '__main__':
     axes[1].imshow(saliency, cmap='hot')
     axes[1].set_title('Saliency Map')
     plt.tight_layout()
-    plt.savefig('GO1054-saliency-map.png', dpi=100, bbox_inches='tight')
-    plt.close()
-    print("Saliency map salvo em GO1054-saliency-map.png")
+    plt.show()

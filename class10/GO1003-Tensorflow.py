@@ -11,7 +11,6 @@ print(c)  # Sem sessões! Sem placeholders! Só código normal!
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Operações sobre tensores a=[1,2,3], b=[4,5,6] e sua soma
@@ -32,5 +31,4 @@ if __name__ == "__main__":
     ax.set_ylabel('Valor')
     ax.legend()
     plt.tight_layout()
-    plt.savefig('GO1003-tensors.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

@@ -7,7 +7,6 @@
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     import seaborn as sns
     from tensorflow import keras
@@ -49,5 +48,4 @@ if __name__ == "__main__":
     ax.set_title('Classification Report — Precision / Recall / F1 por Classe')
     ax.set_xlabel('Classe (dígito)')
     plt.tight_layout()
-    plt.savefig('GO1017-report.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

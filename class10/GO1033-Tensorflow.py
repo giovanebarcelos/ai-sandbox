@@ -12,7 +12,6 @@
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow.keras import Input, Model
     from tensorflow.keras.layers import Dense, Flatten
@@ -42,5 +41,4 @@ if __name__ == "__main__":
     ax.set_xlabel('Camada')
     ax.set_ylabel('Parâmetros')
     plt.tight_layout()
-    plt.savefig('GO1033-params.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

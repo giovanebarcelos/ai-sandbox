@@ -27,7 +27,6 @@ from tensorflow.keras.layers import Flatten, Concatenate
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow.keras import Input, Model
     from tensorflow.keras.layers import Dense
@@ -67,5 +66,4 @@ if __name__ == "__main__":
     plt.ylabel('Loss')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('GO1030-multi-input.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

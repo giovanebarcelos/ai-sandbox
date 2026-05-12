@@ -17,7 +17,6 @@
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow import keras
     from tensorflow.keras.models import Sequential
@@ -62,5 +61,4 @@ if __name__ == "__main__":
     plt.ylabel('Loss')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('GO1037-training-log.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

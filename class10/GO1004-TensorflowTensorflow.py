@@ -6,7 +6,6 @@ import tensorflow.keras as keras
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Imprime a versão do Keras disponível via TensorFlow
@@ -33,5 +32,4 @@ if __name__ == "__main__":
                 arrowprops=dict(arrowstyle='->', color='green', lw=2))
     ax.set_title('Hierarquia: tf → keras → Sequential / layers')
     plt.tight_layout()
-    plt.savefig('GO1004-keras-hierarchy.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

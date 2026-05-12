@@ -7,7 +7,6 @@ print(tf.config.list_physical_devices('GPU'))
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Imprime versão e dispositivos disponíveis no ambiente
@@ -30,5 +29,4 @@ if __name__ == "__main__":
     )
     ax.set_title(f'Dispositivos disponíveis\n(TF {tf.__version__})')
     plt.tight_layout()
-    plt.savefig('GO1005-devices.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

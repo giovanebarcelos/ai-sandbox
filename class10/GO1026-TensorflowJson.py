@@ -20,7 +20,6 @@ import json
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.layers import Dense, Flatten
@@ -70,5 +69,4 @@ if __name__ == "__main__":
     axes[1].set_ylabel('Accuracy')
     axes[1].legend()
     plt.tight_layout()
-    plt.savefig('GO1026-full-pipeline.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

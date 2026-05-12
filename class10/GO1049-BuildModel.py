@@ -63,7 +63,6 @@ from tensorflow import keras
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Simula resultados do KerasTuner Hyperband com dados fictícios (lr × units × val_acc)
@@ -82,5 +81,4 @@ if __name__ == "__main__":
     ax.set_xlabel('Learning Rate (log)')
     ax.set_ylabel('Units')
     plt.tight_layout()
-    plt.savefig('GO1049-hyperband-results.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

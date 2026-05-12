@@ -12,7 +12,6 @@
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow import keras
     from tensorflow.keras.models import Sequential
@@ -55,5 +54,4 @@ if __name__ == "__main__":
     ax.set_title('Accuracy — Salvar e Carregar Modelo Completo')
     ax.set_ylabel('Accuracy')
     plt.tight_layout()
-    plt.savefig('GO1021-save-load.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

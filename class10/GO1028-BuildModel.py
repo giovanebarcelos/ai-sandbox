@@ -56,7 +56,6 @@
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Simula resultados de 5 trials do KerasTuner RandomSearch com dados fictícios
@@ -75,5 +74,4 @@ if __name__ == "__main__":
     ax.set_xlabel('Trial')
     ax.set_ylabel('Val Accuracy')
     plt.tight_layout()
-    plt.savefig('GO1028-tuner-results.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

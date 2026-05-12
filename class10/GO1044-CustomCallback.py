@@ -33,7 +33,6 @@ if __name__ == '__main__':
 
     # Gráfico das curvas de loss e accuracy registradas pelo CustomCallback
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
@@ -49,5 +48,4 @@ if __name__ == '__main__':
     axes[1].set_ylabel('Accuracy')
     axes[1].legend()
     plt.tight_layout()
-    plt.savefig('GO1044-custom-callback.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

@@ -22,7 +22,6 @@ X_test = scaler.transform(X_test)
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow.keras.models import Sequential
     from tensorflow.keras.layers import Dense
@@ -49,8 +48,7 @@ if __name__ == "__main__":
     plt.ylabel('MSE')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('GO1043-regression-loss.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()
 
     # Gráfico 2: scatter plot de valores preditos vs valores reais no conjunto de teste
     plt.figure(figsize=(6, 6))
@@ -63,5 +61,4 @@ if __name__ == "__main__":
     plt.ylabel('Valor Predito')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('GO1043-pred-vs-real.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

@@ -7,7 +7,6 @@
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow import keras
 
@@ -24,5 +23,4 @@ if __name__ == "__main__":
     plt.xlabel('Classe (dígito)')
     plt.ylabel('Quantidade de amostras')
     plt.tight_layout()
-    plt.savefig('GO1020-label-distribution.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

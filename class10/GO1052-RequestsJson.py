@@ -17,7 +17,6 @@ import json
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Simula a resposta do TF Serving com probabilidades fictícias para 5 exemplos
@@ -48,5 +47,4 @@ if __name__ == "__main__":
             ax.set_ylabel('Probabilidade')
     plt.suptitle('TF Serving — Probabilidades Preditas (Simulado)', fontsize=11)
     plt.tight_layout()
-    plt.savefig('GO1052-tf-serving-preds.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

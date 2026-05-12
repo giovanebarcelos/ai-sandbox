@@ -39,7 +39,6 @@ reduce_lr = ReduceLROnPlateau(
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Plota os 3 schedules de LR ao longo de 50 épocas em um mesmo gráfico
@@ -73,5 +72,4 @@ if __name__ == "__main__":
     plt.ylabel('Learning Rate')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('GO1050-lr-schedules.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

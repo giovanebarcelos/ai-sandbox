@@ -17,7 +17,6 @@
 if __name__ == "__main__":
     import tensorflow as tf
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Lista GPUs disponíveis e imprime informações sobre os dispositivos físicos
@@ -43,5 +42,4 @@ if __name__ == "__main__":
     ax.set_ylabel('Quantidade')
     ax.set_ylim(0, max(quantidades) + 1)
     plt.tight_layout()
-    plt.savefig('GO1036-devices.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

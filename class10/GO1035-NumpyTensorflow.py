@@ -16,7 +16,6 @@ tf.config.experimental.enable_op_determinism()
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     # Gera 3 séries com seed fixa (resultados idênticos) e sem seed (resultados diferentes)
@@ -41,5 +40,4 @@ if __name__ == "__main__":
     axes[1].legend()
 
     plt.tight_layout()
-    plt.savefig('GO1035-reproducibility.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

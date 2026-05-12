@@ -55,7 +55,6 @@ if __name__ == "__main__":
 
     # Gráfico 1: curvas de loss e accuracy (treino vs validação) por época
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 4))
@@ -72,8 +71,7 @@ if __name__ == "__main__":
     axes[1].set_ylabel('Accuracy')
     axes[1].legend()
     plt.tight_layout()
-    plt.savefig('GO1002-history.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()
 
     # Gráfico 2: grade 2×5 com 10 imagens do teste e suas predições vs rótulos reais
     all_preds = np.argmax(model.predict(X_test[:10], verbose=0), axis=1)
@@ -85,5 +83,4 @@ if __name__ == "__main__":
         ax.set_title(f"Pred:{all_preds[i]} / Real:{all_reais[i]}", fontsize=9)
         ax.axis('off')
     plt.tight_layout()
-    plt.savefig('GO1002-predictions.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

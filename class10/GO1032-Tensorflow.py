@@ -18,7 +18,6 @@ from tensorflow.keras.layers import Add
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow import keras
     from tensorflow.keras import Input, Model
@@ -58,5 +57,4 @@ if __name__ == "__main__":
     axes[1].set_ylabel('Accuracy')
     axes[1].legend()
     plt.tight_layout()
-    plt.savefig('GO1032-residual.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

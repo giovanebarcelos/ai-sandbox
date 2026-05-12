@@ -29,7 +29,6 @@
 
 if __name__ == "__main__":
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow import keras
     from tensorflow.keras import Input, Model
@@ -66,5 +65,4 @@ if __name__ == "__main__":
     plt.ylabel('Loss')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('GO1031-multi-output.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

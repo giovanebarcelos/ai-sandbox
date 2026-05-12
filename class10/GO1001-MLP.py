@@ -1,7 +1,6 @@
 # GO1001-MLP
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 
@@ -157,6 +156,4 @@ if __name__ == "__main__":
     ax2.set_ylabel('x₂')
 
     plt.tight_layout()
-    plt.savefig('GO1001-mlp-xor.png', dpi=100, bbox_inches='tight')
-    plt.close()
-    print("\n  Gráfico salvo em GO1001-mlp-xor.png")
+    plt.show()

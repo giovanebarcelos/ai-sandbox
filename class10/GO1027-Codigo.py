@@ -48,7 +48,6 @@ if __name__ == "__main__":
     import numpy as np
     import pandas as pd
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     import seaborn as sns
     from tensorflow import keras
@@ -101,5 +100,4 @@ if __name__ == "__main__":
     ax.set_xlabel('Dropout')
     ax.set_ylabel('Units')
     plt.tight_layout()
-    plt.savefig('GO1027-grid-search.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

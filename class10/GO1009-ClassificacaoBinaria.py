@@ -17,7 +17,6 @@ from tensorflow.keras.optimizers import Adam
 if __name__ == "__main__":
     import numpy as np
     import matplotlib
-    matplotlib.use('Agg')
     import matplotlib.pyplot as plt
     from tensorflow import keras
     from tensorflow.keras.models import Sequential
@@ -49,5 +48,4 @@ if __name__ == "__main__":
     plt.ylabel('Binary Crossentropy')
     plt.legend()
     plt.tight_layout()
-    plt.savefig('GO1009-binary-loss.png', dpi=100, bbox_inches='tight')
-    plt.close()
+    plt.show()

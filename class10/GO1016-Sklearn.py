@@ -3,7 +3,6 @@
 # e a visualiza como heatmap com seaborn para analisar erros por classe.
 import numpy as np
 import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.metrics import confusion_matrix, classification_report
@@ -39,7 +38,5 @@ if __name__ == "__main__":
     plt.ylabel('True')
     plt.title('Confusion Matrix - MNIST')
     plt.tight_layout()
-    plt.savefig('GO1016-confusion-matrix.png', dpi=100, bbox_inches='tight')
-    plt.close()
-    print("Gráfico salvo em GO1016-confusion-matrix.png")
+    plt.show()
     print(classification_report(y_test, y_pred_classes))
