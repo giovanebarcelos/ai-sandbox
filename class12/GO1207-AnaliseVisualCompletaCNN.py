@@ -2,8 +2,17 @@
 import tensorflow as tf
 from tensorflow import keras
 import numpy as np
-import matplotlib.pyplot as plt
 from matplotlib.gridspec import GridSpec
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # Carregar modelo treinado
 model = keras.models.load_model('best_cifar10_model.h5')
@@ -73,7 +82,7 @@ def visualize_conv_filters(model, layer_name='conv1', num_filters=32):
     plt.suptitle(f'Filtros Aprendidos - Camada {layer_name}', 
                 fontsize=14, fontweight='bold')
     plt.tight_layout()
-    plt.savefig(f'filters_{layer_name}.png', dpi=150)
+    plt.show()
     print(f"✅ Filtros salvos em filters_{layer_name}.png")
 
 visualize_conv_filters(model, 'conv1', 32)
@@ -119,7 +128,7 @@ def visualize_feature_maps(model, img, layers_to_show=None):
             ax.axis('off')
 
     plt.tight_layout()
-    plt.savefig('feature_maps_progression.png', dpi=150, bbox_inches='tight')
+    plt.show()
     print("✅ Feature maps salvos em feature_maps_progression.png")
 
 # Carregar uma imagem de teste
@@ -134,7 +143,7 @@ plt.figure(figsize=(3, 3))
 plt.imshow(test_img)
 plt.title('Imagem Original')
 plt.axis('off')
-plt.savefig('original_image.png', dpi=150)
+plt.show()
 
 # Visualizar feature maps
 layers_to_analyze = ['conv1', 'conv3', 'conv5']
@@ -188,7 +197,7 @@ for i in range(8):
 plt.suptitle('Padrões que Maximizam Ativação dos Filtros', 
             fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('activation_maximization.png', dpi=150)
+plt.show()
 print("✅ Padrões salvos em activation_maximization.png")
 
 # 5. ANÁLISE DE GRADIENTES
@@ -237,7 +246,7 @@ axes[2].axis('off')
 plt.suptitle('Análise de Gradientes - Quais pixels influenciam a predição?', 
             fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('gradient_analysis.png', dpi=150)
+plt.show()
 print("✅ Análise de gradientes salva")
 
 print("\n✅ ANÁLISE VISUAL COMPLETA!")

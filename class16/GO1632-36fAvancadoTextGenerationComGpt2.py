@@ -2,8 +2,17 @@
 from transformers import GPT2Tokenizer, GPT2LMHeadModel
 import torch
 import numpy as np
-import matplotlib.pyplot as plt
 from collections import Counter
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class ControlledTextGenerator:
     """Gerador de texto com GPT-2 e múltiplas estratégias"""
@@ -128,7 +137,6 @@ class ControlledTextGenerator:
         plt.suptitle(f'Temperature Effect on Token Distribution\nPrompt: "{prompt}"', 
                     fontsize=14, fontweight='bold')
         plt.tight_layout()
-        plt.savefig('gpt2_temperature_effect.png', dpi=300, bbox_inches='tight')
         plt.show()
 
     def analyze_next_token_probabilities(self, prompt, top_k=15):
@@ -158,7 +166,6 @@ class ControlledTextGenerator:
             plt.text(prob, i, f' {prob:.4f}', va='center', fontsize=9)
 
         plt.tight_layout()
-        plt.savefig('gpt2_next_token_probs.png', dpi=300, bbox_inches='tight')
         plt.show()
 
         return list(zip(top_tokens, top_probs.numpy()))

@@ -2,7 +2,6 @@
 # MÉTRICAS DE AVALIAÇÃO DE CLUSTERING
 
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import make_blobs
 from sklearn.cluster import KMeans
 from sklearn.metrics import (
@@ -91,6 +90,16 @@ print("=" * 60)
 # SILHOUETTE PLOT DETALHADO
 
 from matplotlib import cm
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 def plot_silhouette(X, labels, n_clusters):
     """

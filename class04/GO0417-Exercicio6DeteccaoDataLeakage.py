@@ -1,10 +1,19 @@
 # GO0417-Exercicio6DeteccaoDataLeakage
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import accuracy_score
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 np.random.seed(42)
 
@@ -47,7 +56,7 @@ correlation.drop('target').plot(kind='barh',
 plt.xlabel('Correlação')
 plt.title('Correlação Features vs Target (Vermelho = Suspeito)')
 plt.tight_layout()
-plt.savefig('leakage_correlation.png', dpi=100)
+plt.show()
 print("\n✓ leakage_correlation.png")
 
 # 2. Treinar COM leakage
@@ -85,7 +94,7 @@ plt.barh(importance['feature'], importance['importance'],
 plt.xlabel('Importância')
 plt.title('Feature Importance (Vermelho = Leakage)')
 plt.tight_layout()
-plt.savefig('leakage_importance.png', dpi=100)
+plt.show()
 print("\n✓ leakage_importance.png")
 
 print(f"\n🚨 LEAKAGE DETECTADO:")
@@ -133,7 +142,7 @@ for bar, acc in zip(bars, comparison['Acurácia']):
     ax.text(bar.get_x() + bar.get_width()/2, bar.get_height() + 0.02,
            f'{acc:.4f}', ha='center', fontweight='bold')
 plt.tight_layout()
-plt.savefig('leakage_comparison.png', dpi=100)
+plt.show()
 print("\n✓ leakage_comparison.png")
 
 # 6. Cenários comuns

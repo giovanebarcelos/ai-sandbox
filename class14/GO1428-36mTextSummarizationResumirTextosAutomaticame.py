@@ -9,7 +9,16 @@ import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, LSTM, Dense, Embedding
 from tensorflow.keras.preprocessing.sequence import pad_sequences
+
+import matplotlib
 import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("📝 TEXT SUMMARIZATION COM SEQ2SEQ")
 print("=" * 70)
@@ -240,7 +249,7 @@ axes[1].grid(alpha=0.3)
 
 plt.suptitle('Text Summarization Training', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('summarization_training.png', dpi=150)
+plt.show()
 print("\n✅ Training salvo: summarization_training.png")
 
 print("\n💡 SUMMARIZATION TYPES:")

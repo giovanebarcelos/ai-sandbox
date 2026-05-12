@@ -1,8 +1,17 @@
 # GO1624-31bBiasDetectionFairness
 import numpy as np
 from typing import List, Dict
-import matplotlib.pyplot as plt
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class BiasDetector:
     """
@@ -279,7 +288,7 @@ for bar, reduction in zip(bars, bias_reduction):
             f'{reduction}%', ha='center', va='bottom', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('bias_detection.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: bias_detection.png")
 
 print("\n✅ Bias detection implementado!")

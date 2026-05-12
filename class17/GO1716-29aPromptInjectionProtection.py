@@ -4,6 +4,16 @@ from typing import Dict, List, Tuple
 import numpy as np
 from collections import Counter
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 class PromptSecurityGuard:
     """
     Sistema de segurança para proteger RAG contra:
@@ -189,7 +199,6 @@ for query in test_queries:
         print(f"  ✅ Safe")
 
 # Statistics
-import matplotlib.pyplot as plt
 
 fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
@@ -237,7 +246,7 @@ if pii_counts:
     ax.grid(axis='y', alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('security_analysis.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: security_analysis.png")
 
 print("\n📊 SECURITY LOG")

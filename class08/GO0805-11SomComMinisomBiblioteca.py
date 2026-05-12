@@ -7,7 +7,6 @@ subprocess.check_call([sys.executable, "-m", "pip", "install", "minisom", "-q"])
 
 from minisom import MiniSom
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris
 from sklearn.preprocessing import StandardScaler
 
@@ -95,6 +94,17 @@ ax3.grid(True, alpha=0.3)
 
 # Legenda
 from matplotlib.lines import Line2D
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 legend_elements = [
     Line2D([0], [0], marker='o', color='w', label=class_names[0],
           markerfacecolor='none', markeredgecolor='red', markersize=10),

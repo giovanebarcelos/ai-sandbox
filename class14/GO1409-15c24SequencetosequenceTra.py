@@ -6,13 +6,22 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, LSTM, Embedding, Dense
 from tensorflow.keras.callbacks import EarlyStopping
 import re
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ─── 1. CRIAR DATASET DE TRADUÇÃO ───
 print("🌍 Criando dataset de tradução Inglês → Português...")
@@ -344,7 +353,7 @@ axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('seq2seq_training.png', dpi=150)
+plt.show()
 print("  ✓ Histórico salvo: seq2seq_training.png")
 
 # ─── 10. RELATÓRIO FINAL ───

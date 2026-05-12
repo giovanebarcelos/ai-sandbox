@@ -10,9 +10,18 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import Conv2D, Input, UpSampling2D, Add
 from tensorflow.keras.datasets import cifar10
-import matplotlib.pyplot as plt
 from skimage.metrics import peak_signal_noise_ratio as psnr
 from skimage.metrics import structural_similarity as ssim
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🔍 IMAGE SUPER-RESOLUTION")
 print("=" * 70)
@@ -149,7 +158,7 @@ for i in range(5):
 
 plt.suptitle('Image Super-Resolution Comparison (2x)', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('super_resolution_comparison.png', dpi=150)
+plt.show()
 print("✅ Comparação salva: super_resolution_comparison.png")
 
 # ─── 6. MÉTRICAS ───
@@ -187,7 +196,7 @@ axes[1].grid(axis='y', alpha=0.3)
 
 plt.suptitle('Super-Resolution Metrics', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('super_resolution_metrics.png', dpi=150)
+plt.show()
 print("✅ Métricas salvas: super_resolution_metrics.png")
 
 print("\n💡 MÉTODOS DE SUPER-RESOLUTION:")

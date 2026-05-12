@@ -2,9 +2,18 @@
 import shap
 import xgboost as xgb
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import fetch_openml
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ═══════════════════════════════════════════════════════════
 # 1. CARREGAR DADOS (German Credit Dataset)
@@ -58,14 +67,12 @@ print(f"Valor base (expected value): {explainer.expected_value:.3f}")
 shap.summary_plot(shap_values, X_test, plot_type="bar")
 plt.title("SHAP Feature Importance (Global)")
 plt.tight_layout()
-plt.savefig("shap_global_importance.png", dpi=150)
 plt.show()
 
 # Summary Plot detalhado (beeswarm)
 shap.summary_plot(shap_values, X_test)
 plt.title("SHAP Beeswarm Plot - Feature Impact")
 plt.tight_layout()
-plt.savefig("shap_beeswarm.png", dpi=150)
 plt.show()
 
 # ═══════════════════════════════════════════════════════════
@@ -95,7 +102,6 @@ shap.force_plot(
 )
 plt.title(f"SHAP Force Plot - Cliente #{sample_idx}")
 plt.tight_layout()
-plt.savefig(f"shap_force_plot_sample_{sample_idx}.png", dpi=150, bbox_inches='tight')
 plt.show()
 
 # Waterfall Plot: Decomposição passo a passo
@@ -109,7 +115,6 @@ shap.waterfall_plot(
 )
 plt.title(f"SHAP Waterfall Plot - Cliente #{sample_idx}")
 plt.tight_layout()
-plt.savefig(f"shap_waterfall_sample_{sample_idx}.png", dpi=150)
 plt.show()
 
 # ═══════════════════════════════════════════════════════════
@@ -125,7 +130,6 @@ shap.dependence_plot(
 )
 plt.title(f"SHAP Dependence Plot - {feature_name}")
 plt.tight_layout()
-plt.savefig(f"shap_dependence_{feature_name}.png", dpi=150)
 plt.show()
 
 # ═══════════════════════════════════════════════════════════

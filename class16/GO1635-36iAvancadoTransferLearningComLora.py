@@ -6,7 +6,6 @@ from transformers import AutoTokenizer, AutoModelForSequenceClassification
 from peft import get_peft_model, LoraConfig, TaskType
 from datasets import load_dataset
 import numpy as np
-import matplotlib.pyplot as plt
 from tqdm import tqdm
 import time
 
@@ -112,7 +111,6 @@ class LoRAFineTuning:
                     f'Reduction: {(1-lora/full)*100:.1f}%', 
                     fontsize=16, fontweight='bold')
         plt.tight_layout()
-        plt.savefig('lora_parameter_comparison.png', dpi=300, bbox_inches='tight')
         plt.show()
 
     def train_and_compare(self, train_size=1000, epochs=3, batch_size=16):
@@ -240,11 +238,19 @@ class LoRAFineTuning:
         plt.suptitle('LoRA vs Full Fine-tuning - Training Comparison', 
                     fontsize=16, fontweight='bold')
         plt.tight_layout()
-        plt.savefig('lora_training_comparison.png', dpi=300, bbox_inches='tight')
         plt.show()
 
 # Executar comparação
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     print("="*80)

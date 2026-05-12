@@ -9,8 +9,16 @@ import cv2
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout, Input, Concatenate, Reshape
+
+import matplotlib
 import matplotlib.pyplot as plt
-import matplotlib.patches as patches
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🎯 SINGLE SHOT DETECTOR (SSD)")
 print("=" * 70)
@@ -194,7 +202,7 @@ for idx in range(6):
 
 plt.suptitle('SSD Object Detection (Green=GT, Red=Pred)', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('ssd_detection.png', dpi=150)
+plt.show()
 print("✅ Detecção salva: ssd_detection.png")
 
 print("\n💡 SSD vs OUTROS DETECTORES:")

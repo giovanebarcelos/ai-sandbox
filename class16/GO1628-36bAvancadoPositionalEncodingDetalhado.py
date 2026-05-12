@@ -1,7 +1,6 @@
 # GO1628-36bAvançadoPositionalEncodingDetalhado
 import numpy as np
 import torch
-import matplotlib.pyplot as plt
 import seaborn as sns
 
 class PositionalEncoding:
@@ -71,13 +70,21 @@ class PositionalEncoding:
         axes[1, 1].set_title('Similaridade Entre Posições\n(Posições próximas = mais similar)')
 
         plt.tight_layout()
-        plt.savefig('positional_encoding_analysis.png', dpi=300, bbox_inches='tight')
         plt.show()
 
         return pe
 
 # Gerar e visualizar
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     seq_len = 100
@@ -137,7 +144,6 @@ if __name__ == "__main__":
     axes[2].set_ylabel('Position')
 
     plt.tight_layout()
-    plt.savefig('embedding_with_positional.png', dpi=300, bbox_inches='tight')
     plt.show()
 
     print("\n✅ Visualizações salvas!")

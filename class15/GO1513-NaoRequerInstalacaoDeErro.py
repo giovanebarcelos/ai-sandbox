@@ -1,9 +1,18 @@
 # GO1513-NãoRequerInstalaçãoDeErro
 import re
-import matplotlib.pyplot as plt
 import pandas as pd
 from collections import Counter
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class RegexEntityExtractor:
     """
@@ -180,7 +189,7 @@ ax.set_title('Entities per Document')
 ax.set_xticks(range(1, len(documents)+1))
 
 plt.tight_layout()
-plt.savefig('regex_entity_extraction.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: regex_entity_extraction.png")
 
 print("\n✅ Regex entity extraction completo!")

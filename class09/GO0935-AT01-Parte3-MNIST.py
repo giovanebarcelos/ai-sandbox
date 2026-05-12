@@ -10,11 +10,20 @@
 # BASEADO EM: Aula 09 – Slides 21A, 22, 23, 24
 
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ───────────────────────────────────────────────────────────────────
 # FUNÇÕES AUXILIARES
@@ -74,7 +83,6 @@ for i, ax in enumerate(axes.flat):
     ax.imshow(X_train[i].reshape(28, 28), cmap='gray')
     ax.set_title(f'Label: {y_train[i]}'); ax.axis('off')
 plt.tight_layout()
-plt.savefig('GO0935-parte3-amostras.png', dpi=120, bbox_inches='tight')
 plt.show()
 
 # ───────────────────────────────────────────────────────────────────
@@ -173,7 +181,6 @@ class MNISTClassifier:
     def accuracy(self, X, y_oh):
         return np.mean(self.predict(X) == np.argmax(y_oh, axis=1))
 
-
 # ───────────────────────────────────────────────────────────────────
 # PASSO 3 – TREINAR E AVALIAR
 # ───────────────────────────────────────────────────────────────────
@@ -203,7 +210,6 @@ axes[1].plot([a*100 for a in modelo.val_accs],   label='Validação', color='tom
 axes[1].set_title('Acurácia (%)'); axes[1].set_xlabel('Época')
 axes[1].set_ylim([50, 100]); axes[1].legend(); axes[1].grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('GO0935-parte3-curvas.png', dpi=120, bbox_inches='tight')
 plt.show()
 
 # Matriz de confusão
@@ -214,7 +220,6 @@ sns.heatmap(cm, annot=True, fmt='d', cmap='Blues',
 plt.xlabel('Predito'); plt.ylabel('Verdadeiro')
 plt.title(f'Matriz de Confusão  (Test Acc: {test_acc*100:.2f}%)')
 plt.tight_layout()
-plt.savefig('GO0935-parte3-confusao.png', dpi=120, bbox_inches='tight')
 plt.show()
 
 # Classification report
@@ -237,7 +242,6 @@ for ax, idx in zip(axes.ravel(), top20_idx):
     ax.set_title(f'Real:{y_test[idx]} Pred:{y_pred[idx]}\n{confidences[idx]*100:.0f}%', fontsize=8)
     ax.axis('off')
 plt.tight_layout()
-plt.savefig('GO0935-parte3-erros.png', dpi=120, bbox_inches='tight')
 plt.show()
 
 # Acurácia por dígito

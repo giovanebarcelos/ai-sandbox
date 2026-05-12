@@ -7,8 +7,17 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.model_selection import train_test_split
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ─── 1. CONFIGURAÇÃO E DADOS ───
 print("📦 Carregando e preparando MNIST...")
@@ -158,7 +167,7 @@ plt.title(f'Original ({orig_pred}) | Perturbação (×10) | Adversarial ({adv_pr
 plt.axis('off')
 
 plt.tight_layout()
-plt.savefig('adversarial_attack_analysis.png', dpi=150)
+plt.show()
 print("\n  ✓ Análise salva: adversarial_attack_analysis.png")
 
 # ─── 5. ADVERSARIAL TRAINING (DEFESA) ───
@@ -265,7 +274,7 @@ plt.legend(fontsize=11)
 plt.grid(True, alpha=0.3)
 plt.ylim([0, 1])
 plt.tight_layout()
-plt.savefig('adversarial_defense_comparison.png', dpi=150)
+plt.show()
 print("\n  ✓ Comparação salva: adversarial_defense_comparison.png")
 
 # ─── 7. VISUALIZAR MÚLTIPLOS EXEMPLOS ───
@@ -307,7 +316,7 @@ axes[2, 0].set_ylabel('Perturbação (×10)', fontsize=11, fontweight='bold')
 plt.suptitle(f'Galeria de Ataques Adversariais (ε={eps_gallery})', 
              fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('adversarial_gallery.png', dpi=150)
+plt.show()
 print("  ✓ Galeria salva: adversarial_gallery.png")
 
 # ─── 8. RELATÓRIO FINAL ───

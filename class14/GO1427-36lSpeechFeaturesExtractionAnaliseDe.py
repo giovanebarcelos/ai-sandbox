@@ -8,7 +8,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Bidirectional
-import matplotlib.pyplot as plt
 
 print("🎤 SPEECH FEATURES EXTRACTION COM LSTM")
 print("=" * 70)
@@ -102,6 +101,16 @@ print(f"  Test Accuracy: {test_acc:.4f}")
 from sklearn.metrics import confusion_matrix, classification_report
 import seaborn as sns
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 y_pred = model.predict(X_test, verbose=0).argmax(axis=1)
 cm = confusion_matrix(y_test, y_pred)
 
@@ -114,7 +123,7 @@ plt.title('Speech Classification - Confusion Matrix', fontsize=14, fontweight='b
 plt.ylabel('True Label')
 plt.xlabel('Predicted Label')
 plt.tight_layout()
-plt.savefig('speech_confusion_matrix.png', dpi=150)
+plt.show()
 print("\n✅ Confusion matrix salva: speech_confusion_matrix.png")
 
 print("\n📊 Classification Report:")
@@ -146,7 +155,7 @@ for cls in range(3):
 
 plt.suptitle('Speech Features Visualization (MFCCs)', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('speech_features.png', dpi=150)
+plt.show()
 print("✅ Features salvas: speech_features.png")
 
 # ─── 7. ANÁLISE TEMPORAL ───
@@ -173,7 +182,7 @@ for cls, ax in enumerate(axes):
 
 plt.suptitle('Temporal Patterns by Class', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('speech_temporal_patterns.png', dpi=150)
+plt.show()
 print("✅ Padrões temporais salvos: speech_temporal_patterns.png")
 
 print("\n💡 SPEECH PROCESSING:")

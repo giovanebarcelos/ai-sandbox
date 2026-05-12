@@ -2,9 +2,18 @@
 from sklearn.datasets import fetch_20newsgroups
 from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.decomposition import LatentDirichletAllocation
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("📊 Topic Modeling with LDA Demo\n")
 print("="*70)
@@ -189,7 +198,7 @@ ax.legend()
 ax.grid(axis='y', alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('topic_modeling_lda.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("📊 Gráfico salvo: topic_modeling_lda.png")
 
 print("\n✅ Topic modeling demo completo!")

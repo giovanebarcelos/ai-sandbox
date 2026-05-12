@@ -7,8 +7,6 @@ import subprocess, sys
 subprocess.check_call([sys.executable, "-m", "pip", "install", "minisom", "-q"])
 
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.patches as mpatches
 import pandas as pd
 from sklearn.preprocessing import StandardScaler
 from sklearn.datasets import load_wine
@@ -22,6 +20,15 @@ wine = load_wine()
 df = pd.DataFrame(wine.data, columns=wine.feature_names)
 df['class'] = wine.target
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     X = df.drop('class', axis=1).values

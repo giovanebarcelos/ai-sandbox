@@ -7,11 +7,20 @@ from sklearn.ensemble import RandomForestRegressor, GradientBoostingRegressor
 from sklearn.linear_model import Ridge
 from sklearn.metrics import mean_squared_error, r2_score, mean_absolute_error
 import numpy as np
-import matplotlib.pyplot as plt
 import pandas as pd
 import joblib
 import json
 from datetime import datetime
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("="*70)
 print("PIPELINE MLOps COMPLETO")
@@ -113,9 +122,8 @@ for config in models_config:
         plt.tight_layout()
 
         plot_path = f"{config['name'].replace(' ', '_')}_predictions.png"
-        plt.savefig(plot_path)
+        plt.show()
         mlflow.log_artifact(plot_path)
-        plt.close()
 
         # Salvar resultado
         results.append({
@@ -157,7 +165,7 @@ axes[1].tick_params(axis='x', rotation=45)
 axes[1].grid(True, alpha=0.3, axis='y')
 
 plt.tight_layout()
-plt.savefig('models_comparison.png', dpi=150)
+plt.show()
 mlflow.log_artifact('models_comparison.png')
 print("✅ Comparação salva e logada no MLflow")
 
@@ -237,7 +245,7 @@ plt.title('Monitoramento de Predições em Produção', fontsize=14, fontweight=
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('monitoring_predictions.png', dpi=150)
+plt.show()
 print("✅ Gráfico de monitoramento salvo")
 
 print("\n" + "="*70)

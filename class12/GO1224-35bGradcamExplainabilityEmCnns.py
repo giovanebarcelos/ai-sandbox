@@ -8,8 +8,17 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications import VGG16
 from tensorflow.keras.applications.vgg16 import preprocess_input, decode_predictions
-import matplotlib.pyplot as plt
 import cv2
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🔍 GRAD-CAM: EXPLAINABILITY EM CNNs")
 print("=" * 70)
@@ -152,7 +161,7 @@ plt.suptitle(f'Grad-CAM Visualization\nPredição: {top_pred[1]} ({top_pred[2]:.
             fontsize=16, fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('gradcam_visualization.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("✅ Visualização salva: gradcam_visualization.png")
 
 # ─── 7. GRAD-CAM PARA MÚLTIPLAS CLASSES ───
@@ -181,7 +190,7 @@ for i in range(3):
 
 plt.suptitle('Grad-CAM para Múltiplas Classes (Top-3)', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('gradcam_multiclass.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("✅ Multi-class Grad-CAM salvo: gradcam_multiclass.png")
 
 # ─── 8. ANÁLISE DE INTERPRETABILIDADE ───

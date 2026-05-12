@@ -12,8 +12,17 @@ from tensorflow.keras.layers import (
     BatchNormalization, GlobalAveragePooling2D, Add, Input
 )
 from tensorflow.keras.applications import VGG16, ResNet50
-import matplotlib.pyplot as plt
 import time
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🏗️ CNN ARCHITECTURE COMPARISON")
 print("=" * 70)
@@ -220,7 +229,7 @@ axes[1, 1].grid(True, alpha=0.3)
 plt.suptitle('Comparação de Arquiteturas CNN - Benchmark Completo', 
             fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('architecture_comparison.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("✅ Comparação salva: architecture_comparison.png\n")
 
 # ─── 6. RECOMENDAÇÕES ───

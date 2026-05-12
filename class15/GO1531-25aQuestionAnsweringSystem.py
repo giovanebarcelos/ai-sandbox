@@ -1,8 +1,17 @@
 # GO1531-25aQuestionAnsweringSystem
 from transformers import AutoTokenizer, AutoModelForQuestionAnswering
 import torch
-import matplotlib.pyplot as plt
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class QuestionAnsweringSystem:
     """
@@ -225,7 +234,7 @@ ax.text(0.1, 0.9, display_text,
 ax.set_title('Answer Extraction Visualization')
 
 plt.tight_layout()
-plt.savefig('question_answering_system.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: question_answering_system.png")
 
 print("\n✅ Question answering demo completo!")

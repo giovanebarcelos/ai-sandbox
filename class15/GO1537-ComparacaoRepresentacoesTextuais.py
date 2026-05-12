@@ -5,10 +5,20 @@ from sklearn.feature_extraction.text import CountVectorizer, TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, accuracy_score, confusion_matrix
 from sklearn.model_selection import cross_val_score
-import matplotlib.pyplot as plt
 import seaborn as sns
 from gensim.models import Word2Vec
 import warnings
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 warnings.filterwarnings('ignore')
 
 # Carregar dados preprocessados
@@ -179,7 +189,7 @@ for i, v in enumerate(comparison_df['Features']):
     axes[1].text(i, v * 1.2, f'{v}', ha='center', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('aula15_comparacao_representacoes.png', dpi=300, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: aula15_comparacao_representacoes.png")
 
 # Relatórios detalhados

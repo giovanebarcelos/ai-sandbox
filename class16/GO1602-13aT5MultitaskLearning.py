@@ -1,9 +1,18 @@
 # GO1602-13aT5MultitaskLearning
 from transformers import T5Tokenizer, T5ForConditionalGeneration
 import torch
-import matplotlib.pyplot as plt
 import numpy as np
 from typing import List, Dict
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class T5MultiTaskDemo:
     """
@@ -226,7 +235,7 @@ for bar, tasks_count in zip(bars, num_tasks):
             f'{tasks_count}', ha='left', va='center', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('t5_multi_task.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("📊 Gráfico salvo: t5_multi_task.png")
 
 print("\n✅ T5 multi-task demo implementado!")

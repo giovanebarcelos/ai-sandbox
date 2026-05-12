@@ -6,13 +6,22 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential, Model
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Input, Concatenate
 from tensorflow.keras.callbacks import EarlyStopping
 from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ─── 1. GERAR DADOS DE MERCADO ───
 print("📈 Gerando dados sintéticos de mercado financeiro...")
@@ -122,7 +131,7 @@ axes[2].legend()
 axes[2].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('stock_technical_indicators.png', dpi=150)
+plt.show()
 print("\n  ✓ Indicadores salvos: stock_technical_indicators.png")
 
 # ─── 2. GERAR SINAIS DE TRADING (LABELS) ───
@@ -253,7 +262,7 @@ plt.title('Matriz de Confusão - Sinais de Trading', fontsize=14, fontweight='bo
 plt.ylabel('Real')
 plt.xlabel('Previsto')
 plt.tight_layout()
-plt.savefig('trading_confusion_matrix.png', dpi=150)
+plt.show()
 print("  ✓ Matriz salva: trading_confusion_matrix.png")
 
 # Classification report
@@ -341,7 +350,7 @@ axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('trading_backtest.png', dpi=150)
+plt.show()
 print("  ✓ Backtest salvo: trading_backtest.png")
 
 # ─── 8. COMPARAR COM BUY-AND-HOLD ───
@@ -385,7 +394,7 @@ axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('trading_training_history.png', dpi=150)
+plt.show()
 print("\n  ✓ Histórico salvo: trading_training_history.png")
 
 # ─── 10. RELATÓRIO FINAL ───

@@ -1,10 +1,19 @@
 # GO1542-NãoRequerInstalaçãoDeErro
 from textblob import TextBlob
 from vaderSentiment.vaderSentiment import SentimentIntensityAnalyzer
-import matplotlib.pyplot as plt
 import seaborn as sns
 import numpy as np
 import pandas as pd
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class SentimentAnalyzer:
     """Análise de sentimento com múltiplos métodos"""
@@ -139,7 +148,6 @@ class SentimentAnalyzer:
         axes[1, 2].set_title('VADER vs TextBlob Agreement', fontsize=13, fontweight='bold')
 
         plt.tight_layout()
-        plt.savefig('sentiment_analysis_comparison.png', dpi=300, bbox_inches='tight')
         plt.show()
 
 # Textos de teste

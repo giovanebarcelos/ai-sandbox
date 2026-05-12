@@ -2,8 +2,17 @@
 from transformers import BertTokenizer, BertForMaskedLM, pipeline
 import torch
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class BertMaskedLM:
     """Sistema de preenchimento de palavras mascaradas"""
@@ -62,7 +71,6 @@ class BertMaskedLM:
             plt.text(score, i, f' {score:.4f}', va='center', fontsize=10)
 
         plt.tight_layout()
-        plt.savefig('bert_masked_predictions.png', dpi=300, bbox_inches='tight')
         plt.show()
 
     def multiple_masks(self, text, num_masks=2, iterations=5):
@@ -197,7 +205,6 @@ class BertMaskedLM:
         ax.grid(axis='y', alpha=0.3)
 
         plt.tight_layout()
-        plt.savefig('bert_context_sensitivity.png', dpi=300, bbox_inches='tight')
         plt.show()
 
 # Inicializar sistema

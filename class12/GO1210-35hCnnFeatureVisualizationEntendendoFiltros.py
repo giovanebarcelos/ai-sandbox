@@ -9,7 +9,16 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.datasets import mnist
+
+import matplotlib
 import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🔍 CNN FEATURE VISUALIZATION")
 print("=" * 70)
@@ -66,7 +75,7 @@ for i in range(16):
 
 plt.suptitle('Filtros da Primeira Camada Conv', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('cnn_filters_conv1.png', dpi=150)
+plt.show()
 print("✅ Filtros salvos: cnn_filters_conv1.png")
 
 # ─── 3. VISUALIZAR FEATURE MAPS ───
@@ -119,7 +128,7 @@ for layer_idx, (layer_name, activation) in enumerate(zip(['conv1', 'conv2', 'con
 
 plt.suptitle(f'Feature Maps para Dígito {test_label}', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('cnn_feature_maps.png', dpi=150)
+plt.show()
 print("✅ Feature maps salvos: cnn_feature_maps.png")
 
 # ─── 4. MAXIMALLY ACTIVATING IMAGES ───
@@ -151,7 +160,7 @@ for i, idx in enumerate(top5_indices):
 
 plt.suptitle(f'Top-5 Imagens que Maximizam Filtro {filter_idx}', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('cnn_max_activating.png', dpi=150)
+plt.show()
 print("✅ Max activating salvos: cnn_max_activating.png")
 
 # ─── 5. ANÁLISE POR CAMADA ───

@@ -1,8 +1,17 @@
 # GO1625-31cPromptInjectionDefense
 import re
 from typing import List, Dict, Tuple
-import matplotlib.pyplot as plt
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class PromptInjectionDefense:
     """
@@ -281,7 +290,7 @@ ax.annotate(f'Optimal\n({optimal_threshold:.2f})',
             arrowprops=dict(arrowstyle='->', color='green', lw=2))
 
 plt.tight_layout()
-plt.savefig('prompt_injection_defense.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: prompt_injection_defense.png")
 
 print("\n✅ Prompt injection defense implementado!")

@@ -10,8 +10,17 @@ from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense, Dropout
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras import mixed_precision
-import matplotlib.pyplot as plt
 import time
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("⚡ MIXED PRECISION TRAINING")
 print("=" * 70)
@@ -211,7 +220,7 @@ axes[1, 1].grid(axis='y', alpha=0.3)
 
 plt.suptitle('Mixed Precision Training (FP16 vs FP32)', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('mixed_precision_comparison.png', dpi=150)
+plt.show()
 print("✅ Comparação salva: mixed_precision_comparison.png")
 
 print("\n💡 COMO FUNCIONA:")

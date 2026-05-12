@@ -6,7 +6,6 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
@@ -148,7 +147,7 @@ for i, (class_label, color) in enumerate(zip(class_labels, colors)):
         axes[i].set_xlabel('Tempo (amostras)')
 
 plt.tight_layout()
-plt.savefig('ecg_examples.png', dpi=150)
+plt.show()
 print("\n  ✓ Exemplos salvos: ecg_examples.png")
 
 # ─── 2. PREPARAR DADOS ───
@@ -307,7 +306,7 @@ axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('ecg_model_comparison.png', dpi=150)
+plt.show()
 print("\n  ✓ Comparação salva: ecg_model_comparison.png")
 
 # ─── 7. ANÁLISE DETALHADA DO MELHOR MODELO ───
@@ -330,7 +329,7 @@ plt.title(f'Matriz de Confusão - {best_name}', fontsize=14, fontweight='bold')
 plt.ylabel('Real')
 plt.xlabel('Previsto')
 plt.tight_layout()
-plt.savefig('ecg_confusion_matrix.png', dpi=150)
+plt.show()
 print("  ✓ Matriz de confusão salva: ecg_confusion_matrix.png")
 
 # Classification report
@@ -341,6 +340,16 @@ print(classification_report(y_test, y_pred_classes, target_names=class_labels))
 print("\n📊 Curvas ROC por classe...")
 
 from sklearn.preprocessing import label_binarize
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # Binarizar labels
 y_test_bin = label_binarize(y_test, classes=[0, 1, 2, 3, 4])
@@ -366,7 +375,7 @@ for i in range(5):
 fig.delaxes(axes[5])
 
 plt.tight_layout()
-plt.savefig('ecg_roc_curves.png', dpi=150)
+plt.show()
 print("  ✓ Curvas ROC salvas: ecg_roc_curves.png")
 
 # ─── 9. PREDIÇÃO EM NOVO SINAL ───
@@ -401,7 +410,7 @@ axes[1].set_ylim([0, 1])
 axes[1].grid(True, alpha=0.3, axis='y')
 
 plt.tight_layout()
-plt.savefig('ecg_prediction_example.png', dpi=150)
+plt.show()
 print("  ✓ Exemplo de predição salvo: ecg_prediction_example.png")
 
 print(f"\n  Classe prevista: {class_labels[pred_class]}")

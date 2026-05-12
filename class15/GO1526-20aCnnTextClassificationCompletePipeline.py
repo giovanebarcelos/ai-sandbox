@@ -1,12 +1,21 @@
 # GO1526-20aCnnTextClassificationCompletePipeline
 import numpy as np
-import matplotlib.pyplot as plt
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Embedding, Conv1D, GlobalMaxPooling1D, Dense, Dropout
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from sklearn.model_selection import train_test_split
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class CNNTextClassifier:
     """
@@ -266,7 +275,7 @@ for bar, acc in zip(bars, accuracies):
             f'{acc:.2f}', ha='left', va='center', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('cnn_text_classification.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: cnn_text_classification.png")
 
 print("\n✅ CNN text classification demo completo!")

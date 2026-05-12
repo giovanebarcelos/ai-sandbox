@@ -3,10 +3,18 @@
 # Slide 32: K-Means, DBSCAN, Hierárquico, Silhouette, Davies-Bouldin
 from sklearn.preprocessing import StandardScaler
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     import numpy as np
-    import matplotlib.pyplot as plt
     from scipy.cluster.hierarchy import dendrogram, linkage
 
     from sklearn.datasets import make_blobs
@@ -119,6 +127,5 @@ if __name__ == "__main__":
     ax.legend(lines1 + lines2, labels1 + labels2, fontsize=8)
 
     plt.tight_layout()
-    plt.savefig("class07/GO0714-Essencial.png", dpi=120)
     plt.show()
-    print("\nGráfico salvo em class07/GO0714-Essencial.png")
+    plt.show()

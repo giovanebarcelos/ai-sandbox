@@ -6,7 +6,6 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Sequential, Model
@@ -16,6 +15,16 @@ from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ─── 1. CRIAR DATASET SINTÉTICO DE NOTÍCIAS ───
 print("📰 Criando dataset sintético de notícias...")
@@ -257,7 +266,7 @@ axes[1].grid(True, alpha=0.3, axis='y')
 axes[1].set_xticklabels(comparison['Modelo'], rotation=45, ha='right')
 
 plt.tight_layout()
-plt.savefig('news_classification_comparison.png', dpi=150)
+plt.show()
 print("\n  ✓ Comparação salva: news_classification_comparison.png")
 
 # ─── 7. ANÁLISE DETALHADA DO MELHOR MODELO ───
@@ -283,7 +292,7 @@ plt.title(f'Matriz de Confusão - {best_name} LSTM', fontsize=14, fontweight='bo
 plt.ylabel('Real')
 plt.xlabel('Previsto')
 plt.tight_layout()
-plt.savefig('news_confusion_matrix.png', dpi=150)
+plt.show()
 print("  ✓ Matriz de confusão salva: news_confusion_matrix.png")
 
 # Classification report

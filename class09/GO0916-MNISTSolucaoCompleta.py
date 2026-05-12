@@ -8,12 +8,20 @@
 # ═══════════════════════════════════════════════════════════════════
 
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 import seaborn as sns
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 from sklearn.metrics import confusion_matrix, classification_report
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ───────────────────────────────────────────────────────────────────
 # PARTE 1 – SETUP E DADOS  (Slide 21A)
@@ -57,7 +65,6 @@ for i, ax in enumerate(axes.flat):
     ax.set_title(f'Label: {y_train[i]}')
     ax.axis('off')
 plt.tight_layout()
-plt.savefig("GO0916-parte1-amostras.png", dpi=120, bbox_inches='tight')
 plt.show()
 
 # Checkpoint Parte 1
@@ -89,7 +96,6 @@ def softmax(z):
 def categorical_cross_entropy(y_true, y_pred):
     y_pred = np.clip(y_pred, 1e-15, 1 - 1e-15)
     return -np.mean(np.sum(y_true * np.log(y_pred), axis=1))
-
 
 class MulticlassNN:
     """Rede neural multiclasse: ReLU nas ocultas, Softmax na saída."""
@@ -170,7 +176,6 @@ class MulticlassNN:
     def accuracy(self, X, y):
         return np.mean(self.predict(X) == np.argmax(y, axis=1))
 
-
 print("   Input:    784 neurônios (28×28 pixels)")
 print("   Hidden 1: 128 neurônios (ReLU)")
 print("   Hidden 2:  64 neurônios (ReLU)")
@@ -226,7 +231,6 @@ axes[1].grid(True, alpha=0.3)
 axes[1].set_ylim([50, 100])
 
 plt.tight_layout()
-plt.savefig("GO0916-parte3-treinamento.png", dpi=120, bbox_inches='tight')
 plt.show()
 
 # Checkpoint Parte 3
@@ -252,7 +256,6 @@ plt.xlabel('Predito')
 plt.ylabel('Verdadeiro')
 plt.title(f'Parte 4 – Matriz de Confusão  (Acc: {test_acc*100:.2f}%)')
 plt.tight_layout()
-plt.savefig("GO0916-parte4-confusao.png", dpi=120, bbox_inches='tight')
 plt.show()
 
 # Classification report
@@ -279,7 +282,6 @@ for ax, idx in zip(axes.ravel(), top_errors_idx):
                  f'Conf: {confidences[idx]*100:.1f}%', fontsize=8)
     ax.axis('off')
 plt.tight_layout()
-plt.savefig("GO0916-parte4-erros.png", dpi=120, bbox_inches='tight')
 plt.show()
 
 # Acurácia por dígito

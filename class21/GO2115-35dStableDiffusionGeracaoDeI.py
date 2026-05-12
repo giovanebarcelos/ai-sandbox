@@ -1,9 +1,18 @@
 # GO2115-35dStableDiffusionGeraçãoDeI
 from diffusers import StableDiffusionPipeline
 import torch
-import matplotlib.pyplot as plt
 from PIL import Image
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("="*70)
 print("STABLE DIFFUSION - Geração de Imagens por Texto")
@@ -87,7 +96,7 @@ for idx, (prompt, img) in enumerate(generated_images):
 
 plt.suptitle('Stable Diffusion - Imagens Geradas', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('stable_diffusion_grid.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("✅ Grid salvo: stable_diffusion_grid.png")
 
 # 4. VARIAÇÕES COM SEEDS
@@ -117,7 +126,7 @@ for idx, seed in enumerate(seeds):
 
 plt.suptitle(f'Variações: "{prompt_var}"', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('sd_variations.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n✅ Variações salvas: sd_variations.png")
 
 # 5. NEGATIVE PROMPTS
@@ -155,7 +164,7 @@ axes[1].axis('off')
 
 plt.suptitle('Impacto do Negative Prompt', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('sd_negative_prompt.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("✅ Comparação salva: sd_negative_prompt.png")
 
 print("\n" + "="*70)

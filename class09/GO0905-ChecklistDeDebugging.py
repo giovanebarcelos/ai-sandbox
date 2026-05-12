@@ -4,12 +4,22 @@
 # Etapa 1: CARREGAR E PREPARAR DADOS
 # ═══════════════════════════════════════════════════════════════════
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler
 from sklearn.metrics import classification_report, confusion_matrix
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 print("="*70)
 print("CLASSIFICAÇÃO DE DÍGITOS MANUSCRITOS - MNIST")
 print("="*70)

@@ -10,7 +10,16 @@
 # BASEADO EM: Aula 09 – Slides 5, 6, 8, 10
 
 import numpy as np
+
+import matplotlib
 import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ───────────────────────────────────────────────────────────────────
 # PASSO 1 – FUNÇÕES DE ATIVAÇÃO
@@ -59,7 +68,6 @@ axes[2].set_title('ReLU\nPadrão nas camadas ocultas')
 axes[2].set_xlabel('z'); axes[2].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('GO0933-parte1-funcoes-ativacao.png', dpi=120, bbox_inches='tight')
 plt.show()
 
 # ───────────────────────────────────────────────────────────────────
@@ -109,7 +117,6 @@ class Perceptron:
 
     def score(self, X, y):
         return np.mean(self.predict(X) == y)
-
 
 # ───────────────────────────────────────────────────────────────────
 # PASSO 3 – TESTAR EM AND, OR E XOR
@@ -163,7 +170,6 @@ for col, (name, (X, y)) in enumerate(datasets.items()):
     ax.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('GO0933-parte1-perceptron-fronteiras.png', dpi=120, bbox_inches='tight')
 plt.show()
 
 # ───────────────────────────────────────────────────────────────────

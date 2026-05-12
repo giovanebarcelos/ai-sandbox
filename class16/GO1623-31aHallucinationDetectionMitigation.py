@@ -1,8 +1,17 @@
 # GO1623-31aHallucinationDetectionMitigation
 import numpy as np
 from typing import List, Dict, Tuple
-import matplotlib.pyplot as plt
 from collections import Counter
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class HallucinationDetector:
     """
@@ -302,7 +311,7 @@ ax.grid(axis='y', alpha=0.3)
 ax.set_ylim(0, 1)
 
 plt.tight_layout()
-plt.savefig('hallucination_detection.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: hallucination_detection.png")
 
 print("\n✅ Sistema de detecção implementado!")

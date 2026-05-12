@@ -5,12 +5,21 @@ import pickle
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.linear_model import LogisticRegression
 from sklearn.metrics import classification_report, confusion_matrix
-import matplotlib.pyplot as plt
 import seaborn as sns
 import re
 from nltk.tokenize import word_tokenize
 from nltk.corpus import stopwords
 from nltk.stem import WordNetLemmatizer
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ============================================================================
 # CLASSE DO SISTEMA DE ANÁLISE DE SENTIMENTO
@@ -128,7 +137,7 @@ class SentimentAnalyzer:
         plt.title('Matriz de Confusão - Análise de Sentimento')
         plt.ylabel('Real')
         plt.xlabel('Predito')
-        plt.savefig('aula15_confusion_matrix.png', dpi=300, bbox_inches='tight')
+        plt.show()
         print("\n📊 Matriz de confusão salva: aula15_confusion_matrix.png")
 
         return y_pred
@@ -249,7 +258,7 @@ axes[1].set_title('Top 10 Palavras Negativas')
 axes[1].invert_yaxis()
 
 plt.tight_layout()
-plt.savefig('aula15_important_words.png', dpi=300, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: aula15_important_words.png")
 
 # ============================================================================

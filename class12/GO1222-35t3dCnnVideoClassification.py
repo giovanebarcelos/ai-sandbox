@@ -8,7 +8,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv3D, MaxPooling3D, Flatten, Dense, Dropout
-import matplotlib.pyplot as plt
 
 print("🎬 3D CNN - VIDEO CLASSIFICATION")
 print("=" * 70)
@@ -56,6 +55,16 @@ print(f"  Classes: 0=Horizontal, 1=Vertical")
 
 # Split
 from sklearn.model_selection import train_test_split
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 X_train, X_test, y_train, y_test = train_test_split(X_data, y_data, test_size=0.2, random_state=42)
 
@@ -147,7 +156,7 @@ axes[1, 0].text(-5, 16, 'Vertical ↓', fontsize=10, fontweight='bold',
 
 plt.suptitle('3D CNN: Video Classification', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('3d_cnn_video.png', dpi=150)
+plt.show()
 print("✅ Video frames salvos: 3d_cnn_video.png")
 
 # ─── 6. TRAINING HISTORY ───
@@ -171,7 +180,7 @@ axes[1].grid(True, alpha=0.3)
 
 plt.suptitle('3D CNN Training', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('3d_cnn_training.png', dpi=150)
+plt.show()
 print("✅ Training salvo: 3d_cnn_training.png")
 
 print("\n💡 3D CNN:")

@@ -2,10 +2,19 @@
 import numpy as np
 import time
 import faiss
-import matplotlib.pyplot as plt
 import seaborn as sns
 from typing import List, Dict
 from collections import defaultdict
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class VectorStoreComparison:
     """
@@ -234,8 +243,7 @@ ax.legend()
 ax.grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('vector_store_comparison.png', dpi=150, bbox_inches='tight')
-print("\n📊 Gráfico salvo: vector_store_comparison.png")
+plt.show()
 
 # === SUMMARY TABLE ===
 
@@ -265,4 +273,4 @@ print("✅ FAISS + ChromaDB: Combinar ambos para melhor resultado")
 print("\n🔗 FAISS Advanced:")
 print("  - IndexIVFFlat: Inverted file index (mais rápido, aprox.)")
 print("  - IndexHNSW: Hierarchical NSW (melhor recall)")
-  - IndexPQ: Product Quantization (menor memória)")
+print("  - IndexPQ: Product Quantization (menor memória)")

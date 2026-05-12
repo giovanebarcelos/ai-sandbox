@@ -8,7 +8,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, GRU, Dense, Embedding
-import matplotlib.pyplot as plt
 import time
 
 print("⚔️ GRU vs LSTM - COMPARAÇÃO")
@@ -37,6 +36,17 @@ y = y.astype('float32') / (seq_length * max_value)
 
 # Split
 from sklearn.model_selection import train_test_split
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
 
 print(f"  Train: {X_train.shape}")
@@ -213,7 +223,7 @@ axes[1, 2].grid(axis='y', alpha=0.3)
 
 plt.suptitle('GRU vs LSTM vs SimpleRNN - Comprehensive Comparison', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('gru_lstm_comparison.png', dpi=150)
+plt.show()
 print("✅ Comparação salva: gru_lstm_comparison.png")
 
 # ─── 6. ARQUITETURA INTERNA ───

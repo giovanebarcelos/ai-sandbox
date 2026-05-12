@@ -8,7 +8,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.applications import VGG19
 from tensorflow.keras.preprocessing.image import load_img, img_to_array
-import matplotlib.pyplot as plt
 
 print("🎨 NEURAL STYLE TRANSFER")
 print("=" * 70)
@@ -23,6 +22,17 @@ content_img = np.zeros((img_size, img_size, 3), dtype=np.uint8)
 content_img[:, :] = [100, 150, 200]  # Azul claro
 # Adicionar círculo
 import cv2
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 cv2.circle(content_img, (112, 112), 60, (255, 255, 0), -1)  # Amarelo
 
 # Style image (padrão artístico)
@@ -191,7 +201,7 @@ axes[2].axis('off')
 
 plt.suptitle('Neural Style Transfer', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('style_transfer_result.png', dpi=150)
+plt.show()
 print("✅ Resultado salvo: style_transfer_result.png")
 
 # Loss curve
@@ -201,7 +211,7 @@ plt.xlabel('Iteration')
 plt.ylabel('Total Loss')
 plt.title('Style Transfer Optimization', fontsize=14, fontweight='bold')
 plt.grid(alpha=0.3)
-plt.savefig('style_transfer_loss.png', dpi=150)
+plt.show()
 print("✅ Loss salvo: style_transfer_loss.png")
 
 print("\n💡 COMO FUNCIONA:")

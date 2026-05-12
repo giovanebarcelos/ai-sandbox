@@ -1,6 +1,5 @@
 # GO2114-35cLimeParaXai
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import load_iris, fetch_20newsgroups
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.model_selection import train_test_split
@@ -8,6 +7,17 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 import lime
 from lime import lime_tabular, lime_text
 import warnings
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 warnings.filterwarnings('ignore')
 
 print("="*70)
@@ -62,9 +72,8 @@ for feature, weight in explanation.as_list():
 # Visualizar
 fig = explanation.as_pyplot_figure()
 plt.tight_layout()
-plt.savefig('lime_tabular_explanation.png', dpi=150)
+plt.show()
 print("\n✅ Explicação visual salva: lime_tabular_explanation.png")
-plt.close()
 
 # ==================
 # EXEMPLO 2: DADOS DE TEXTO
@@ -189,7 +198,7 @@ plt.title(f'Sensibilidade da Predição a {feature_name}', fontsize=14, fontweig
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('sensitivity_analysis.png', dpi=150)
+plt.show()
 print("✅ Análise de sensibilidade salva: sensitivity_analysis.png")
 
 print("\n📊 RESUMO XAI COM LIME:")

@@ -1,5 +1,4 @@
 # GO1622-30aLlmCostOptimizationCalculator
-import matplotlib.pyplot as plt
 import numpy as np
 from typing import Dict, List
 from dataclasses import dataclass
@@ -328,11 +327,22 @@ ax.set_xscale('log')
 
 # Find intersection
 from scipy.interpolate import interp1d
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 # Simplified: mark crossover visually
 ax.axhline(25000, color='gray', linestyle=':', alpha=0.5)
 
 plt.tight_layout()
-plt.savefig('llm_cost_optimization.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n\n📊 Gráfico salvo: llm_cost_optimization.png")
 
 print("\n\n✅ Cost calculator implementado!")

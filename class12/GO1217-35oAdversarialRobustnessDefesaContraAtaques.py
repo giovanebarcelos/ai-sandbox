@@ -9,7 +9,16 @@ import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.datasets import mnist
+
+import matplotlib
 import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("⚔️ ADVERSARIAL ROBUSTNESS")
 print("=" * 70)
@@ -156,7 +165,7 @@ for i in range(6):
 
 plt.suptitle(f'Adversarial Examples (FGSM, epsilon={epsilon})', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('adversarial_examples.png', dpi=150)
+plt.show()
 print("✅ Exemplos salvos: adversarial_examples.png")
 
 # Comparação
@@ -181,7 +190,7 @@ ax.set_ylim(0, 1)
 ax.grid(axis='y', alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('adversarial_robustness_comparison.png', dpi=150)
+plt.show()
 print("✅ Comparação salva: adversarial_robustness_comparison.png")
 
 print("\n💡 ATAQUES ADVERSARIAIS:")

@@ -2,9 +2,18 @@
 import torch
 import torch.nn as nn
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
 from transformers import BertModel, BertTokenizer
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class AttentionVisualizer:
     """
@@ -211,14 +220,14 @@ print()
 print("📌 Visualizing Layer 0 (all 12 heads)...\n")
 
 fig = visualizer.visualize_heads(text, layer_idx=0)
-plt.savefig('attention_heads_layer0.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("   Saved: attention_heads_layer0.png")
 
 # Attention flow across layers
 print("\n📌 Visualizing attention flow across all 12 layers...\n")
 
 fig = visualizer.attention_flow(text)
-plt.savefig('attention_flow.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("   Saved: attention_flow.png")
 
 # Head importance analysis
@@ -235,7 +244,7 @@ ax.set_ylabel('Layer Index')
 ax.set_title('Attention Head Importance Across Layers')
 
 plt.tight_layout()
-plt.savefig('head_importance.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("   Saved: head_importance.png")
 
 # Find most/least important heads
@@ -310,7 +319,7 @@ ax.legend(loc='upper right')
 ax.grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('attention_patterns.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: attention_patterns.png")
 
 print("\n✅ Attention visualization implementado!")

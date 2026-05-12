@@ -1,9 +1,18 @@
 # GO1510-NãoRequerInstalaçãoDeErro
 from sklearn.feature_extraction.text import CountVectorizer
-import matplotlib.pyplot as plt
 import pandas as pd
 from collections import Counter
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class NgramAnalyzer:
     """
@@ -204,7 +213,7 @@ ax.set_title('Top 6 Trigrams')
 ax.invert_yaxis()
 
 plt.tight_layout()
-plt.savefig('ngram_analysis.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: ngram_analysis.png")
 
 print("\n✅ N-gram analysis completo!")

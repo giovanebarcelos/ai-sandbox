@@ -5,7 +5,6 @@
 # ═══════════════════════════════════════════════════════════════════
 
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import fetch_openml
 from sklearn.model_selection import train_test_split
 
@@ -56,6 +55,16 @@ for i, ax in enumerate(axes.flat):
     ax.axis('off')
 plt.tight_layout()
 plt.show()
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     # ───────────────────────────────────────────────────────────────

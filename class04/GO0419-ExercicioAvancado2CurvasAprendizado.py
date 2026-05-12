@@ -1,11 +1,20 @@
 # GO0419-ExercicioAvancado2CurvasAprendizado
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import load_diabetes
 from sklearn.model_selection import learning_curve, train_test_split
 from sklearn.linear_model import Ridge
 from sklearn.tree import DecisionTreeRegressor
 from sklearn.preprocessing import StandardScaler
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("=" * 70)
 print("ANÁLISE DE CURVAS DE APRENDIZADO")
@@ -60,6 +69,6 @@ for idx, (name, model) in enumerate(models.items()):
     print(f"   Gap: {gap:.1f} → {diagnosis}")
 
 plt.tight_layout()
-plt.savefig('learning_curves.png', dpi=100)
+plt.show()
 print("\n✓ learning_curves.png")
 print("\n✅ Análise de Curvas concluída!")

@@ -6,7 +6,6 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from tensorflow.keras.preprocessing.text import Tokenizer
 from tensorflow.keras.preprocessing.sequence import pad_sequences
 from tensorflow.keras.models import Model
@@ -168,6 +167,16 @@ lstm_out_vis = lstm_layer(embedding_vis)
 from tensorflow.keras.layers import Layer
 import tensorflow as tf
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 class AttentionWithScores(Layer):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -250,7 +259,7 @@ for idx, (text, sentiment) in enumerate(zip(example_texts, example_sentiments)):
     ax.grid(True, alpha=0.3, axis='x')
 
 plt.tight_layout()
-plt.savefig('attention_visualization.png', dpi=150)
+plt.show()
 print("  ✓ Visualização salva: attention_visualization.png")
 
 # ─── 6. HEATMAP DE ATTENTION PARA MÚLTIPLOS EXEMPLOS ───
@@ -289,7 +298,7 @@ plt.title('Heatmap de Attention - Múltiplos Exemplos', fontsize=14, fontweight=
 plt.xlabel('Posição da Palavra')
 plt.ylabel('Texto')
 plt.tight_layout()
-plt.savefig('attention_heatmap.png', dpi=150)
+plt.show()
 print("  ✓ Heatmap salvo: attention_heatmap.png")
 
 # ─── 7. ANÁLISE DE PALAVRAS MAIS ATENDIDAS ───
@@ -329,7 +338,7 @@ plt.title('Top 20 Palavras com Maior Attention', fontsize=14, fontweight='bold')
 plt.gca().invert_yaxis()
 plt.grid(True, alpha=0.3, axis='x')
 plt.tight_layout()
-plt.savefig('top_attention_words.png', dpi=150)
+plt.show()
 print("  ✓ Top words salvo: top_attention_words.png")
 
 print("\n  Top 10:")

@@ -2,9 +2,18 @@
 import torch
 import numpy as np
 from transformers import AutoModelForCausalLM, AutoTokenizer, BitsAndBytesConfig
-import matplotlib.pyplot as plt
 from typing import Dict, List
 import time
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class QuantizationComparison:
     """
@@ -271,7 +280,7 @@ for bar, mem in zip(bars, memory):
             f'{mem:.3f}', ha='center', va='bottom', fontweight='bold', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('quantization_comparison.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: quantization_comparison.png")
 
 print("\n✅ Quantization comparison implementado!")

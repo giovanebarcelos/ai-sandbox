@@ -229,8 +229,17 @@ for strategy in ['buffer', 'summary', 'entity']:
         print(f"   {key}: {value}")
 
 # Visualize memory strategies
-import matplotlib.pyplot as plt
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
@@ -291,7 +300,7 @@ ax.legend()
 ax.grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('conversational_memory_comparison.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n\n📊 Gráfico salvo: conversational_memory_comparison.png")
 
 print("\n✅ Conversational Memory System implementado!")

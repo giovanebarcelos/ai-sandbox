@@ -1,7 +1,6 @@
 # GO1718-30bRagEvaluationMetrics
 import numpy as np
 from typing import List, Dict
-import matplotlib.pyplot as plt
 from dataclasses import dataclass
 
 @dataclass
@@ -349,12 +348,23 @@ df = pd.DataFrame(metric_data)
 corr = df.corr()
 
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', center=0,
             square=True, ax=ax, cbar_kws={'label': 'Correlation'})
 ax.set_title('Metric Correlations')
 
 plt.tight_layout()
-plt.savefig('rag_evaluation_results.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n\n📊 Gráfico salvo: rag_evaluation_results.png")
 
 # Summary

@@ -3,11 +3,19 @@ import subprocess, sys
 subprocess.check_call([sys.executable, "-m", "pip", "install", "minisom", "-q"])
 
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.datasets import load_wine
 from sklearn.preprocessing import StandardScaler
 from minisom import MiniSom
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     # Carregar e preparar dados

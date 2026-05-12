@@ -8,8 +8,17 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 from tensorflow.keras.layers import RandomFlip, RandomRotation, RandomZoom
-import matplotlib.pyplot as plt
 import cv2
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🎨 DATA AUGMENTATION PIPELINE AVANÇADO")
 print("=" * 70)
@@ -130,7 +139,7 @@ fig.text(0.02, 0.21, 'PESADO', fontsize=14, fontweight='bold', rotation=90, va='
 plt.suptitle('Data Augmentation Pipeline - Comparação de Intensidades', 
             fontsize=16, fontweight='bold', y=0.98)
 plt.tight_layout()
-plt.savefig('augmentation_comparison.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("✅ Comparação salva: augmentation_comparison.png")
 
 # ─── 6. GUIDELINES DE USO ───

@@ -1,8 +1,17 @@
 # GO0413-Exercicio2AnaliseExploratoriaAvancada
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # Configurar estilo
 sns.set_style('whitegrid')
@@ -121,7 +130,7 @@ for i, bar in enumerate(bars):
             f'{height:.2%}', ha='center', va='bottom', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('titanic_eda.png', dpi=100, bbox_inches='tight')
+plt.show()
 print("\n✓ Visualizações salvas: titanic_eda.png")
 
 # 4. Identificar 3 insights importantes

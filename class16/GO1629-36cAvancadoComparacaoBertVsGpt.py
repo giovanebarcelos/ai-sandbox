@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 from transformers import BertTokenizer, BertModel, GPT2Tokenizer, GPT2LMHeadModel
 import numpy as np
-import matplotlib.pyplot as plt
 
 class TransformerComparison:
     """Comparar BERT (Encoder) vs GPT (Decoder)"""
@@ -71,7 +70,6 @@ class TransformerComparison:
         plt.colorbar(im2, ax=axes[1], label='Can Attend (1=Yes)')
 
         plt.tight_layout()
-        plt.savefig('bert_vs_gpt_attention_masks.png', dpi=300, bbox_inches='tight')
         plt.show()
 
         print("\n📊 DIFERENÇAS DE ARQUITETURA:")
@@ -124,7 +122,6 @@ class TransformerComparison:
             plt.colorbar(im2, ax=axes[idx, 1])
 
         plt.tight_layout()
-        plt.savefig('bert_vs_gpt_embeddings.png', dpi=300, bbox_inches='tight')
         plt.show()
 
     def benchmark_tasks(self):
@@ -166,11 +163,19 @@ class TransformerComparison:
                        ha='center', va='bottom', fontsize=9)
 
         plt.tight_layout()
-        plt.savefig('bert_vs_gpt_tasks.png', dpi=300, bbox_inches='tight')
         plt.show()
 
 # Executar comparações
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     comparator = TransformerComparison()

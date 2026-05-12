@@ -184,8 +184,17 @@ print("\n\n📄 Streamlit Integration Code:")
 print(streamlit_code)
 
 # Visualize streaming performance
-import matplotlib.pyplot as plt
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 
@@ -251,7 +260,7 @@ ax.legend()
 ax.grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('streaming_rag_performance.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: streaming_rag_performance.png")
 
 print("\n✅ Streaming RAG implementado!")

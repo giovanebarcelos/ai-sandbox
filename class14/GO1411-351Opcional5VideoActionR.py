@@ -5,7 +5,6 @@
 # ═══════════════════════════════════════════════════════════════════
 
 import numpy as np
-import matplotlib.pyplot as plt
 from tensorflow.keras.models import Model, Sequential
 from tensorflow.keras.layers import (Conv2D, MaxPooling2D, Flatten, LSTM, Dense, 
                                       Dropout, TimeDistributed, Input)
@@ -102,7 +101,7 @@ for action_idx in range(4):
 
 plt.suptitle('Exemplos de Vídeos por Ação', fontsize=14, fontweight='bold', y=1.02)
 plt.tight_layout()
-plt.savefig('video_action_examples.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n  ✓ Exemplos salvos: video_action_examples.png")
 
 # ─── 2. PREPARAR DADOS ───
@@ -230,6 +229,16 @@ print("\n📊 Comparando modelos...")
 
 import pandas as pd
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 comparison = pd.DataFrame({
     'Modelo': ['CNN-LSTM', 'CNN-BiLSTM', 'MobileNetV2-LSTM'],
     'Parâmetros': [
@@ -281,7 +290,7 @@ axes[2].legend()
 axes[2].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('video_action_comparison.png', dpi=150)
+plt.show()
 print("\n  ✓ Comparação salva: video_action_comparison.png")
 
 # ─── 7. MATRIZ DE CONFUSÃO (MELHOR MODELO) ───
@@ -302,7 +311,7 @@ plt.title(f'Matriz de Confusão - {best_model_name}', fontsize=14, fontweight='b
 plt.ylabel('Real')
 plt.xlabel('Previsto')
 plt.tight_layout()
-plt.savefig('video_action_confusion.png', dpi=150)
+plt.show()
 print("  ✓ Matriz salva: video_action_confusion.png")
 
 print("\n📋 Classification Report:")

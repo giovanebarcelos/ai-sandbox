@@ -8,7 +8,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, LSTM, RepeatVector, TimeDistributed, Dense
-import matplotlib.pyplot as plt
 
 print("🚨 TIME SERIES ANOMALY DETECTION")
 print("=" * 70)
@@ -73,6 +72,16 @@ X_anomaly = X_anomaly.reshape(-1, 50, 1)
 
 # Split
 from sklearn.model_selection import train_test_split
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 X_train, X_test_normal = train_test_split(X_normal, test_size=0.2, random_state=42)
 
@@ -165,7 +174,7 @@ for i in range(3):
 
 plt.suptitle('LSTM Autoencoder: Anomaly Detection', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('timeseries_anomaly_detection.png', dpi=150)
+plt.show()
 print("✅ Detecção salva: timeseries_anomaly_detection.png")
 
 # Distribuição de erros
@@ -181,7 +190,7 @@ ax.legend()
 ax.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('timeseries_anomaly_distribution.png', dpi=150)
+plt.show()
 print("✅ Distribuição salva: timeseries_anomaly_distribution.png")
 
 print("\n💡 TIME SERIES ANOMALY DETECTION:")

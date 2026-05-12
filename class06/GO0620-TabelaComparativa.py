@@ -5,6 +5,16 @@ from sklearn.metrics import (
 )
 import numpy as np
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 # Calcular todas as métricas
 mae = mean_absolute_error(y_test, y_pred)
 mse = mean_squared_error(y_test, y_pred)
@@ -22,7 +32,6 @@ print(f"R²:    {r2:>10.4f}  (0-1, quanto maior melhor)")
 print(f"MAPE:  {mape:>10.2f}% (erro percentual)")
 
 # Visualização
-import matplotlib.pyplot as plt
 
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 

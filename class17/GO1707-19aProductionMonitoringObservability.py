@@ -3,8 +3,17 @@ import time
 from typing import Dict, List
 from datetime import datetime, timedelta
 from collections import defaultdict
-import matplotlib.pyplot as plt
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class RAGMonitor:
     """
@@ -338,7 +347,7 @@ print(monitor.export_prometheus_metrics()[:300] + "\n...")
 # Visualize dashboard
 print("\n📊 Generating monitoring dashboard...")
 fig = monitor.visualize_dashboard()
-plt.savefig('rag_monitoring_dashboard.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("✅ Dashboard saved: rag_monitoring_dashboard.png")
 
 print("\n✅ Production monitoring system implemented!")

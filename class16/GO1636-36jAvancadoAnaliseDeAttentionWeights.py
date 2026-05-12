@@ -2,7 +2,6 @@
 from transformers import BertTokenizer, BertModel
 import torch
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
 
 class AttentionVisualizer:
@@ -56,7 +55,6 @@ class AttentionVisualizer:
         plt.yticks(rotation=0)
 
         plt.tight_layout()
-        plt.savefig(f'attention_layer{layer}_head{head}.png', dpi=300, bbox_inches='tight')
         plt.show()
 
         # Análise
@@ -117,7 +115,6 @@ class AttentionVisualizer:
         plt.suptitle(f'All Attention Heads - Layer {layer}\nText: "{text}"',
                     fontsize=16, fontweight='bold')
         plt.tight_layout()
-        plt.savefig(f'all_heads_layer{layer}.png', dpi=300, bbox_inches='tight')
         plt.show()
 
     def compare_layers(self, text, head=0):
@@ -153,7 +150,6 @@ class AttentionVisualizer:
                     f'Text: "{text}"',
                     fontsize=16, fontweight='bold')
         plt.tight_layout()
-        plt.savefig(f'layers_comparison_head{head}.png', dpi=300, bbox_inches='tight')
         plt.show()
 
     def attention_flow(self, text):
@@ -215,7 +211,6 @@ class AttentionVisualizer:
         plt.suptitle(f'Aggregated Attention Analysis\nText: "{text}"',
                     fontsize=16, fontweight='bold')
         plt.tight_layout()
-        plt.savefig('attention_flow.png', dpi=300, bbox_inches='tight')
         plt.show()
 
         # Estatísticas
@@ -235,6 +230,15 @@ class AttentionVisualizer:
 
 # Inicializar visualizador
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     visualizer = AttentionVisualizer()

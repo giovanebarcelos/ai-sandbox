@@ -1,8 +1,17 @@
 # GO1621-29aLongContextHandlingStrategies
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import List, Dict, Tuple
 import re
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class LongContextManager:
     """
@@ -283,7 +292,7 @@ for bar, length in zip(bars, context_lengths):
             label, ha='center', va='bottom', fontweight='bold', fontsize=10)
 
 plt.tight_layout()
-plt.savefig('long_context_handling.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("📊 Gráfico salvo: long_context_handling.png")
 
 print("\n✅ Long context strategies implementado!")

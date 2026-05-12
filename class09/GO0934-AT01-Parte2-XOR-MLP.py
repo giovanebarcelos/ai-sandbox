@@ -10,8 +10,6 @@
 # BASEADO EM: Aula 09 – Slides 11, 13, 14, 15, 16, 17
 
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 
 # ───────────────────────────────────────────────────────────────────
 # FUNÇÕES AUXILIARES (reutilizadas da Parte 1)
@@ -148,7 +146,6 @@ class MLP:
     def score(self, X, y):
         return np.mean(self.predict(X) == y)
 
-
 # ───────────────────────────────────────────────────────────────────
 # PASSO 2 – TREINAR NO XOR
 # ───────────────────────────────────────────────────────────────────
@@ -205,6 +202,17 @@ ax2.contourf(xx, yy, Z, levels=50, cmap='RdYlGn', alpha=0.8)
 ax2.contour( xx, yy, Z, levels=[0.5], colors='black', linewidths=1.5, linestyles='--')
 
 from matplotlib.patches import Patch
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 for xi, yi in zip(X_xor, y_xor):
     cor = 'seagreen' if yi[0] == 1 else 'tomato'
     ax2.scatter(xi[0], xi[1], color=cor, s=200, edgecolors='black', zorder=5)
@@ -219,7 +227,6 @@ ax2.set_title('Fronteira de Decisão Aprendida')
 ax2.set_xlabel('x₁'); ax2.set_ylabel('x₂')
 
 plt.tight_layout()
-plt.savefig('GO0934-parte2-xor-mlp.png', dpi=120, bbox_inches='tight')
 plt.show()
 
 # ───────────────────────────────────────────────────────────────────

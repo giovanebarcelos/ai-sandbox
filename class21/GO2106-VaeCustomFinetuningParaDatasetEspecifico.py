@@ -6,8 +6,17 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.decomposition import PCA
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ─── 1. PREPARAR DATASET CUSTOM ───
 print("📦 Carregando Fashion MNIST (roupas)...")
@@ -202,7 +211,7 @@ plt.xlabel('Dimensão Latente 1')
 plt.ylabel('Dimensão Latente 2')
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('latent_space_fashion.png', dpi=150)
+plt.show()
 print("✅ Gráfico salvo: latent_space_fashion.png")
 
 # ─── 5. GERAÇÃO DE NOVAS ROUPAS ───
@@ -218,7 +227,7 @@ for i, ax in enumerate(axes.flat):
     ax.axis('off')
 plt.suptitle('Roupas Geradas pelo VAE', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('generated_fashion.png', dpi=150)
+plt.show()
 print("✅ Imagens geradas salvas: generated_fashion.png")
 
 # ─── 6. INTERPOLAÇÃO NO ESPAÇO LATENTE ───
@@ -248,7 +257,7 @@ for i, ax in enumerate(axes):
 plt.suptitle(f'Interpolação: {class_names[y_test[idx1]]} → {class_names[y_test[idx2]]}', 
              fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('interpolation_fashion.png', dpi=150)
+plt.show()
 print("✅ Interpolação salva: interpolation_fashion.png")
 
 # ─── 7. RECONSTRUÇÃO DE AMOSTRAS ───
@@ -274,7 +283,7 @@ for i in range(n_compare):
 
 plt.suptitle('Comparação: Original vs Reconstruído', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('reconstruction_comparison.png', dpi=150)
+plt.show()
 print("✅ Comparação salva: reconstruction_comparison.png")
 
 print("\n" + "="*70)

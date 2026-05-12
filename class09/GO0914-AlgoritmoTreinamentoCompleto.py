@@ -1,8 +1,6 @@
 # GO0914-AlgoritmoTreinamentoCompleto
 # IMPLEMENTAÇÃO DO ALGORITMO DE TREINAMENTO COMPLETO
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.gridspec as gridspec
 
 def sigmoid(z):
     """Função de ativação sigmoid"""
@@ -176,6 +174,17 @@ def train_neural_network(X, y, layer_sizes, learning_rate=0.1, n_epochs=1000, ba
     return weights, biases, losses
 
 # EXEMPLO DE USO - XOR
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 if __name__ == "__main__":
     print("="*60)
     print("TREINANDO REDE NEURAL - XOR")
@@ -260,6 +269,6 @@ if __name__ == "__main__":
         ax2.annotate(f"{pred[0]:.2f}", xy=(xi[0], xi[1]),
                      xytext=(xi[0] + 0.06, xi[1] + 0.06), fontsize=8)
 
-    plt.savefig("GO0914-graficos.png", dpi=150, bbox_inches='tight')
+    plt.show()
     print("📊 Gráficos salvos em GO0914-graficos.png")
     plt.show()

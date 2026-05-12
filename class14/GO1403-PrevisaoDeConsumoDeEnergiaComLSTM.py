@@ -6,13 +6,23 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Bidirectional
 from tensorflow.keras.callbacks import EarlyStopping, ReduceLROnPlateau
 import warnings
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 warnings.filterwarnings('ignore')
 
 # ─── 1. GERAR DADOS SINTÉTICOS DE CONSUMO DE ENERGIA ───
@@ -81,7 +91,7 @@ axes[1].set_ylabel('Consumo (kWh)')
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('energy_timeseries.png', dpi=150)
+plt.show()
 print("  ✓ Série temporal salva: energy_timeseries.png")
 
 # ─── 2. PREPARAR DADOS PARA LSTM ───
@@ -226,7 +236,7 @@ axes[2].legend()
 axes[2].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('energy_lstm_results.png', dpi=150)
+plt.show()
 print("  ✓ Resultados salvos: energy_lstm_results.png")
 
 # ─── 7. PREVER PRÓXIMOS 7 DIAS (RECURSIVO) ───
@@ -269,7 +279,7 @@ plt.ylabel('Consumo (kWh)')
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('energy_future_forecast.png', dpi=150)
+plt.show()
 print("  ✓ Previsão futura salva: energy_future_forecast.png")
 
 # ─── 8. ANÁLISE DE RESÍDUOS ───
@@ -296,7 +306,7 @@ axes[1].set_ylabel('Resíduo (kWh)')
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('energy_residuals.png', dpi=150)
+plt.show()
 print("  ✓ Análise de resíduos salva: energy_residuals.png")
 
 # Estatísticas dos resíduos

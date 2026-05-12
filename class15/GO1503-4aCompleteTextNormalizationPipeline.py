@@ -4,9 +4,18 @@ import string
 import unicodedata
 from nltk.corpus import stopwords
 from nltk.tokenize import word_tokenize
-import matplotlib.pyplot as plt
 import pandas as pd
 from collections import Counter
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class TextNormalizer:
     """
@@ -218,7 +227,7 @@ ax.legend()
 ax.grid(axis='y', alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('text_normalization.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("📊 Gráfico salvo: text_normalization.png")
 
 print("\n✅ Text normalization completo!")

@@ -1,8 +1,17 @@
 # GO1710-21cCostOptimizationStrategies
 import time
 from typing import Dict, List
-import matplotlib.pyplot as plt
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class CostOptimizedRAG:
     """
@@ -325,7 +334,7 @@ ax.legend()
 ax.grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('cost_optimization_analysis.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n\n📊 Gráfico salvo: cost_optimization_analysis.png")
 
 # Summary recommendations

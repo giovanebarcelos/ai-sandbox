@@ -6,11 +6,20 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from sklearn.metrics import mean_absolute_error, mean_squared_error
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("📊 PREVISÃO DE DEMANDA COM LSTM MULTIVARIADA")
 print("=" * 70)
@@ -172,7 +181,7 @@ for idx, sample_idx in enumerate(samples_to_plot):
 
 plt.suptitle('Previsão de Demanda - 7 Dias à Frente', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('demand_forecast_predictions.png', dpi=150)
+plt.show()
 print("✅ Predições salvas: demand_forecast_predictions.png")
 
 # ─── 7. ANÁLISE DE ERRO POR HORIZONTE ───
@@ -191,7 +200,7 @@ plt.ylabel('MAE (unidades)', fontsize=12)
 plt.title('Erro de Previsão por Horizonte', fontsize=14, fontweight='bold')
 plt.grid(axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig('demand_forecast_error_by_horizon.png', dpi=150)
+plt.show()
 print("✅ Erro por horizonte salvo: demand_forecast_error_by_horizon.png")
 
 print("\n💡 INSIGHTS:")

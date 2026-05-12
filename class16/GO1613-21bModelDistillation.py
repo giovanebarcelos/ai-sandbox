@@ -4,8 +4,17 @@ import torch.nn as nn
 import torch.optim as optim
 from transformers import BertModel, BertTokenizer, BertConfig
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import List, Tuple
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class DistilledBERT(nn.Module):
     """
@@ -331,7 +340,7 @@ ax.grid(alpha=0.3)
 ax.set_ylim(0.8, 0.95)
 
 plt.tight_layout()
-plt.savefig('knowledge_distillation.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: knowledge_distillation.png")
 
 print("\n✅ Knowledge distillation implementado!")

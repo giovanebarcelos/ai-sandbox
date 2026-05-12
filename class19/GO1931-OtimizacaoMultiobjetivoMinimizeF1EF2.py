@@ -2,7 +2,16 @@
 from pymoo.algorithms.moo.nsga2 import NSGA2
 from pymoo.factory import get_problem, get_termination
 from pymoo.optimize import minimize
+
+import matplotlib
 import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # Definir problema multi-objetivo
 # Minimizar f1(x) = x^2 e f2(x) = (x-2)^2 simultaneamente

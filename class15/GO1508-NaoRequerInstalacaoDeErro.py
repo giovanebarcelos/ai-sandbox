@@ -1,9 +1,18 @@
 # GO1508-NãoRequerInstalaçãoDeErro
 from sklearn.feature_extraction.text import TfidfVectorizer
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
 import pandas as pd
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class TFIDFAnalyzer:
     """
@@ -199,7 +208,7 @@ if top_keywords:
     ax.invert_yaxis()
 
 plt.tight_layout()
-plt.savefig('tfidf_advanced_analysis.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: tfidf_advanced_analysis.png")
 
 print("\n✅ TF-IDF analysis completo!")

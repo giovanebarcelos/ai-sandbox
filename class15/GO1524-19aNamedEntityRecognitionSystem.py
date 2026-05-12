@@ -1,9 +1,18 @@
 # GO1524-19aNamedEntityRecognitionSystem
 import spacy
 from spacy import displacy
-import matplotlib.pyplot as plt
 from collections import Counter
 import pandas as pd
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🏷️ Named Entity Recognition (NER) Demo\n")
 print("="*70)
@@ -193,7 +202,7 @@ for i in range(3):
 ax.set_title('Top 10 Most Common Entities', pad=20, fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('ner_analysis.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("📊 Gráfico salvo: ner_analysis.png")
 
 print("\n✅ NER analysis completo!")

@@ -1,6 +1,15 @@
 # GO1922-AntColonyOptimizationCompletaTSP
 import numpy as np
+
+import matplotlib
 import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class ACO_TSP:
     def __init__(self, distances, n_ants=20, n_iterations=100, 
@@ -122,7 +131,6 @@ class ACO_TSP:
                 print(f"Iter {iteration:3d}: Best length = {self.best_length:.2f}")
 
         return self.best_tour, self.best_length
-
 
 # EXEMPLO: TSP 20 cidades
 np.random.seed(42)

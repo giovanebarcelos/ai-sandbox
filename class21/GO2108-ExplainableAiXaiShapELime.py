@@ -5,7 +5,6 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier, GradientBoostingClassifier
 from sklearn.model_selection import train_test_split
 from sklearn.datasets import load_breast_cancer
@@ -13,6 +12,16 @@ from sklearn.metrics import classification_report, confusion_matrix
 import shap
 from lime import lime_tabular
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ─── 1. CARREGAR DATASET ───
 print("📦 Carregando dataset de câncer de mama...")
@@ -67,7 +76,7 @@ plt.figure(figsize=(12, 8))
 shap.summary_plot(shap_values, X_test, show=False)
 plt.title('SHAP Summary Plot - Importância e Impacto', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('shap_summary_plot.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("  ✓ Summary plot salvo: shap_summary_plot.png")
 
 # 3.2 - Bar Plot (Importância média)
@@ -75,7 +84,7 @@ plt.figure(figsize=(10, 8))
 shap.summary_plot(shap_values, X_test, plot_type="bar", show=False)
 plt.title('SHAP Feature Importance', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('shap_feature_importance.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("  ✓ Feature importance salvo: shap_feature_importance.png")
 
 # 3.3 - Dependence Plot (feature específica)
@@ -89,7 +98,7 @@ shap.dependence_plot(
 )
 plt.title(f'SHAP Dependence Plot - {top_feature}', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('shap_dependence_plot.png', dpi=150, bbox_inches='tight')
+plt.show()
 print(f"  ✓ Dependence plot salvo: shap_dependence_plot.png")
 
 # ─── 4. SHAP - LOCAL EXPLANATION (instância específica) ───
@@ -115,7 +124,7 @@ shap.waterfall_plot(
 )
 plt.title(f'SHAP Waterfall - Caso Benigno (Correto)', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('shap_waterfall_tp.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("  ✓ Waterfall (TP) salvo: shap_waterfall_tp.png")
 
 # Explicar FP
@@ -131,7 +140,7 @@ shap.waterfall_plot(
 )
 plt.title(f'SHAP Waterfall - Falso Positivo (ERRO!)', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('shap_waterfall_fp.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("  ✓ Waterfall (FP) salvo: shap_waterfall_fp.png")
 
 # Force plot para múltiplas instâncias
@@ -145,7 +154,7 @@ shap.force_plot(
 )
 plt.title('SHAP Force Plot - 50 primeiras amostras', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('shap_force_plot.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("  ✓ Force plot salvo: shap_force_plot.png")
 
 # ─── 5. LIME - LOCAL EXPLANATION ───
@@ -170,9 +179,8 @@ lime_exp_tp = lime_explainer.explain_instance(
 fig = lime_exp_tp.as_pyplot_figure()
 plt.title(f'LIME - Caso Benigno (Correto)', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('lime_explanation_tp.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("  ✓ LIME (TP) salvo: lime_explanation_tp.png")
-plt.close()
 
 # Explicar FP
 lime_exp_fp = lime_explainer.explain_instance(
@@ -184,9 +192,8 @@ lime_exp_fp = lime_explainer.explain_instance(
 fig = lime_exp_fp.as_pyplot_figure()
 plt.title(f'LIME - Falso Positivo (ERRO!)', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('lime_explanation_fp.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("  ✓ LIME (FP) salvo: lime_explanation_fp.png")
-plt.close()
 
 # ─── 6. COMPARAÇÃO SHAP vs LIME ───
 print("\n📊 Comparando SHAP e LIME...")
@@ -217,7 +224,7 @@ axes[1].set_xlabel('|Weight|')
 axes[1].invert_yaxis()
 
 plt.tight_layout()
-plt.savefig('shap_vs_lime_comparison.png', dpi=150)
+plt.show()
 print("  ✓ Comparação salva: shap_vs_lime_comparison.png")
 
 # ─── 7. ANÁLISE DE CONSISTÊNCIA ───
@@ -269,7 +276,7 @@ if len(low_conf_indices) > 0:
     plt.title(f'SHAP - Caso de Baixa Confiança ({lc_prob:.2f})', 
               fontsize=14, fontweight='bold')
     plt.tight_layout()
-    plt.savefig('shap_low_confidence.png', dpi=150, bbox_inches='tight')
+    plt.show()
     print("  ✓ Análise salva: shap_low_confidence.png")
 
 # ─── 9. RELATÓRIO FINAL ───

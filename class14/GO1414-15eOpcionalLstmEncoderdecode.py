@@ -1,11 +1,20 @@
 # GO1414-15eOpcionalLstmEncoderdecode
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from tensorflow import keras
 from tensorflow.keras import layers, models
 from sklearn.preprocessing import MinMaxScaler
 from datetime import datetime, timedelta
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("="*70)
 print("LSTM ENCODER-DECODER - Previsão Multivariada")
@@ -76,7 +85,7 @@ for ax, var, title in zip(axes, variables, titles):
     ax.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('multivariate_data.png', dpi=150)
+plt.show()
 print("✅ Dados visualizados em multivariate_data.png")
 
 # 2. PREPARAR DADOS
@@ -294,7 +303,7 @@ for i, idx in enumerate(test_indices):
     axes[i].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('encoder_decoder_predictions.png', dpi=150)
+plt.show()
 print("\n✅ Predições visualizadas em encoder_decoder_predictions.png")
 
 # 7. PLOTAR HISTÓRICO
@@ -317,7 +326,7 @@ axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('encoder_decoder_training.png', dpi=150)
+plt.show()
 print("✅ Histórico de treinamento salvo")
 
 print("\n✅ ENCODER-DECODER LSTM COMPLETO!")

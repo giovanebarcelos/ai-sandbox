@@ -5,13 +5,22 @@
 
 import pandas as pd
 import numpy as np
-import matplotlib.pyplot as plt
 import seaborn as sns
 
 # Dataset: Boston Housing (sklearn) ou House Prices (Kaggle)
 # Vamos usar California Housing por estar built-in
 
 from sklearn.datasets import fetch_california_housing
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("="*60)
 print("PREVISÃO DE PREÇOS DE IMÓVEIS - CALIFORNIA HOUSING")

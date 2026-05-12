@@ -6,9 +6,18 @@ from transformers import BertTokenizer, BertForSequenceClassification, AdamW, ge
 from datasets import load_dataset
 import numpy as np
 from sklearn.metrics import classification_report, confusion_matrix
-import matplotlib.pyplot as plt
 import seaborn as sns
 from tqdm import tqdm
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # Configuração
 device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
@@ -187,7 +196,6 @@ plt.title(f'Confusion Matrix - BERT Fine-tuned\nAccuracy: {final_acc:.4f}')
 plt.ylabel('True Label')
 plt.xlabel('Predicted Label')
 plt.tight_layout()
-plt.savefig('bert_finetuning_confusion_matrix.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # Classification Report
@@ -214,7 +222,6 @@ axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('bert_finetuning_history.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # Testar com exemplos novos

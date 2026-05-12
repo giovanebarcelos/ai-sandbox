@@ -3,9 +3,18 @@ from transformers import BertTokenizer, BertForSequenceClassification, Trainer, 
 from datasets import load_dataset
 import torch
 import numpy as np
-import matplotlib.pyplot as plt
 from sklearn.metrics import accuracy_score, precision_recall_fscore_support, confusion_matrix
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class BERTFineTuner:
     """
@@ -226,7 +235,7 @@ ax.grid(alpha=0.3)
 ax.ticklabel_format(style='scientific', axis='y', scilimits=(0,0))
 
 plt.tight_layout()
-plt.savefig('bert_finetuning.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: bert_finetuning.png")
 
 print("\n✅ BERT fine-tuning demo completo!")

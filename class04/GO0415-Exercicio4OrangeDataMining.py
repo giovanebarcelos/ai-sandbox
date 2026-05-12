@@ -1,12 +1,21 @@
 # GO0415-Exercicio4OrangeDataMining
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.datasets import load_iris
 from sklearn.decomposition import PCA
 from sklearn.tree import DecisionTreeClassifier, plot_tree
 from sklearn.model_selection import cross_val_score
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("=" * 60)
 print("EQUIVALENTE EM PYTHON AO ORANGE")
@@ -39,7 +48,7 @@ for i, col in enumerate(iris.feature_names):
     ax.grid(True, alpha=0.3)
 plt.suptitle('DISTRIBUTIONS', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('orange_distributions.png', dpi=100)
+plt.show()
 print("\n✓ orange_distributions.png")
 
 # 4. SCATTER PLOT widget
@@ -54,7 +63,7 @@ plt.title('SCATTER PLOT', fontsize=14, fontweight='bold')
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('orange_scatter.png', dpi=100)
+plt.show()
 print("✓ orange_scatter.png")
 
 # 5. PCA widget
@@ -79,7 +88,7 @@ plt.title('PCA', fontsize=14, fontweight='bold')
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('orange_pca.png', dpi=100)
+plt.show()
 print("✓ orange_pca.png")
 
 # 6. TREE widget
@@ -91,7 +100,7 @@ plot_tree(tree_model, filled=True, feature_names=['PC1', 'PC2'],
          class_names=iris.target_names, rounded=True, fontsize=10)
 plt.title('DECISION TREE', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('orange_tree.png', dpi=100)
+plt.show()
 print("✓ orange_tree.png")
 
 # 7. TEST & SCORE widget

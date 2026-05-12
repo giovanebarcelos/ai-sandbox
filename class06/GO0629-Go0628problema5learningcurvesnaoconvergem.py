@@ -4,7 +4,6 @@ from sklearn.preprocessing import PolynomialFeatures
 from sklearn.linear_model import Ridge, LinearRegression
 from sklearn.datasets import make_regression
 from sklearn.model_selection import train_test_split, learning_curve
-import matplotlib.pyplot as plt
 
 def main():
     # Gerar dados de exemplo
@@ -60,6 +59,16 @@ def main():
     print("   • Gap grande + ambos erros altos → UNDERFITTING → adicionar features")
     print("   • Gap grande + erro treino baixo → OVERFITTING → adicionar regularização")
     print("   • Curvas convergindo → Modelo balanceado! ✅")
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     main()

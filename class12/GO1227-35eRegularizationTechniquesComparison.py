@@ -12,7 +12,16 @@ from tensorflow.keras.layers import (
 )
 from tensorflow.keras.regularizers import l2
 from tensorflow.keras.callbacks import EarlyStopping
+
+import matplotlib
 import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🛡️ REGULARIZATION TECHNIQUES COMPARISON")
 print("=" * 70)
@@ -247,7 +256,7 @@ axes[1, 1].grid(True, alpha=0.3)
 plt.suptitle('Regularization Techniques - Comparação de Performance', 
             fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('regularization_comparison.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("✅ Comparação salva: regularization_comparison.png")
 
 # ─── 9. ANÁLISE FINAL ───

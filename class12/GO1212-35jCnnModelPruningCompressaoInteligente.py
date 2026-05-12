@@ -10,8 +10,17 @@ from tensorflow.keras.models import Sequential, clone_model
 from tensorflow.keras.layers import Conv2D, MaxPooling2D, Flatten, Dense
 from tensorflow.keras.datasets import mnist
 import tensorflow_model_optimization as tfmot
-import matplotlib.pyplot as plt
 import time
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("✂️ CNN MODEL PRUNING")
 print("=" * 70)
@@ -179,7 +188,7 @@ for i in range(4):
 
 plt.suptitle('Weight Pruning Visualization', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('model_pruning_weights.png', dpi=150)
+plt.show()
 print("✅ Pesos salvos: model_pruning_weights.png")
 
 # Comparação de métricas
@@ -209,7 +218,7 @@ axes[2].grid(axis='y', alpha=0.3)
 
 plt.suptitle('Model Pruning - Performance Comparison', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('model_pruning_comparison.png', dpi=150)
+plt.show()
 print("✅ Comparação salva: model_pruning_comparison.png")
 
 # ─── 9. RESUMO ───

@@ -1,13 +1,23 @@
 # GO1413-NãoRequerInstalaçãoDeErro
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import MinMaxScaler
 from sklearn.metrics import mean_absolute_error, mean_squared_error
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout
 from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint
 import warnings
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 warnings.filterwarnings('ignore')
 
 print("="*80)
@@ -79,7 +89,7 @@ plt.xlabel('Data')
 plt.ylabel('Temperatura (°C)')
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('aula14_temperature_series.png', dpi=300, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: aula14_temperature_series.png")
 
 # Análise sazonal
@@ -104,7 +114,7 @@ plt.title('Temperatura Média por Ano (Tendência)')
 plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('aula14_temperature_analysis.png', dpi=300, bbox_inches='tight')
+plt.show()
 print("📊 Análise sazonal salva: aula14_temperature_analysis.png")
 
 # ============================================================================
@@ -258,7 +268,7 @@ plt.legend()
 plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('aula14_training_curves.png', dpi=300, bbox_inches='tight')
+plt.show()
 print("📊 Curvas de aprendizado salvas: aula14_training_curves.png")
 
 # ============================================================================
@@ -342,7 +352,7 @@ for idx, sample_idx in enumerate(sample_indices):
     ax.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('aula14_forecast_examples.png', dpi=300, bbox_inches='tight')
+plt.show()
 print("📊 Exemplos de previsão salvos: aula14_forecast_examples.png")
 
 # Visualizar período contínuo
@@ -381,7 +391,7 @@ plt.legend()
 plt.grid(True, alpha=0.3)
 plt.xticks(rotation=45)
 plt.tight_layout()
-plt.savefig('aula14_continuous_forecast.png', dpi=300, bbox_inches='tight')
+plt.show()
 print("📊 Previsão contínua salva: aula14_continuous_forecast.png")
 
 # ============================================================================
@@ -425,7 +435,7 @@ plt.legend()
 plt.grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('aula14_error_analysis.png', dpi=300, bbox_inches='tight')
+plt.show()
 print("📊 Análise de erros salva: aula14_error_analysis.png")
 
 # ============================================================================

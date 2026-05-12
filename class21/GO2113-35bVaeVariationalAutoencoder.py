@@ -4,8 +4,17 @@ import torch.nn as nn
 import torch.nn.functional as F
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-import matplotlib.pyplot as plt
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("="*70)
 print("VAE (Variational Autoencoder) - MNIST")
@@ -159,8 +168,7 @@ for epoch in range(num_epochs):
 
             plt.suptitle(f'VAE Reconstruction - Epoch {epoch+1}', fontsize=14)
             plt.tight_layout()
-            plt.savefig(f'vae_recon_epoch_{epoch+1}.png', dpi=100)
-            plt.close()
+    plt.show()
 
 print("\n✅ Treinamento concluído!")
 
@@ -179,7 +187,7 @@ with torch.no_grad():
 
     plt.suptitle('Imagens Geradas pela VAE', fontsize=16, fontweight='bold')
     plt.tight_layout()
-    plt.savefig('vae_generated_samples.png', dpi=150)
+    plt.show()
     print("✅ Amostras geradas salvas")
 
 # 5. VISUALIZAR ESPAÇO LATENTE (2D)
@@ -209,7 +217,7 @@ if latent_dim == 2:
     plt.title('Espaço Latente da VAE', fontsize=14, fontweight='bold')
     plt.grid(True, alpha=0.3)
     plt.tight_layout()
-    plt.savefig('vae_latent_space.png', dpi=150)
+    plt.show()
     print("✅ Espaço latente visualizado")
 
 print("\n📊 VAE COMPLETO!")

@@ -122,7 +122,7 @@ def tournament_selection(population, fitness_values, k=5):
 
 ### 📈 Exemplo de Evolução do AG
 
-**PROBLEMA:** Maximizar f(x) = -x² + 10x  (parábola)
+**PROBLEMA:** Maximizar f(x) = -x**2 + 10x  (parábola)
 
 **DOMÍNIO:** x ∈ [0, 10]
 

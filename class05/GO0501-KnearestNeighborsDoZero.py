@@ -58,7 +58,6 @@ class KNN:
         """
         return np.array([self.predict_single(x) for x in X])
 
-
 # ═══════════════════════════════════════════════════════════════════
 # EXEMPLO DE USO
 # ═══════════════════════════════════════════════════════════════════
@@ -99,6 +98,16 @@ print(f"Acurácia: {accuracy*100:.2f}%")
 
 from sklearn.neighbors import KNeighborsClassifier
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 # Treinar
 knn_sklearn = KNeighborsClassifier(n_neighbors=5)
 knn_sklearn.fit(X_train_scaled, y_train)
@@ -116,8 +125,6 @@ print(classification_report(y_test, y_pred_sklearn,
 # ═══════════════════════════════════════════════════════════════════
 # ENCONTRAR MELHOR K
 # ═══════════════════════════════════════════════════════════════════
-
-import matplotlib.pyplot as plt
 
 k_values = range(1, 31)
 accuracies = []

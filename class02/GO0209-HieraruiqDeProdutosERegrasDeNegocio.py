@@ -1,8 +1,17 @@
 # GO0209-HieraruiqDeProdutosERegrasDeNegócio
 from rdflib import Graph, Literal, RDF, URIRef, Namespace
 from rdflib.namespace import RDFS, OWL
-import matplotlib.pyplot as plt
 import networkx as nx
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ═══════════════════════════════════════════════════════════════════
 # 1. ONTOLOGIA E-COMMERCE COM RDF/OWL

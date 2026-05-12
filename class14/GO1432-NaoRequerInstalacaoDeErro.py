@@ -8,7 +8,6 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, LSTM, Dense, RepeatVector, TimeDistributed
-import matplotlib.pyplot as plt
 
 print("📈 MULTI-STEP FORECASTING")
 print("=" * 70)
@@ -144,7 +143,7 @@ for i in range(6):
 plt.suptitle(f'Multi-Step Forecasting: {input_length} → {output_length} steps', 
              fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('multistep_forecasting.png', dpi=150)
+plt.show()
 print("✅ Previsões salvas: multistep_forecasting.png")
 
 # ─── 7. COMPARAR ESTRATÉGIAS ───
@@ -156,6 +155,16 @@ mae_direct = test_mae
 # Estratégia 2: Recursive (1-step iterativo)
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 model_recursive = Sequential([
     LSTM(64, input_shape=(input_length, 1)),
@@ -211,7 +220,7 @@ for i, mae in enumerate(maes):
     ax.text(i, mae + 0.01, f'{mae:.4f}', ha='center', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('multistep_strategies.png', dpi=150)
+plt.show()
 print("✅ Estratégias salvas: multistep_strategies.png")
 
 print("\n💡 MULTI-STEP FORECASTING:")

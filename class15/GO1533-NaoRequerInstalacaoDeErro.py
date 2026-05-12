@@ -1,7 +1,16 @@
 # GO1533-NãoRequerInstalaçãoDeErro
 from transformers import MarianMTModel, MarianTokenizer
-import matplotlib.pyplot as plt
 import time
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class NeuralMachineTranslation:
     """
@@ -262,7 +271,7 @@ for bar, score in zip(bars, bleu_scores):
             f'{score:.1f}', ha='center', va='bottom', fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('machine_translation_system.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("📊 Gráfico salvo: machine_translation_system.png")
 
 print("\n✅ Machine translation demo completo!")

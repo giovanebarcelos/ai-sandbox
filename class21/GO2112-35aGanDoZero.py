@@ -4,8 +4,17 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from torchvision import datasets, transforms
-import matplotlib.pyplot as plt
 import numpy as np
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("="*70)
 print("GAN (Generative Adversarial Network) - MNIST")
@@ -182,8 +191,7 @@ for epoch in range(num_epochs):
 
             plt.suptitle(f'Epoch {epoch+1}', fontsize=16)
             plt.tight_layout()
-            plt.savefig(f'gan_samples_epoch_{epoch+1}.png', dpi=100)
-            plt.close()
+            plt.show()
 
 print("\n✅ Treinamento concluído!")
 
@@ -197,7 +205,7 @@ plt.title('GAN Training Losses', fontsize=14, fontweight='bold')
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('gan_training_losses.png', dpi=150)
+plt.show()
 print("✅ Gráfico de losses salvo")
 
 # 8. GERAR IMAGENS FINAIS
@@ -213,7 +221,7 @@ with torch.no_grad():
 
     plt.suptitle('Imagens Geradas pela GAN', fontsize=16, fontweight='bold')
     plt.tight_layout()
-    plt.savefig('gan_final_samples.png', dpi=150)
+    plt.show()
     print("✅ Amostras finais salvas")
 
 print("\n📊 RESULTADO FINAL:")

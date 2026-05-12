@@ -9,7 +9,6 @@ import cv2
 import tensorflow as tf
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, Conv2D, MaxPooling2D, Conv2DTranspose, Concatenate, Dropout
-import matplotlib.pyplot as plt
 
 print("🎨 SEMANTIC SEGMENTATION COM U-NET")
 print("=" * 70)
@@ -159,12 +158,22 @@ for i in range(6):
 
 plt.suptitle('U-Net Semantic Segmentation', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('unet_segmentation.png', dpi=150)
+plt.show()
 print("✅ Segmentação salva: unet_segmentation.png")
 
 # ─── 6. MÉTRICAS POR CLASSE ───
 from sklearn.metrics import confusion_matrix
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 y_true_flat = y_test.flatten()
 y_pred_flat = pred_masks.flatten()
@@ -179,7 +188,7 @@ plt.title('Pixel-wise Confusion Matrix', fontsize=14, fontweight='bold')
 plt.ylabel('True')
 plt.xlabel('Predicted')
 plt.tight_layout()
-plt.savefig('unet_confusion_matrix.png', dpi=150)
+plt.show()
 print("✅ Confusion matrix salva: unet_confusion_matrix.png")
 
 print("\n💡 U-NET ARCHITECTURE:")

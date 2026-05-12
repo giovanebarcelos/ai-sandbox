@@ -3,8 +3,17 @@ import torch
 import torch.nn.functional as F
 from transformers import GPT2LMHeadModel, GPT2Tokenizer
 import numpy as np
-import matplotlib.pyplot as plt
 from typing import List, Dict
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class TextGenerator:
     """
@@ -274,7 +283,7 @@ for i, (bar, method) in enumerate(zip(bars, recommended_methods)):
             method, ha='left', va='center', fontsize=9, fontweight='bold')
 
 plt.tight_layout()
-plt.savefig('sampling_strategies.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n\n📊 Gráfico salvo: sampling_strategies.png")
 
 print("\n\n✅ Sampling strategies implementado!")

@@ -6,10 +6,19 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, RepeatVector, TimeDistributed
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🚨 TIME SERIES ANOMALY DETECTION COM LSTM")
 print("=" * 70)
@@ -166,7 +175,7 @@ axes[2].grid(alpha=0.3)
 
 plt.suptitle('Time Series Anomaly Detection com LSTM Autoencoder', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('anomaly_detection_lstm.png', dpi=150)
+plt.show()
 print("✅ Resultados salvos: anomaly_detection_lstm.png")
 
 # ─── 8. MÉTRICAS DE AVALIAÇÃO ───

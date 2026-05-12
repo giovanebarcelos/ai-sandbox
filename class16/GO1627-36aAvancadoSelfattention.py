@@ -2,8 +2,17 @@
 import numpy as np
 import torch
 import torch.nn as nn
-import matplotlib.pyplot as plt
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class SelfAttention(nn.Module):
     """Implementação simplificada de Self-Attention"""
@@ -84,7 +93,6 @@ plt.title('Self-Attention Weights - Head 0\n"Para cada palavra (linha), onde ela
 plt.xlabel('Keys (Palavras de Origem)')
 plt.ylabel('Queries (Palavras que Atendem)')
 plt.tight_layout()
-plt.savefig('self_attention_visualization.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 # Análise das atenções
@@ -120,7 +128,6 @@ for i, num_heads in enumerate([1, 4, 8]):
 
 plt.suptitle('Comparação: Efeito do Número de Attention Heads', fontsize=14, y=1.02)
 plt.tight_layout()
-plt.savefig('multi_head_comparison.png', dpi=300, bbox_inches='tight')
 plt.show()
 
 print("\n✅ Visualizações salvas!")

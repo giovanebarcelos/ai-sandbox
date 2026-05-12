@@ -1,6 +1,5 @@
 # GO1535-31aNlpDatasetAnalysis
 import pandas as pd
-import matplotlib.pyplot as plt
 import numpy as np
 
 class NLPDatasetAnalyzer:
@@ -183,6 +182,17 @@ for i, size in enumerate(sizes):
 
 # Legend
 from matplotlib.patches import Patch
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 legend_elements = [Patch(facecolor=c, alpha=0.7, label=l) for l, c in colors_map.items()]
 ax.legend(handles=legend_elements, loc='lower right', title='Difficulty')
 
@@ -236,7 +246,7 @@ for bar, score in zip(bars, benchmarks):
             f'{score:.3f}', ha='center', va='bottom', fontweight='bold', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('nlp_dataset_analysis.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("📊 Gráfico salvo: nlp_dataset_analysis.png")
 
 print("\n✅ Dataset analysis completo!")

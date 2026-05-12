@@ -6,7 +6,6 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 from sklearn.preprocessing import StandardScaler
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Input, LSTM, RepeatVector, TimeDistributed, Dense
@@ -131,7 +130,7 @@ axes[1, 1].legend()
 axes[1, 1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('sensor_data_examples.png', dpi=150)
+plt.show()
 print("\n  ✓ Exemplos salvos: sensor_data_examples.png")
 
 # ─── 2. PREPARAR DADOS ───
@@ -223,6 +222,16 @@ y_pred = (reconstruction_errors > threshold).astype(int)
 # Métricas
 from sklearn.metrics import classification_report, confusion_matrix, roc_curve, auc
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 print("\n📋 Classification Report:")
 print(classification_report(y_test, y_pred, target_names=['Normal', 'Anomalia']))
 
@@ -273,7 +282,7 @@ axes[2].legend()
 axes[2].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('anomaly_detection_results.png', dpi=150)
+plt.show()
 print("  ✓ Resultados salvos: anomaly_detection_results.png")
 
 # ─── 8. VISUALIZAR RECONSTRUÇÕES ───
@@ -328,7 +337,7 @@ if len(fn_idx) > 0:
     axes[1, 1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('anomaly_reconstructions.png', dpi=150)
+plt.show()
 print("  ✓ Reconstruções salvas: anomaly_reconstructions.png")
 
 # ─── 9. RELATÓRIO FINAL ───

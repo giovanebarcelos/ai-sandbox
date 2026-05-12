@@ -6,9 +6,18 @@ from transformers import (
     XLNetTokenizer,
     T5Tokenizer
 )
-import matplotlib.pyplot as plt
 import numpy as np
 from collections import Counter
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class TokenizerComparison:
     """
@@ -200,7 +209,7 @@ ax.legend()
 ax.grid(alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('tokenizer_comparison.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: tokenizer_comparison.png")
 
 print("\n✅ Tokenizer comparison completo!")

@@ -1,7 +1,6 @@
 # GO1924-GeneticProgrammingSymbolicRegression
 from gplearn.genetic import SymbolicRegressor
 import numpy as np
-import matplotlib.pyplot as plt
 
 # Gerar dados de função desconhecida
 np.random.seed(42)
@@ -60,6 +59,17 @@ poly_model.fit(X_train, y_train)
 y_pred_poly = poly_model.predict(X_test)
 
 from sklearn.metrics import r2_score
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 print(f"📊 R² Score:")
 print(f"  GP: {r2_score(y_test_true, y_pred):.4f}")
 print(f"  Polynomial Regression: {r2_score(y_test_true, y_pred_poly.ravel()):.4f}")

@@ -7,10 +7,19 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 import numpy as np
-import matplotlib.pyplot as plt
 from IPython import display
 import time
 import os
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ─── 1. CONFIGURAÇÃO ───
 print("⚙️ Configurando hiperparâmetros...")
@@ -208,8 +217,7 @@ def generate_and_save_images(model, epoch, test_input):
 
     plt.suptitle(f'Epoch {epoch}', fontsize=16, fontweight='bold')
     plt.tight_layout()
-    plt.savefig(f'gan_outputs/image_at_epoch_{epoch:04d}.png', dpi=100)
-    plt.close()
+    plt.show()
 
 # ─── 9. FUNÇÃO DE TREINAMENTO PRINCIPAL ───
 def train(dataset, epochs):
@@ -300,7 +308,7 @@ axes[1].set_ylabel('Tempo (s)')
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('gan_outputs/training_history.png', dpi=150)
+plt.show()
 print("  ✓ Histórico salvo: gan_outputs/training_history.png")
 
 # ─── 12. ANÁLISE DE QUALIDADE - INTERPOLAÇÃO ───
@@ -330,7 +338,7 @@ for i in range(10):
     axes[i].axis('off')
 plt.suptitle('Interpolação Suave no Espaço Latente', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('gan_outputs/latent_interpolation.png', dpi=150)
+plt.show()
 print("  ✓ Interpolação salva: gan_outputs/latent_interpolation.png")
 
 # ─── 13. ANÁLISE DE QUALIDADE - VARIAÇÕES ───
@@ -347,7 +355,7 @@ for i, ax in enumerate(axes.flat):
     ax.axis('off')
 plt.suptitle('20 Dígitos Gerados Aleatoriamente', fontsize=14, fontweight='bold')
 plt.tight_layout()
-plt.savefig('gan_outputs/random_variations.png', dpi=150)
+plt.show()
 print("  ✓ Variações salvas: gan_outputs/random_variations.png")
 
 # ─── 14. ANÁLISE DE MODE COLLAPSE ───

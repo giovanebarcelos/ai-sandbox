@@ -5,7 +5,6 @@
 
 import numpy as np
 import pandas as pd
-import matplotlib.pyplot as plt
 import seaborn as sns
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import RandomForestClassifier
@@ -15,6 +14,17 @@ from aif360.metrics import BinaryLabelDatasetMetric, ClassificationMetric
 from aif360.algorithms.preprocessing import Reweighing
 from aif360.algorithms.inprocessing import PrejudiceRemover
 import warnings
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 warnings.filterwarnings('ignore')
 
 # ─── 1. CRIAR DATASET SINTÉTICO COM VIÉS ───
@@ -110,7 +120,7 @@ axes[2].set_xlabel('Correlação')
 axes[2].axvline(x=0, color='black', linestyle='-', linewidth=0.5)
 
 plt.tight_layout()
-plt.savefig('bias_analysis_pre.png', dpi=150)
+plt.show()
 print("  ✓ Gráfico salvo: bias_analysis_pre.png")
 
 # ─── 3. TREINAR MODELO SEM MITIGAÇÃO ───
@@ -265,7 +275,7 @@ axes[1].legend()
 axes[1].set_xticklabels(['SEM\nMitigação', 'COM\nMitigação'], rotation=0)
 
 plt.tight_layout()
-plt.savefig('fairness_comparison.png', dpi=150)
+plt.show()
 print("\n  ✓ Comparação salva: fairness_comparison.png")
 
 # ─── 6. RELATÓRIO FINAL ───

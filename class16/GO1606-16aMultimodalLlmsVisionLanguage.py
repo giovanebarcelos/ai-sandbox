@@ -3,7 +3,6 @@ import torch
 import torch.nn as nn
 from transformers import CLIPProcessor, CLIPModel, GPT2LMHeadModel, GPT2Tokenizer
 from PIL import Image
-import matplotlib.pyplot as plt
 import numpy as np
 from typing import List, Tuple
 
@@ -235,6 +234,16 @@ ax.axis('off')
 # Draw architecture
 from matplotlib.patches import FancyBboxPatch, FancyArrowPatch
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 components = [
     ('Image\nInput', 0.1, 0.7, 'lightblue'),
     ('CLIP\nEncoder', 0.1, 0.5, 'lightgreen'),
@@ -328,7 +337,7 @@ ax.grid(axis='y', alpha=0.3)
 ax.set_ylim(0, 1)
 
 plt.tight_layout()
-plt.savefig('multimodal_vision_language.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("📊 Gráfico salvo: multimodal_vision_language.png")
 
 print("\n✅ Multimodal system implementado!")

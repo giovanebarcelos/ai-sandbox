@@ -2,7 +2,6 @@
 from rank_bm25 import BM25Okapi
 import numpy as np
 from typing import List, Dict, Tuple
-import matplotlib.pyplot as plt
 import seaborn as sns
 
 class HybridSearchRAG:
@@ -208,6 +207,17 @@ fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 # 1. Score distribution by method
 ax = axes[0, 0]
 import pandas as pd
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 df = pd.DataFrame(results_data)
 for method in ['bm25', 'vector', 'rrf', 'hybrid']:
     method_df = df[df['method'] == method]
@@ -273,7 +283,7 @@ for bar, std in zip(bars, rank_stds):
             f'{std:.3f}', ha='left', va='center', fontsize=10)
 
 plt.tight_layout()
-plt.savefig('hybrid_search_comparison.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n\n📊 Gráfico salvo: hybrid_search_comparison.png")
 
 # Summary

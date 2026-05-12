@@ -3,10 +3,18 @@ import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
 import networkx as nx
-import matplotlib.pyplot as plt
 import nltk
 from nltk.tokenize import sent_tokenize
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     nltk.download('punkt', quiet=True)
@@ -133,7 +141,6 @@ if __name__ == "__main__":
                                ha='center', va='bottom', fontsize=10, fontweight='bold')
 
             plt.tight_layout()
-            plt.savefig('text_summarization_comparison.png', dpi=300, bbox_inches='tight')
             plt.show()
 
             return summary_tfidf, summary_textrank

@@ -1,9 +1,18 @@
 # GO1605-15aLlmBenchmarkingModelSelection
-import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 from typing import Dict, List
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 class LLMBenchmark:
     """
@@ -293,7 +302,7 @@ for bar, lat in zip(bars, latencies):
             f'{lat}ms', ha='left', va='center', fontweight='bold', fontsize=9)
 
 plt.tight_layout()
-plt.savefig('llm_benchmarking.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n📊 Gráfico salvo: llm_benchmarking.png")
 
 print("\n✅ LLM benchmarking implementado!")

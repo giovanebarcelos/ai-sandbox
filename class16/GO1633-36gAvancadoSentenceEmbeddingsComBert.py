@@ -4,7 +4,6 @@ import torch
 import numpy as np
 from sklearn.metrics.pairwise import cosine_similarity
 from sklearn.decomposition import PCA
-import matplotlib.pyplot as plt
 import seaborn as sns
 
 class BertSentenceEmbeddings:
@@ -84,7 +83,6 @@ class BertSentenceEmbeddings:
                    bbox=dict(boxstyle='round', facecolor='wheat', alpha=0.3))
 
         plt.tight_layout()
-        plt.savefig(f'bert_similarity_{pooling}.png', dpi=300, bbox_inches='tight')
         plt.show()
 
         return sim_matrix, embeddings
@@ -126,7 +124,6 @@ class BertSentenceEmbeddings:
                   loc='upper left', bbox_to_anchor=(1, 1), fontsize=9)
 
         plt.tight_layout()
-        plt.savefig(f'bert_embeddings_pca_{pooling}.png', dpi=300, bbox_inches='tight')
         plt.show()
 
     def compare_pooling_strategies(self, sentences):
@@ -148,7 +145,6 @@ class BertSentenceEmbeddings:
 
         plt.suptitle('Comparison of Pooling Strategies', fontsize=14, fontweight='bold')
         plt.tight_layout()
-        plt.savefig('bert_pooling_comparison.png', dpi=300, bbox_inches='tight')
         plt.show()
 
     def find_most_similar(self, query, candidates, pooling='cls', top_k=3):
@@ -196,11 +192,19 @@ class BertSentenceEmbeddings:
             plt.text(sim, i, f' {sim:.3f}', va='center', fontsize=9)
 
         plt.tight_layout()
-        plt.savefig('bert_similarity_ranking.png', dpi=300, bbox_inches='tight')
         plt.show()
 
 # Inicializar sistema
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     embedder = BertSentenceEmbeddings()

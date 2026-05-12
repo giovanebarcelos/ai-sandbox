@@ -8,7 +8,16 @@ import numpy as np
 import tensorflow as tf
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import LSTM, Dense, Dropout, Embedding
+
+import matplotlib
 import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 print("🎵 MUSIC GENERATION COM LSTM")
 print("=" * 70)
@@ -184,7 +193,7 @@ for idx, temp in enumerate(temperatures):
 
 plt.suptitle('Music Generation com LSTM', fontsize=16, fontweight='bold')
 plt.tight_layout()
-plt.savefig('music_generation_lstm.png', dpi=150)
+plt.show()
 print("✅ Música salva: music_generation_lstm.png")
 
 # ─── 7. ANÁLISE DE PROBABILIDADES ───
@@ -207,7 +216,7 @@ plt.title(f'Probabilidade da Próxima Nota após "{" ".join([int_to_note[i] for 
 plt.xticks(rotation=0)
 plt.grid(axis='y', alpha=0.3)
 plt.tight_layout()
-plt.savefig('music_generation_probs.png', dpi=150)
+plt.show()
 print("✅ Probabilidades salvas: music_generation_probs.png")
 
 # Top 3 notas mais prováveis

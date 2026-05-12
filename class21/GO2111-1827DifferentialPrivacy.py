@@ -7,9 +7,18 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 import numpy as np
-import matplotlib.pyplot as plt
 from tensorflow_privacy.privacy.optimizers import dp_optimizer_keras
 from tensorflow_privacy.privacy.analysis import compute_dp_sgd_privacy
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ─── 1. CONFIGURAÇÃO ───
 print("⚙️ Configurando Differential Privacy...")
@@ -168,7 +177,7 @@ axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
 plt.tight_layout()
-plt.savefig('differential_privacy_comparison.png', dpi=150)
+plt.show()
 print("\n  ✓ Comparação salva: differential_privacy_comparison.png")
 
 # ─── 8. ANÁLISE DE SENSIBILIDADE ───
@@ -206,7 +215,7 @@ plt.title('Trade-off: Ruído vs Privacidade', fontsize=14, fontweight='bold')
 plt.legend()
 plt.grid(True, alpha=0.3)
 plt.tight_layout()
-plt.savefig('privacy_noise_tradeoff.png', dpi=150)
+plt.show()
 print("\n  ✓ Trade-off salvo: privacy_noise_tradeoff.png")
 
 # ─── 9. RELATÓRIO FINAL ───

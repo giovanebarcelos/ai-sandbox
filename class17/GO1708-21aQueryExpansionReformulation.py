@@ -160,7 +160,6 @@ for query in test_queries:
     print(f"\n📊 Total expanded queries: {len(all_expanded)}")
 
 # Visualize expansion impact
-import matplotlib.pyplot as plt
 import numpy as np
 
 fig, axes = plt.subplots(2, 2, figsize=(12, 10))
@@ -222,6 +221,17 @@ ax.legend(lines, labels, loc='upper left')
 # 4. Coverage heatmap
 ax = axes[1, 1]
 import seaborn as sns
+
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 # Simulate document coverage
 queries_types = ['Original', 'Synonyms', 'Perspectives', 'Decompose']
 doc_sections = ['Intro', 'Methods', 'Results', 'Discussion', 'Conclusion']
@@ -242,7 +252,7 @@ ax.set_xlabel('Document Section')
 ax.set_ylabel('Query Strategy')
 
 plt.tight_layout()
-plt.savefig('query_expansion_analysis.png', dpi=150, bbox_inches='tight')
+plt.show()
 print("\n\n📊 Gráfico salvo: query_expansion_analysis.png")
 
 print("\n✅ Query Expansion implementado!")

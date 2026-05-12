@@ -3,8 +3,16 @@ import numpy as np
 import tensorflow as tf
 from tensorflow import keras
 from tensorflow.keras import layers, models
+
+import matplotlib
 import matplotlib.pyplot as plt
 
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
     print("="*70)
@@ -194,7 +202,7 @@ if __name__ == "__main__":
         ax2.legend()
 
         plt.tight_layout()
-        plt.savefig('attention_weights_visualization.png', dpi=150)
+        plt.show()
         print(f"\n✅ Visualização salva: attention_weights_visualization.png")
         print(f"\n📊 Predição: {prediction:.4f}")
         print(f"   Valor real: {y_sample:.4f}")
@@ -284,7 +292,7 @@ if __name__ == "__main__":
         axes[1].grid(True, alpha=0.3)
 
         plt.tight_layout()
-        plt.savefig('lstm_vs_lstm_attention.png', dpi=150)
+        plt.show()
         print("\n✅ Comparação salva: lstm_vs_lstm_attention.png")
 
         # Métricas finais
