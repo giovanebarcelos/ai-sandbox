@@ -1,4 +1,6 @@
 # GO1033-Tensorflow
+# Exibe o resumo textual da arquitetura do modelo e gera um diagrama visual em PNG
+# com formatos de camadas, útil para inspecionar e documentar a rede.
 # Resumo do modelo
 model.summary()
 

@@ -1,4 +1,6 @@
 # GO1002-Model
+# Script completo de treinamento no MNIST: pré-processa os dados, constrói e treina
+# um modelo MLP com Keras, avalia no conjunto de teste e exibe predições de exemplo.
 import numpy as np
 from tensorflow import keras
 from tensorflow.keras.models import Sequential

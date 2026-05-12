@@ -1,4 +1,6 @@
 # GO1030-Tensorflow
+# Exemplo de modelo com múltiplas entradas: processa imagem e metadados em ramos
+# separados e os concatena antes das camadas finais de classificação.
 from tensorflow.keras.layers import Flatten, Concatenate
 
 # Entrada 1: Imagem

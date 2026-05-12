@@ -1,4 +1,6 @@
 # GO1053-Tensorflow
+# Configura o treinamento distribuído com MirroredStrategy para múltiplas GPUs:
+# o modelo é criado dentro do escopo da estratégia e o Keras gerencia a sincronização.
 import tensorflow as tf
 
 # Estratégia para múltiplas GPUs

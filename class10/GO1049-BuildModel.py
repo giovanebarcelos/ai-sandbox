@@ -2,6 +2,9 @@
 import keras_tuner as kt
 from tensorflow import keras
 
+# Constrói e compila um modelo Sequential com hiperparâmetros controláveis pelo Keras Tuner:
+# número de camadas, unidades por camada, taxa de dropout e learning rate do Adam.
+# É chamada repetidamente pelo Hyperband para explorar o espaço de busca.
 def build_model(hp):
     model = keras.Sequential()
     model.add(keras.layers.Flatten(input_shape=(28, 28)))

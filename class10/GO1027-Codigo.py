@@ -1,4 +1,7 @@
 # GO1027-Codigo
+# Realiza busca manual de hiperparâmetros por força bruta (grid search): testa todas
+# as combinações de learning rate, unidades e dropout, registrando a melhor val_accuracy
+# de cada configuração e exibindo as melhores combinações ao final.
 learning_rates = [0.001, 0.0001]
 hidden_units = [128, 256, 512]
 dropout_rates = [0.2, 0.3, 0.5]

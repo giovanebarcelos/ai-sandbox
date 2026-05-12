@@ -1,4 +1,6 @@
 # GO1016-Sklearn
+# Gera predições no conjunto de teste, calcula a matriz de confusão com sklearn
+# e a visualiza como heatmap com seaborn para analisar erros por classe.
 y_pred = model.predict(X_test)
 y_pred_classes = np.argmax(y_pred, axis=1)
 

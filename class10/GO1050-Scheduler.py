@@ -3,6 +3,8 @@ from tensorflow.keras.callbacks import LearningRateScheduler
 from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
 # MÉTODO 1: Callback com função customizada
+# Define a taxa de aprendizado em função da época: mantém o valor original nas
+# primeiras 10 épocas e reduz 5% por época a partir daí, evitando oscilações tardias.
 def scheduler(epoch, lr):
     if epoch < 10:
         return lr

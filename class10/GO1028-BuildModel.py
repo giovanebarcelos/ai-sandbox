@@ -1,6 +1,9 @@
 # GO1028-BuildModel
 import keras_tuner as kt
 
+# Constrói um modelo Sequential com hiperparâmetros tunáveis: número de camadas,
+# unidades por camada, taxa de dropout e learning rate. Retorna o modelo compilado
+# pronto para ser avaliado pelo mecanismo de busca do Keras Tuner.
 def build_model(hp):
     model = Sequential()
     model.add(Flatten(input_shape=(28, 28)))

@@ -1,4 +1,6 @@
 # GO1029-TensorflowTensorflow
+# Demonstra a API Funcional do Keras com camadas Dense encadeadas de forma explícita,
+# criando o modelo com Model() a partir de inputs e outputs nomeados.
 from tensorflow.keras import Input, Model
 from tensorflow.keras.layers import Dense
 

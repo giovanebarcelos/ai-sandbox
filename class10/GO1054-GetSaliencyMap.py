@@ -1,6 +1,9 @@
 # GO1054-GetSaliencyMap
 import tensorflow as tf
 
+# Calcula o saliency map de uma imagem: usa GradientTape para obter os gradientes
+# da classe alvo em relação aos pixels de entrada, revelando quais regiões mais
+# influenciaram a predição do modelo para a classe indicada por class_idx.
 def get_saliency_map(model, image, class_idx):
     """Calcula saliency map usando gradientes"""
     image = tf.convert_to_tensor(image)

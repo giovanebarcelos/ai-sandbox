@@ -1,4 +1,6 @@
 # GO1024-Tensorflow
+# Configura o ModelCheckpoint para salvar automaticamente somente o modelo com
+# melhor val_accuracy durante o treino e recarregá-lo para predição posterior.
 from tensorflow.keras.callbacks import ModelCheckpoint
 
 # Salva automaticamente o melhor modelo

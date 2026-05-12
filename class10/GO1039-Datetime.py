@@ -1,4 +1,6 @@
 # GO1039-Datetime
+# Salva o modelo e seus hiperparâmetros com timestamp no nome do arquivo, permitindo
+# rastrear e comparar diferentes versões de experimentos ao longo do tempo.
 # Salvar com versão
 import datetime
 timestamp = datetime.datetime.now().strftime("%Y%m%d-%H%M%S")

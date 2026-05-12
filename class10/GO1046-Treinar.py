@@ -1,4 +1,6 @@
 # GO1046-Treinar
+# Implementa a fase de fine-tuning: descongela as últimas camadas da base VGG16
+# e retreina com learning rate muito baixo para ajustar finamente os pesos à nova tarefa.
 # 1. Primeiro, treinar com feature extraction (acima)
 # ... train for 10 epochs ...
 

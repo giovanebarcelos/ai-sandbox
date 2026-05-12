@@ -1,4 +1,6 @@
 # GO1041-TensorflowTensorflow
+# Carrega o dataset IMDB de críticas de filmes, limitando o vocabulário a 10 000 palavras,
+# e aplica padding para que todas as sequências tenham o mesmo comprimento (200 tokens).
 from tensorflow.keras.datasets import imdb
 from tensorflow.keras.preprocessing import sequence
 

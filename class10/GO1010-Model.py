@@ -1,4 +1,6 @@
 # GO1010-Model
+# Define uma arquitetura MLP mais profunda para o MNIST com três camadas ocultas
+# decrescentes (512→256→128), Dropout para regularização e inicialização He Normal.
 model = Sequential([
     # Input: 28×28 → 784 neurônios
     Flatten(input_shape=(28, 28)),

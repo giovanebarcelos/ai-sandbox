@@ -1,4 +1,6 @@
 # GO1043-SklearnSklearn
+# Carrega o dataset California Housing, divide em treino/teste e normaliza com
+# StandardScaler — passo crucial para redes densas aplicadas a problemas de regressão.
 from sklearn.datasets import fetch_california_housing
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import StandardScaler

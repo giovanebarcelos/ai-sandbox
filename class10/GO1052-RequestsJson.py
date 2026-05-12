@@ -1,4 +1,6 @@
 # GO1052-RequestsJson
+# Demonstra como enviar dados ao TensorFlow Serving via HTTP POST e interpretar
+# o JSON de resposta, permitindo usar modelos em produção como microsserviços.
 import requests
 import json
 

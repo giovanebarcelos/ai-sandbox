@@ -1,4 +1,6 @@
 # GO1045-TensorflowTensorflow
+# Demonstra transfer learning com VGG16 pré-treinado no ImageNet: congela a base
+# convolucional e adiciona novas camadas densas para classificação binária customizada.
 from tensorflow.keras.applications import VGG16
 from tensorflow.keras.models import Sequential
 from tensorflow.keras.layers import Dense, Dropout, Flatten

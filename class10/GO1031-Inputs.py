@@ -1,4 +1,6 @@
 # GO1031-Inputs
+# Demonstra modelo com múltiplas saídas: a mesma representação interna alimenta duas
+# cabeças de classificação (dígito e paridade), cada uma com sua própria loss e peso.
 inputs = Input(shape=(784,))
 x = Dense(128, 'relu')(inputs)
 x = Dense(64, 'relu')(x)

@@ -1,4 +1,6 @@
 # GO1015-Codigo
+# Plota lado a lado as curvas de loss e acurácia (treino vs. validação) ao longo
+# das épocas, com linha vertical indicando a melhor época salva pelo checkpoint.
 fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(14, 5))
 
 # Loss

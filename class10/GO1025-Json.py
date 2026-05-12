@@ -1,4 +1,6 @@
 # GO1025-Json
+# Persiste o histórico de treino (loss, accuracy por época) em JSON para
+# permitir visualizações futuras sem precisar retreinar o modelo.
 import json
 
 # Salvar histórico

@@ -1,4 +1,6 @@
 # GO1036-CrescimentoDinâmicoDe
+# Configura o crescimento dinâmico de memória GPU para evitar pré-alocação total
+# e, opcionalmente, limita a memória disponível para um dispositivo específico.
 # Crescimento dinâmico de memória
 
 gpus = tf.config.list_physical_devices('GPU')

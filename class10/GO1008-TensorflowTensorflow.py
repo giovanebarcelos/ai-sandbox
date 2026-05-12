@@ -1,4 +1,6 @@
 # GO1008-TensorflowTensorflow
+# Pipeline completo do MNIST com Keras: carrega, normaliza, cria modelo Sequential
+# com Flatten + Dense, compila, treina e avalia a acurácia no conjunto de teste.
 from tensorflow import keras
 from tensorflow.keras import Sequential
 from tensorflow.keras.layers import Flatten, Dense

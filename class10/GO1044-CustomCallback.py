@@ -1,5 +1,7 @@
 # GO1044-CustomCallback
 class CustomCallback(keras.callbacks.Callback):
+    # Ao final de cada época, salva o modelo a cada 5 épocas e interrompe o treino
+    # imediatamente se a loss se tornar NaN, evitando desperdício de recursos.
     def on_epoch_end(self, epoch, logs=None):
         if epoch % 5 == 0:
             self.model.save(f'model_epoch_{epoch}.keras')

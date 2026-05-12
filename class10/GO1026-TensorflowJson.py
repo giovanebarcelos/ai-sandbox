@@ -1,4 +1,6 @@
 # GO1026-TensorflowJson
+# Pipeline de treino com persistência completa: salva o melhor modelo via checkpoint,
+# armazena o histórico em JSON e demonstra como recarregar o modelo para predição.
 from tensorflow import keras
 import json
 

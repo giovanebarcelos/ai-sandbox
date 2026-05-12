@@ -1,4 +1,7 @@
 # GO1012-Callbacks
+# Configura três callbacks essenciais para treino robusto: EarlyStopping para parar
+# sem melhora, ModelCheckpoint para salvar o melhor modelo e ReduceLROnPlateau
+# para reduzir o learning rate automaticamente quando a val_loss estacionar.
 callbacks = [
     EarlyStopping(
         monitor='val_loss',

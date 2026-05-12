@@ -1,4 +1,6 @@
 # GO1009-ClassificaçãoBinária
+# Mostra as configurações de compile() para os três cenários principais: classificação
+# binária, multiclasse (MNIST) e regressão, incluindo learning rate customizado.
 # Classificação binária
 model.compile(optimizer='adam', loss='binary_crossentropy', metrics=['accuracy'])
 

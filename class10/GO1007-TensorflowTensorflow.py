@@ -1,4 +1,6 @@
 # GO1007-TensorflowTensorflow
+# Demonstra a API Funcional do Keras: define o fluxo de dados passando tensores entre
+# camadas e cria o modelo a partir de inputs e outputs explícitos com Model().
 from tensorflow.keras import Model
 from tensorflow.keras.layers import Input, Dense
 

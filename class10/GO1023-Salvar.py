@@ -1,4 +1,6 @@
 # GO1023-Salvar
+# Demonstra o formato SavedModel do TensorFlow: salva o modelo como diretório
+# com arquivos .pb e variáveis separados, e como recarregá-lo posteriormente.
 # Salvar (cria diretório)
 model.save('saved_model/')
 
