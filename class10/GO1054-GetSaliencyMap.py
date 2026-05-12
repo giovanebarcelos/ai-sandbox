@@ -55,5 +55,6 @@ if __name__ == '__main__':
     axes[1].imshow(saliency, cmap='hot')
     axes[1].set_title('Saliency Map')
     plt.tight_layout()
-    plt.savefig('saliency_demo.png', dpi=80)
-    print("Saliency map salvo em saliency_demo.png")
+    plt.savefig('GO1054-saliency-map.png', dpi=100, bbox_inches='tight')
+    plt.close()
+    print("Saliency map salvo em GO1054-saliency-map.png")
