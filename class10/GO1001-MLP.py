@@ -1,5 +1,8 @@
 # GO1001-MLP
 import numpy as np
+import matplotlib
+matplotlib.use('Agg')
+import matplotlib.pyplot as plt
 
 
 class MLP:
@@ -126,3 +129,34 @@ if __name__ == "__main__":
 
     print(f"\n  Acurácia final: {mlp.score(X, y):.0%}")
     print(f"  Loss final:     {mlp.losses[-1]:.6f}")
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Curva de loss: mostra a convergência do MSE ao longo do treinamento
+    ax1.plot(mlp.losses, color='steelblue')
+    ax1.set_title('Curva de Loss — XOR')
+    ax1.set_xlabel('Época')
+    ax1.set_ylabel('MSE')
+    ax1.grid(True, alpha=0.3)
+
+    # Fronteira de decisão: mapeia a probabilidade de saída para cada ponto do espaço
+    # revelando a região não-linear aprendida pela rede para separar as classes do XOR
+    xx, yy = np.meshgrid(np.linspace(-0.5, 1.5, 300), np.linspace(-0.5, 1.5, 300))
+    grid = np.c_[xx.ravel(), yy.ravel()]
+    probs = mlp.forward(grid).reshape(xx.shape)
+
+    ax2.contourf(xx, yy, probs, levels=50, cmap='RdYlGn', alpha=0.8)
+    ax2.contour(xx, yy, probs, levels=[0.5], colors='black', linewidths=1.5)
+    cores = ['red' if yi[0] == 0 else 'green' for yi in y]
+    ax2.scatter(X[:, 0], X[:, 1], c=cores, s=200, edgecolors='black', zorder=5)
+    for xi, yi in zip(X, y):
+        ax2.annotate(str(yi[0]), xy=(xi[0], xi[1]), xytext=(6, 6),
+                     textcoords='offset points', fontsize=12, fontweight='bold')
+    ax2.set_title('Fronteira de Decisão — XOR')
+    ax2.set_xlabel('x₁')
+    ax2.set_ylabel('x₂')
+
+    plt.tight_layout()
+    plt.savefig('GO1001-mlp-xor.png', dpi=100, bbox_inches='tight')
+    plt.close()
+    print("\n  Gráfico salvo em GO1001-mlp-xor.png")
