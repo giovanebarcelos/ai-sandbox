@@ -3,6 +3,9 @@ import numpy as np
 
 
 class MLP:
+    # Inicializa a arquitetura da rede: cria matrizes de pesos W e vetores de bias b
+    # para cada par de camadas consecutivas. Pesos inicializados com He initialization
+    # (escala √(2/n)) para evitar vanishing/exploding gradients com sigmoid.
     def __init__(self, layer_sizes, learning_rate=0.1, epochs=1000):
         self.lr = learning_rate
         self.epochs = epochs
@@ -14,15 +17,24 @@ class MLP:
         ]
         self.biases = [np.zeros((1, s)) for s in layer_sizes[1:]]
 
+    # Função de ativação σ(z) = 1/(1+e^-z): mapeia qualquer valor real para (0,1),
+    # introduzindo não-linearidade que permite à rede aprender fronteiras complexas.
     def _sigmoid(self, z):
         return 1 / (1 + np.exp(-np.clip(z, -500, 500)))
 
+    # Derivada de σ em função da própria saída: σ'= a(1-a).
+    # Usada no backward para calcular o quanto cada neurônio contribuiu para o erro.
     def _sigmoid_deriv(self, a):
         return a * (1 - a)
 
+    # Função de custo MSE: média dos quadrados dos erros entre predito e real.
+    # Mede o quão longe a rede está da resposta correta; o objetivo é minimizá-la.
     def _mse(self, y_pred, y_true):
         return np.mean((y_pred - y_true) ** 2)
 
+    # Passo forward (propagação direta): calcula a saída da rede para uma entrada X.
+    # Para cada camada computa z = X·W + b e a = σ(z), guardando todas as ativações
+    # intermediárias — necessárias para o backward calcular os gradientes.
     def forward(self, X):
         self.activations = [X]
         current = X
@@ -36,6 +48,9 @@ class MLP:
         self.activations.append(output)
         return output
 
+    # Passo backward (retropropagação): usa a regra da cadeia para calcular ∂Loss/∂W
+    # em cada camada. Começa pelo erro da saída, propaga o delta para trás camada
+    # a camada, e atualiza W e b na direção contrária ao gradiente (gradiente descendente).
     def backward(self, y):
         m = y.shape[0]
         deltas = [None] * len(self.weights)
@@ -56,6 +71,9 @@ class MLP:
             self.weights[i] -= self.lr * grad_w
             self.biases[i] -= self.lr * grad_b
 
+    # Loop de treinamento: repete forward → calcula loss → backward por N épocas.
+    # A cada iteração a rede ajusta seus pesos para reduzir o erro, convergindo
+    # gradualmente para uma solução que generaliza o padrão dos dados.
     def fit(self, X, y):
         self.losses = []
         intervalo = max(1, self.epochs // 5)
@@ -69,12 +87,16 @@ class MLP:
                 print(f"  Época {epoch:5d}/{self.epochs} | Loss: {loss:.5f} | Acurácia: {acc:.1%}")
         return self
 
+    # Converte a saída contínua do forward em classe discreta: limiar 0.5 para binário
+    # ou argmax para multiclasse. Usado após o treinamento para classificar novos dados.
     def predict(self, X):
         output = self.forward(X)
         if output.shape[1] == 1:
             return (output >= 0.5).astype(int)
         return np.argmax(output, axis=1)
 
+    # Calcula a acurácia: proporção de amostras classificadas corretamente.
+    # Métrica de avaliação final — complementa o MSE mostrando o desempenho real.
     def score(self, X, y):
         preds = self.predict(X)
         if y.ndim == 2 and y.shape[1] == 1:
