@@ -44,8 +44,12 @@ try:
     import skfuzzy as fuzz
     from skfuzzy import control as ctrl
 except ImportError:
-    print("Instale: pip install scikit-fuzzy")
-    raise
+    import subprocess, sys
+    print("scikit-fuzzy nao encontrado. Instalando automaticamente...")
+    subprocess.check_call([sys.executable, "-m", "pip", "install", "scikit-fuzzy", "-q"])
+    import skfuzzy as fuzz
+    from skfuzzy import control as ctrl
+    print("Instalacao concluida.")
 
 
 # =============================================================================
