@@ -12,6 +12,8 @@ import matplotlib.gridspec as gridspec
 
 
 # ── Funções de pertinência ────────────────────────────────────────────────────
+# Estas funções são genéricas e não precisam mudar para outro problema.
+# Apenas os parâmetros (a, b, c, d) mudam conforme o domínio.
 
 def mf_trap(x, a, b, c, d):
     """Trapezoidal: sobe a→b, plano b→c, desce c→d. Aceita escalar ou array."""
@@ -31,41 +33,64 @@ def mf_tri(x, a, b, c):
     return mf_trap(x, a, b, b, c)
 
 
-# Serviço [0, 10]: RUIM(6.5)=0.0  MÉDIO(6.5)=0.5  BOM(6.5)=0.5
+# ── BLOCO 1 — ENTRADAS ────────────────────────────────────────────────────────
+# GORJETA: duas variáveis de entrada, escala 0–10.
+# Para outro problema, substitua estes dois dicionários pelas variáveis
+# de entrada do seu domínio (ex.: temperatura e pressão, velocidade e carga…).
+# Cada chave é o nome linguístico do termo; os parâmetros definem onde cada
+# termo começa, atinge grau 1 e termina — calibrados para bater com o slide.
+
+# Entrada 1 — Qualidade do Serviço [0, 10]
 FUNCS_SERV = {
+    # RUIM: máximo até 2, cai a zero em 5  → RUIM(6.5) = 0.0
     "RUIM":  lambda x: mf_trap(x, 0,  0,  2,  5),
+    # MÉDIO: pico em 5, zero em 2 e 8     → MÉDIO(6.5) = 0.5
     "MÉDIO": lambda x: mf_tri (x, 2,  5,  8),
+    # BOM: sobe de 5 a 8, máximo até 10   → BOM(6.5) = 0.5
     "BOM":   lambda x: mf_trap(x, 5,  8, 10, 10),
 }
 
-# Comida [0, 10]: RUIM(7.0)=0.0  MÉDIA(7.0)=0.4  BOA(7.0)=0.6
+# Entrada 2 — Qualidade da Comida [0, 10]
 FUNCS_COMIDA = {
+    # RUIM: máximo até 1, cai a zero em 4  → RUIM(7.0) = 0.0
     "RUIM":  lambda x: mf_trap(x, 0,  0,  1,  4),
+    # MÉDIA: pico em 4, zero em 1 e 9     → MÉDIA(7.0) = 0.4
     "MÉDIA": lambda x: mf_tri (x, 1,  4,  9),
+    # BOA: sobe de 4 a 9, máximo até 10   → BOA(7.0) = 0.6
     "BOA":   lambda x: mf_trap(x, 4,  9, 10, 10),
 }
 
-# Gorjeta [0, 25%]
+# ── BLOCO 2 — SAÍDA ───────────────────────────────────────────────────────────
+# GORJETA: uma variável de saída, escala 0–25%.
+# Para outro problema, substitua por uma saída do seu domínio
+# (ex.: potência do motor [0–100%], dose de medicamento [0–500mg]…).
+# O universo de discurso (linspace em mamdani()) também deve ser ajustado.
+
 FUNCS_GORJETA = {
-    "BAIXA": lambda x: mf_tri(x,  0,  0, 13),
-    "MÉDIA": lambda x: mf_tri(x,  0, 13, 25),
-    "ALTA":  lambda x: mf_tri(x, 13, 25, 25),
+    "BAIXA": lambda x: mf_tri(x,  0,  0, 13),  # gorjeta ruim: 0–13%
+    "MÉDIA": lambda x: mf_tri(x,  0, 13, 25),  # gorjeta média: centrada em 13%
+    "ALTA":  lambda x: mf_tri(x, 13, 25, 25),  # gorjeta boa: 13–25%
 }
 
 COR = {"BAIXA": "#3498DB", "MÉDIA": "#2ECC71", "ALTA": "#E74C3C"}
 
 
-# ── Regras ────────────────────────────────────────────────────────────────────
+# ── BLOCO 3 — REGRAS ─────────────────────────────────────────────────────────
+# GORJETA: base com 3 regras linguísticas do slide (SE … ENTÃO …).
+# Para outro problema, reescreva as regras usando os termos dos seus
+# dicionários de entrada/saída. O operador "AND"/"OR" e os termos
+# ant_serv/ant_comida são as únicas coisas que mudam na classe Regra.
 
 class Regra:
     def __init__(self, numero, op, ant_serv, ant_comida, consequente):
         self.numero = numero
-        self.op = op                  # "AND" | "OR"
-        self.ant_serv = ant_serv      # termo do serviço
-        self.ant_comida = ant_comida  # termo da comida
+        self.op = op                  # "AND" = min() | "OR" = max()
+        self.ant_serv = ant_serv      # termo da 1ª entrada (chave de FUNCS_SERV)
+        self.ant_comida = ant_comida  # termo da 2ª entrada (chave de FUNCS_COMIDA)
         self.consequente = consequente
 
     def avaliar(self, gs, gc):
+        # AND fuzzy = mínimo dos graus; OR fuzzy = máximo dos graus
         a, b = gs[self.ant_serv], gc[self.ant_comida]
         return max(a, b) if self.op == "OR" else min(a, b)
 
@@ -74,6 +99,10 @@ class Regra:
                 f"{self.op} comida={self.ant_comida} → {self.consequente}")
 
 
+# R1: serviço OU comida RUIM → gorjeta BAIXA  (α = max(0.0, 0.0) = 0.0)
+# R2: serviço MÉDIO E comida MÉDIA → gorjeta MÉDIA  (α = min(0.5, 0.4) = 0.4)
+# R3: serviço BOM  E comida BOA   → gorjeta ALTA   (α = min(0.5, 0.6) = 0.5)
+# Para outro problema: adicione, remova ou modifique entradas nesta lista.
 REGRAS = [
     Regra(1, "OR",  "RUIM",  "RUIM",  "BAIXA"),
     Regra(2, "AND", "MÉDIO", "MÉDIA", "MÉDIA"),
@@ -82,24 +111,38 @@ REGRAS = [
 
 
 # ── Inferência ────────────────────────────────────────────────────────────────
+# Esta função implementa as 3 etapas de Mamdani e não precisa mudar
+# para outro problema — desde que FUNCS_SERV, FUNCS_COMIDA, FUNCS_GORJETA
+# e REGRAS sejam atualizados nos blocos acima.
 
 def mamdani(servico, comida):
+    # Universo de discurso da SAÍDA: ajuste o intervalo para outro problema
     x = np.linspace(0, 25, 500)
 
+    # Etapa 1 — Fuzzificação: converte valores nítidos em graus de pertinência
     gs = {t: f(servico) for t, f in FUNCS_SERV.items()}
     gc = {t: f(comida)  for t, f in FUNCS_COMIDA.items()}
 
+    # Etapa 2 — Inferência: avalia cada regra e acumula a força por consequente
+    # Quando duas regras ativam o mesmo consequente, prevalece o maior (max)
     forcas, detalhes = {}, []
     for r in REGRAS:
         alpha = r.avaliar(gs, gc)
         forcas[r.consequente] = max(forcas.get(r.consequente, 0.0), alpha)
         detalhes.append((r, alpha))
 
+    # Etapa 3a — Clipping: corta cada MF de saída na força da regra que a ativou
+    # (método de implicação min — a parte da MF acima de α é descartada)
     clips = {t: np.minimum(FUNCS_GORJETA[t](x), forcas[t]) for t in forcas}
+
+    # Etapa 3b — Agregação: une os clips em uma única área (método max)
     agregado = np.zeros_like(x)
     for clip in clips.values():
         agregado = np.maximum(agregado, clip)
 
+    # Etapa 3c — Defuzzificação pelo centroide: centro de massa da área agregada
+    # Resultado: gorjeta nítida em % — para outro problema, o resultado terá
+    # as unidades do universo de discurso da saída (°C, rpm, kPa…)
     denom = float(np.sum(agregado))
     centroide = float(np.sum(agregado * x) / denom) if denom > 0 else 0.0
 
@@ -263,6 +306,9 @@ def grafico(servico, comida, gs, gc, forcas, detalhes, clips, agregado, centroid
 
 
 # ── Main ──────────────────────────────────────────────────────────────────────
+# GORJETA: os valores de entrada do slide são Serviço=6.5 e Comida=7.0.
+# Para outro problema, troque estas duas variáveis pelos valores de entrada
+# do seu domínio e atualize os Blocos 1, 2 e 3 acima.
 
 if __name__ == "__main__":
     SERVICO, COMIDA = 6.5, 7.0
