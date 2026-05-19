@@ -95,6 +95,7 @@ if __name__ == "__main__":
     resultado = relatorio(temp, T)
 
     # Salva na pasta images/ da aula (dois níveis acima do script)
-    raiz = os.path.join(os.path.dirname(__file__), "..", "..", "images")
+    base = os.path.dirname(__file__) if "__file__" in dir() else os.getcwd()
+    raiz = os.path.join(base, "..", "..", "images")
     saida = os.path.join(raiz, "Aula1146.png")
     grafico(temp, T, resultado, saida)
