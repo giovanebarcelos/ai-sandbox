@@ -39,8 +39,15 @@ def defuzzify_lom(x, mu):
 
 if __name__ == "__main__":
     x = np.linspace(0, 25, 100)
-    mu = np.array([...])  # valores de pertinencia
+    # Função de pertinência triangular com pico em 15% (gorjeta "boa")
+    mu = np.maximum(0, 1 - np.abs(x - 15) / 10)
     gorjeta_centroid = defuzzify_centroid(x, mu)
     gorjeta_mom = defuzzify_mom(x, mu)
+    gorjeta_bisector = defuzzify_bisector(x, mu)
+    gorjeta_som = defuzzify_som(x, mu)
+    gorjeta_lom = defuzzify_lom(x, mu)
     print(f"Centroide: {gorjeta_centroid:.1f}%")
-    print(f"MOM: {gorjeta_mom:.1f}%")
+    print(f"MOM:       {gorjeta_mom:.1f}%")
+    print(f"Bisector:  {gorjeta_bisector:.1f}%")
+    print(f"SOM:       {gorjeta_som:.1f}%")
+    print(f"LOM:       {gorjeta_lom:.1f}%")
