@@ -71,6 +71,10 @@ class SistemaFuzzyQualidadeAgua:
         80-100: OTIMA    (agua sem restricoes)
     """
 
+    # BLOCO 1 — CLASSIFICAÇÕES: limiares de qualidade baseados em normas de
+    # água potável (ex: CONAMA 357). Para outro domínio, substitua estes
+    # limiares e ações pelos critérios de aceitação do seu problema.
+    # Cada tupla: (indice_min, indice_max, nome, cor_hex, acao_recomendada)
     CLASSIFICACOES = [
         (80, 100, 'OTIMA',   '#26c6da', 'Agua potavel sem restricoes'),
         (60,  80, 'BOA',     '#66bb6a', 'Adequada — monitorar mensalmente'),
@@ -83,6 +87,9 @@ class SistemaFuzzyQualidadeAgua:
         self._simulacao = self._construir()
         self.historico  = []
 
+    # BLOCO 2 — CONSTRUÇÃO DO SISTEMA: encapsula variáveis, MFs e regras.
+    # Para outro domínio: este é o único método que precisa ser reescrito —
+    # as demais funções (avaliar, relatorio, dashboard) são genéricas.
     def _construir(self):
         ph_u    = np.arange(4.0, 10.1, 0.05)
         turb_u  = np.arange(0.0, 201.0, 1.0)
@@ -271,6 +278,9 @@ if __name__ == '__main__':
     print()
 
     # Pontos de coleta para avaliacao
+    # BLOCO 3 — PONTOS DE COLETA: 7 cenários cobrem situações reais diversas
+    # (preservado, urbano, industrial, turístico, rural). Para outro domínio:
+    # substitua pelos casos de uso representativos do seu sistema.
     pontos = [
         ('Manancial A (preservado)', 7.2, 8,   9.5, 20),
         ('Rio B (zona urbana)',      6.8, 55,  6.2, 24),
@@ -300,6 +310,9 @@ if __name__ == '__main__':
     print(f"  Indice max       : {np.max(indices_all):.1f}")
     print(f"  Desvio padrao    : {np.std(indices_all):.1f}")
 
+    # BLOCO 4 — ALERTAS: limiar 40 separa situações aceitáveis de problemáticas.
+    # Para outro domínio: ajuste o limiar de alerta conforme o critério de risco
+    # do seu problema (ex: < 60 para sistemas críticos de saúde).
     criticos = [r for r in sistema.historico if r['indice'] < 40]
     if criticos:
         print(f"\n  ALERTAS ({len(criticos)} pontos com qualidade RUIM/CRITICA):")

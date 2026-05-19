@@ -79,6 +79,11 @@ def pertinencia_ponto(x, a, b, c, d):
 # DEFINICAO DOS CONJUNTOS FUZZY
 # =============================================================================
 
+# BLOCO 1 — CONJUNTOS DE ENTRADA: cada tupla (a,b,c,d) define os 4 pontos
+# de uma trapezoidal para uma variável do sistema de água.
+# Para outro domínio: substitua as 4 seções (pH, Turbidez, OD, Temperatura)
+# pelas variáveis do seu problema. Mantenha a convenção: termos adjacentes
+# devem se sobrepor para garantir partição de unidade.
 # --- pH [4.0, 10.0] ---
 PH_ACIDO    = (4.0, 4.0,  5.5, 6.5)   # trapezoidal aberto a esquerda
 PH_NEUTRO   = (6.0, 7.0,  7.5, 8.5)   # triangular/trapezoidal
@@ -99,6 +104,9 @@ TEMP_FRIA   = ( 0,  0, 10, 18)
 TEMP_IDEAL  = (15, 20, 24, 28)
 TEMP_QUENTE = (25, 32, 40, 40)
 
+# BLOCO 2 — CONJUNTOS DE SAÍDA: 5 classes cobre o espectro Crítica→Ótima.
+# Para outro domínio: redefina os termos e ajuste o universo [0,100].
+# Regra prática: mais termos = granularidade maior, mas exige mais regras.
 # --- Saida: Indice de Qualidade [0, 100] ---
 IQ_CRITICA  = (  0,  0, 10, 20)
 IQ_RUIM     = ( 15, 25, 30, 40)
@@ -109,6 +117,9 @@ IQ_OTIMA    = ( 78, 88, 100, 100)
 
 def testar_pertinencias():
     """Testa as funcoes com valores concretos e explica o resultado."""
+    # BLOCO 3 — TESTES DE PERTINÊNCIA: verifica se os parâmetros calibrados
+    # produzem os graus esperados para valores de referência conhecidos.
+    # Para outro domínio: substitua pelos pares (valor, MF esperada) do seu sistema.
     testes = [
         ('pH = 4.5 em ACIDO',    PH_ACIDO,    4.5),
         ('pH = 6.2 em NEUTRO',   PH_NEUTRO,   6.2),

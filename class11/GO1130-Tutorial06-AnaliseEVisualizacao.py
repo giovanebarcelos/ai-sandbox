@@ -137,6 +137,10 @@ def superficie_controle(sim):
     print("  OD = 9.0 mg/L (fixo) | Temperatura = 22 C (fixa)")
     print("  Aguarde — pode demorar alguns segundos...")
 
+    # BLOCO 1 — GRADE DA SUPERFÍCIE: define a resolução da varredura pH × Turbidez.
+    # OD=9.0 e Temp=22°C estão fixos — para revelar o efeito de outro par de
+    # variáveis, troque as duas dimensões varridas e fixe as outras.
+    # Para outro domínio: ajuste os ranges para as duas entradas mais relevantes.
     ph_vals   = np.arange(4.5, 9.6, 0.4)
     turb_vals = np.arange(5, 195, 10)
     Z = np.zeros((len(ph_vals), len(turb_vals)))
@@ -171,6 +175,9 @@ def superficie_controle(sim):
 
 def analise_sensibilidade(sim):
     """Varia cada variavel mantendo as outras fixas — mostra impacto no indice."""
+    # BLOCO 2 — PONTO-BASE: condição de referência para a análise de sensibilidade.
+    # Cada variável é variada enquanto as outras ficam neste ponto.
+    # Para outro domínio: use um cenário típico/médio do seu problema como base.
     base = {'ph': 7.0, 'turb': 40.0, 'od': 8.0, 'temp': 22.0}
 
     fig, axes = plt.subplots(2, 2, figsize=(12, 7))
@@ -241,6 +248,10 @@ def analise_sensibilidade(sim):
 
 def simular_monitoramento_temporal(sim):
     """Simula 24 horas de coleta de dados com variacao realista."""
+    # BLOCO 3 — SIMULAÇÃO TEMPORAL: modela variações senoidais + ruído gaussiano
+    # para simular um dia de coleta. O seed=42 garante reprodutibilidade.
+    # Para outro domínio: ajuste as funções seno para refletir o comportamento
+    # temporal típico do seu sistema (ex: ciclo diário, pico de produção, etc.).
     np.random.seed(42)
     horas = np.arange(0, 24.5, 0.5)
     n = len(horas)

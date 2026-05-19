@@ -159,6 +159,11 @@ def defuzz_lom(x, mu):
 # CLASSIFICACAO DO INDICE
 # =============================================================================
 
+# BLOCO 1 — ESCALA DE CLASSIFICAÇÃO: define os limiares que convertem o
+# índice numérico [0-100] em ações concretas. Estes limiares são decisões
+# de domínio — um especialista em água potável os definiu.
+# Para outro domínio: redefina as faixas e ações conforme a regulamentação
+# ou critério de aceitação do seu problema (ex: CONAMA 357, ANVISA, etc.).
 CLASSIFICACOES = [
     (80, 100, 'OTIMA',   '#26c6da', 'Agua potavel sem restricoes'),
     (60,  80, 'BOA',     '#66bb6a', 'Agua adequada para consumo'),
@@ -175,6 +180,12 @@ def classificar(indice):
     return 'INDEFINIDA', '#999', 'Verificar dados'
 
 
+# BLOCO 2 — COMPARAÇÃO DE MÉTODOS: mostra por que o centroide é o padrão.
+# Para este sistema de água, o centroide é preferido por ser contínuo e
+# levar toda a área em conta. MOM/SOM/LOM são úteis quando a velocidade
+# importa mais que a precisão (ex: sistemas de controle em tempo real).
+# Para outro domínio: o método ideal depende do custo do erro — sistemas
+# conservadores preferem SOM (menor saída), agressivos preferem LOM.
 def comparar_metodos(nome_amostra, ph, turb, od, temp):
     """Compara os 5 metodos de defuzzificacao para a mesma entrada."""
     x, mu = agregar(ph, turb, od, temp)
@@ -250,6 +261,9 @@ if __name__ == '__main__':
         print(f"  [{minv:3d}-{maxv:3d}]  {nome:<10}: {acao}")
     print()
 
+    # BLOCO 3 — AMOSTRAS DE TESTE: 4 cenários cobrem o espectro completo
+    # (ótimo → crítico). Para outro domínio: inclua pelo menos um caso de
+    # cada classe de saída para validar todos os ramos do sistema.
     amostras = [
         ('Manancial A (preservado)', 7.2, 8,   9.5, 20),
         ('Rio B (zona urbana)',      6.8, 55,  6.2, 24),

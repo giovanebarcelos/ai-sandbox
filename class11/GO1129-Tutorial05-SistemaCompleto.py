@@ -53,6 +53,9 @@ except ImportError:
 def construir_sistema():
     """Constroi o sistema fuzzy de qualidade da agua com scikit-fuzzy."""
 
+    # BLOCO 1 — UNIVERSOS: a resolução (passo do arange) afeta precisão vs velocidade.
+    # Passos menores = mais preciso mas mais lento. Para outro domínio: ajuste os
+    # intervalos e passos para cada variável. Regra prática: ~100-500 pontos por universo.
     # --- Universos de discurso ---
     ph_u    = np.arange(4.0, 10.1, 0.05)
     turb_u  = np.arange(0.0, 201.0, 1.0)
@@ -67,6 +70,9 @@ def construir_sistema():
     temp     = ctrl.Antecedent(temp_u, 'Temperatura')
     qualidade= ctrl.Consequent(qual_u, 'Qualidade', defuzzify_method='centroid')
 
+    # BLOCO 2 — MFs DE ENTRADA: mesmos parâmetros do GO1126 (implementação manual),
+    # agora usando a API fuzz.trapmf do scikit-fuzzy. Para outro domínio: substitua
+    # as 4 variáveis (pH, turbidez, OD, temp) pelas suas variáveis de entrada.
     # --- Funcoes de Pertinencia das entradas ---
     pH['Acido']    = fuzz.trapmf(ph_u,   [4.0, 4.0, 5.5, 6.5])
     pH['Neutro']   = fuzz.trapmf(ph_u,   [6.0, 7.0, 7.5, 8.5])
@@ -91,6 +97,9 @@ def construir_sistema():
     qualidade['Boa']     = fuzz.trapmf(qual_u, [60, 70, 75, 82])
     qualidade['Otima']   = fuzz.trapmf(qual_u, [78, 88,100,100])
 
+    # BLOCO 3 — REGRAS: mesma lógica do GO1127, agora com sintaxe scikit-fuzzy.
+    # O operador & é AND (min), | é OR (max). Para outro domínio: reescreva as
+    # regras usando os termos das suas variáveis. Total = nº termos A × nº termos B...
     # --- Base de Regras ---
     regras = [
         # Otima
@@ -242,6 +251,9 @@ if __name__ == '__main__':
     visualizar_mfs_skfuzzy(pH, turbidez, od, temp, qualidade)
 
     # Amostras de teste
+    # BLOCO 4 — AMOSTRAS DE TESTE: 5 pontos cobrindo o espectro completo.
+    # Para outro domínio: inclua casos que exercitem todas as regiões do
+    # espaço de entrada para validar o comportamento em cada faixa de saída.
     amostras = [
         ('Manancial A (preservado)', 7.2, 8,   9.5, 20),
         ('Rio B (zona urbana)',      6.8, 55,  6.2, 24),

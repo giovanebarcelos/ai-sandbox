@@ -103,6 +103,12 @@ def avaliar_regras(ph, turb, od, temp):
         'temp_fria': te_fr, 'temp_ideal': te_id, 'temp_quente': te_qt,
     }
 
+    # BLOCO 1 — BASE DE REGRAS: 15 regras codificam o conhecimento de um
+    # especialista em qualidade da água. Cada linha é um julgamento especialista:
+    # "se pH neutro E água clara E OD alto → qualidade ótima".
+    # Para outro domínio: reescreva estas regras com os termos das suas MFs.
+    # A T-norma min (Zadeh) pode ser trocada por produto algébrico se preferir
+    # penalização mais forte quando múltiplas condições são fracas.
     # Regras — T-norma = min (Zadeh)
     # Formato: (forca, 'nome', mf_params)
     regras = [
@@ -181,8 +187,14 @@ def inferencia_detalhada(nome, ph, turb, od, temp):
     x_saida = np.linspace(0, 100, 1000)
     mu_agregada = np.zeros(len(x_saida))
     for forca, nome_saida, mf in regras_ativas:
+        # BLOCO 2 — CLIPAGEM (implicação Mamdani): a MF de saída é cortada na
+        # força da regra (α). Alternativa: produto algébrico (MF × α), mais suave.
+        # Para outro domínio: este bloco não muda — é o coração do Mamdani.
         # Corte pelo minimo (Mamdani): clipagem do conjunto de saida
         mu_regra = np.minimum(forca, trapmf(x_saida, *mf))
+        # BLOCO 3 — AGREGAÇÃO: une os clips de todas as regras ativas pelo máximo.
+        # Alternativa: soma algébrica (mais permissiva que o máximo).
+        # Para outro domínio: este bloco também não muda.
         # Uniao (max) de todos os conjuntos cortados
         mu_agregada = np.maximum(mu_agregada, mu_regra)
 
