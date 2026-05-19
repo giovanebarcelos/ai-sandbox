@@ -1,26 +1,21 @@
-# GO1101-Png
+# GO1123-Png
 import numpy as np
 import matplotlib.pyplot as plt
 import matplotlib.colors as mcolors
 
 
-def triangular(x, a, b, c):
-    if x <= a or x >= c:
-        return 0
-    elif x <= b:
-        return (x - a) / (b - a)
-    else:
-        return (c - x) / (c - b)
+def gaussiana(x, c, sigma):
+    return np.exp(-((x - c) ** 2) / (2 * sigma ** 2))
 
 
 if __name__ == '__main__':
-    print("=== Função de Pertinência Triangular ===")
-    # Parâmetros: pé esquerdo a=0, pico b=5, pé direito c=10
-    a, b, c = 0, 5, 10
-    print(f"  Parâmetros: a={a}, b={b}, c={c}")
+    print("=== Função de Pertinência Gaussiana ===")
+    # Parâmetros: centro c=5, desvio padrão sigma=2
+    c, sigma = 5, 2
+    print(f"  Parâmetros: c={c}, σ={sigma}")
     print()
     xs = list(range(-1, 12))
-    mus = [triangular(x, a, b, c) for x in xs]
+    mus = [gaussiana(x, c, sigma) for x in xs]
     for x, mu in zip(xs, mus):
         barra = "█" * int(mu * 20)
         print(f"  x={x:3d}: μ={mu:.2f} |{barra}")
@@ -28,14 +23,12 @@ if __name__ == '__main__':
     # --- Gráfico colorido ---
     fig, ax = plt.subplots(figsize=(9, 4))
 
-    # Curva contínua preenchida com gradiente de cor por grau de pertinência
     x_cont = np.linspace(-1, 11, 500)
-    mu_cont = np.array([triangular(xi, a, b, c) for xi in x_cont])
+    mu_cont = gaussiana(x_cont, c, sigma)
 
-    cmap = plt.cm.RdYlGn          # vermelho (baixo) → amarelo → verde (alto)
+    cmap = plt.cm.RdYlGn
     norm = mcolors.Normalize(vmin=0, vmax=1)
 
-    # Preenche fatias verticais coloridas de acordo com μ
     for i in range(len(x_cont) - 1):
         mu_mid = (mu_cont[i] + mu_cont[i + 1]) / 2
         ax.fill_between(
@@ -43,25 +36,22 @@ if __name__ == '__main__':
             color=cmap(norm(mu_mid)), alpha=0.85, linewidth=0
         )
 
-    # Linha da curva
-    ax.plot(x_cont, mu_cont, color='#333333', linewidth=2, label='μ(x) triangular')
+    ax.plot(x_cont, mu_cont, color='#333333', linewidth=2, label='μ(x) gaussiana')
 
-    # Pontos discretos usados na representação em caractere
     ax.scatter(xs, mus, color=[cmap(norm(m)) for m in mus],
                edgecolors='#333333', s=80, zorder=5, label='Pontos discretos')
 
-    # Anotações dos graus nos pontos
     for x, mu in zip(xs, mus):
-        if mu > 0:
-            ax.annotate(f'{mu:.1f}', (x, mu), textcoords='offset points',
+        if mu > 0.05:
+            ax.annotate(f'{mu:.2f}', (x, mu), textcoords='offset points',
                         xytext=(0, 8), ha='center', fontsize=8, color='#222222')
 
-    # Linhas de referência
     ax.axhline(0, color='gray', linewidth=0.8, linestyle='--')
     ax.axhline(1, color='gray', linewidth=0.8, linestyle='--')
-    ax.axvline(b, color='steelblue', linewidth=1, linestyle=':', alpha=0.7, label=f'Pico b={b}')
+    ax.axvline(c, color='steelblue', linewidth=1, linestyle=':', alpha=0.7, label=f'Centro c={c}')
+    # Marcação de ±σ
+    ax.axvspan(c - sigma, c + sigma, alpha=0.08, color='steelblue', label=f'±σ = [{c-sigma}, {c+sigma}]')
 
-    # Colorbar
     sm = plt.cm.ScalarMappable(cmap=cmap, norm=norm)
     sm.set_array([])
     cbar = fig.colorbar(sm, ax=ax, pad=0.02)
@@ -71,11 +61,11 @@ if __name__ == '__main__':
     ax.set_ylim(-0.05, 1.15)
     ax.set_xlabel('x', fontsize=11)
     ax.set_ylabel('μ(x)', fontsize=11)
-    ax.set_title(f'Função de Pertinência Triangular  (a={a}, b={b}, c={c})', fontsize=12)
+    ax.set_title(f'Função de Pertinência Gaussiana  (c={c}, σ={sigma})', fontsize=12)
     ax.legend(fontsize=9)
     ax.set_xticks(range(-1, 12))
 
     plt.tight_layout()
-    plt.savefig('GO1101-Png.png', dpi=150)
+    plt.savefig('GO1123-Png.png', dpi=150)
     plt.show()
-    print("\n  Gráfico salvo em GO1101-Png.png")
+    print("\n  Gráfico salvo em GO1123-Png.png")
