@@ -22,6 +22,9 @@ if __name__ == "__main__":
     # 1. CRIAR VARIÁVEIS FUZZY
     # =============================================================================
 
+    # BLOCO 1 — VARIÁVEIS: temperatura [0,50°C], umidade [0,100%], potência [-100,+100].
+    # Para outro problema: substitua nomes e intervalos. O sinal da potência
+    # (negativo=aquece, positivo=resfria) é uma convenção deste controlador.
     # Entradas
     temperatura = ctrl.Antecedent(np.arange(0, 51, 1), 'temperatura')
     umidade = ctrl.Antecedent(np.arange(0, 101, 1), 'umidade')
@@ -29,6 +32,9 @@ if __name__ == "__main__":
     # Saída (negativo=aquece, positivo=resfria)
     potencia = ctrl.Consequent(np.arange(-100, 101, 1), 'potencia')
 
+    # BLOCO 2 — MFs de TEMPERATURA: 5 termos cobrem toda a faixa.
+    # Para outro problema: ajuste o número de termos e os parâmetros trapmf/trimf.
+    # Mais termos = controle mais fino, porém mais regras na parte 2 (GO1112).
     # =============================================================================
     # 2. FUNÇÕES DE PERTINÊNCIA - TEMPERATURA
     # =============================================================================
@@ -47,6 +53,9 @@ if __name__ == "__main__":
     umidade['normal'] = fuzz.trimf(umidade.universe, [30, 50, 70])
     umidade['umida'] = fuzz.trapmf(umidade.universe, [60, 70, 100, 100])
 
+    # BLOCO 3 — MFs de POTÊNCIA (SAÍDA): intervalo simétrico [-100, +100].
+    # Para outro problema: defina os termos da sua saída (ex: velocidade do motor,
+    # dose de medicamento, ângulo de deflexão…).
     # =============================================================================
     # 4. FUNÇÕES DE PERTINÊNCIA - POTÊNCIA
     # =============================================================================

@@ -16,6 +16,8 @@ except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 if __name__ == "__main__":
+    # BLOCO 1 — UNIVERSOS: definem os intervalos de cada variável.
+    # Para outro problema: ajuste os arange() para o seu domínio.
     qualidade_universo = np.arange(0, 11, 1)
     servico_universo = np.arange(0, 11, 1)
     gorjeta_universo = np.arange(0, 26, 1)
@@ -25,6 +27,8 @@ if __name__ == "__main__":
     servico = ctrl.Antecedent(servico_universo, 'servico')
     gorjeta = ctrl.Consequent(gorjeta_universo, 'gorjeta')
 
+    # BLOCO 2 — MFs: automf(3) gera 3 termos automaticamente (ruim/médio/bom).
+    # Para controle mais fino, use trimf/trapmf manualmente (como na linha seguinte).
     # 3. Definir funções de pertinência (auto-membership)
     qualidade.automf(3)  # Cria 3 termos automaticamente
     servico.automf(3)
@@ -41,6 +45,8 @@ if __name__ == "__main__":
     gorjeta.view()
     plt.show()
 
+    # BLOCO 3 — REGRAS: conectam antecedentes (|=OR, &=AND) ao consequente.
+    # Para outro problema: reescreva as regras com os termos do seu domínio.
     # 5. Definir regras
     regra1 = ctrl.Rule(qualidade['ruim'] | servico['poor'], gorjeta['poor'])
     regra2 = ctrl.Rule(servico['average'], gorjeta['average'])
@@ -53,6 +59,8 @@ if __name__ == "__main__":
     simulacao = ctrl.ControlSystemSimulation(sistema_gorjeta)
 
     # 8. Fornecer entradas
+    # BLOCO 4 — ENTRADA DE TESTE: qualidade=6.5, serviço=9.8 (exemplo do slide).
+    # Para outro problema, substitua os nomes das variáveis e os valores.
     simulacao.input['qualidade'] = 6.5
     simulacao.input['servico'] = 9.8
 

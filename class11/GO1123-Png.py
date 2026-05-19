@@ -10,6 +10,8 @@ def gaussiana(x, c, sigma):
 
 if __name__ == '__main__':
     print("=== Função de Pertinência Gaussiana ===")
+    # PARÂMETROS da gaussiana: c=centro (onde μ=1), sigma=largura da curva.
+    # Para outro domínio: c desloca o pico; sigma maior = curva mais larga (menos seletiva).
     # Parâmetros: centro c=5, desvio padrão sigma=2
     c, sigma = 5, 2
     print(f"  Parâmetros: c={c}, σ={sigma}")
@@ -20,6 +22,8 @@ if __name__ == '__main__':
         barra = "█" * int(mu * 20)
         print(f"  x={x:3d}: μ={mu:.2f} |{barra}")
 
+    # VISUALIZAÇÃO — a região ±σ mostra onde a pertinência cai de 1.0 para ~0.61.
+    # Vantagem da gaussiana: transição infinitamente suave, sem cantos (vs triangular).
     # --- Gráfico colorido ---
     fig, ax = plt.subplots(figsize=(9, 4))
 

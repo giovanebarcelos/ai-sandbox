@@ -141,9 +141,12 @@ def grafico(mu_a, mu_b, resultados, label_a="A", label_b="B"):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    # CENÁRIO — μ_QUENTE(28°C)=0.8 e μ_ALTA(75%)=0.6 do slide 7.
+    # Para outro problema, substitua QUENTE e ALTA pelos graus das suas variáveis.
     # Cenário: temperatura "quente" e umidade "alta"
     QUENTE = 0.8   # μ_QUENTE(28°C)
     ALTA   = 0.6   # μ_ALTA(75%)
 
+    # Os operadores AND, OR e NOT são genéricos — só os valores de entrada mudam.
     resultados = relatorio(QUENTE, ALTA, label_a="QUENTE", label_b="ALTA")
     grafico(QUENTE, ALTA, resultados, label_a="QUENTE", label_b="ALTA")

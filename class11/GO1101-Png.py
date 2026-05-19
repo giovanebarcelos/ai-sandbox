@@ -15,6 +15,8 @@ def triangular(x, a, b, c):
 
 if __name__ == '__main__':
     print("=== Função de Pertinência Triangular ===")
+    # PARÂMETROS — pé esquerdo, pico e pé direito da triangular. Para outro
+    # domínio, ajuste: a=início do suporte, b=valor com grau 1, c=fim do suporte.
     # Parâmetros: pé esquerdo a=0, pico b=5, pé direito c=10
     a, b, c = 0, 5, 10
     print(f"  Parâmetros: a={a}, b={b}, c={c}")
@@ -25,6 +27,8 @@ if __name__ == '__main__':
         barra = "█" * int(mu * 20)
         print(f"  x={x:3d}: μ={mu:.2f} |{barra}")
 
+    # VISUALIZAÇÃO — gradiente RdYlGn mostra visualmente quão 'pertencente'
+    # cada ponto é ao conjunto. Para outro conjunto, apenas os params acima mudam.
     # --- Gráfico colorido ---
     fig, ax = plt.subplots(figsize=(9, 4))
 

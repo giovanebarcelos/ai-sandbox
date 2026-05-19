@@ -17,6 +17,8 @@ def trapezoidal(x, a, b, c, d):
 
 if __name__ == '__main__':
     print("=== Função de Pertinência Trapezoidal ===")
+    # PARÂMETROS da trapezoidal: pé esq (a), início do plano (b), fim do plano (c), pé dir (d).
+    # Para outro domínio: ajuste os 4 parâmetros. O núcleo [b,c] é onde μ=1 (certeza total).
     # Parâmetros: pé esquerdo a=0, subida b=3, descida c=7, pé direito d=10
     a, b, c, d = 0, 3, 7, 10
     print(f"  Parâmetros: a={a}, b={b}, c={c}, d={d}")
@@ -27,6 +29,8 @@ if __name__ == '__main__':
         barra = "█" * int(mu * 20)
         print(f"  x={x:3d}: μ={mu:.2f} |{barra}")
 
+    # VISUALIZAÇÃO — a região sombreada em azul [b,c] é o NÚCLEO da trapezoidal,
+    # onde o elemento pertence completamente ao conjunto. Só os parâmetros acima mudam.
     # --- Gráfico colorido ---
     fig, ax = plt.subplots(figsize=(9, 4))
 

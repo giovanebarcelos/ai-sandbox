@@ -1,4 +1,17 @@
 # GO1116-RepetirAteConvergencia
+# Algoritmo Genético (GA) para otimização automática dos parâmetros das MFs.
+# Problema: definir os parâmetros (a, b, c) de cada MF manualmente é difícil
+# quando não há especialista disponível. O GA busca a combinação que minimiza
+# o erro em dados de teste.
+#
+# Como funciona: cada 'individual' é uma lista de parâmetros de MFs
+# [a1,b1,c1, a2,b2,c2, ...]. O GA evolui a população minimizando o MSE.
+#
+# Para usar em um problema real, implemente:
+#   - create_fuzzy(individual): monta o sistema fuzzy com os parâmetros
+#   - test_fuzzy(sys, X_test, y_test): calcula o erro do sistema nos dados
+#   - population: população inicial gerada com toolbox.population()
+# Requer: pip install deap
 from deap import base, creator, tools, algorithms
 import random
 

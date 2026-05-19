@@ -10,6 +10,9 @@ def sigmoidal(x, a, c):
 
 if __name__ == '__main__':
     print("=== Função de Pertinência Sigmoidal ===")
+    # PARÂMETROS da sigmoidal: a=inclinação (maior a = transição mais abrupta),
+    # c=ponto de inflexão (onde μ=0.5). Para outro domínio, ajuste estes dois valores.
+    # Use a>0 para curva crescente (ex: 'velho') e a<0 para decrescente (ex: 'jovem').
     # Parâmetros: inclinação a=1, ponto de inflexão c=5
     a, c = 1, 5
     print(f"  Parâmetros: a={a} (inclinação), c={c} (ponto de inflexão)")
@@ -20,6 +23,8 @@ if __name__ == '__main__':
         barra = "█" * int(mu * 20)
         print(f"  x={x:3d}: μ={mu:.2f} |{barra}")
 
+    # VISUALIZAÇÃO — as linhas de referência mostram c (onde μ=0.5, ponto de virada)
+    # e μ=0.5 horizontal. Ideal para fenômenos que aumentam indefinidamente sem limite claro.
     # --- Gráfico colorido ---
     fig, ax = plt.subplots(figsize=(9, 4))
 

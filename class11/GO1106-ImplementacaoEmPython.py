@@ -70,12 +70,16 @@ def defuzzify_lom(x, mu):
 # ---------------------------------------------------------------------------
 
 if __name__ == "__main__":
+    # CENÁRIO — gorjeta entre 0% e 25%, distribuição triangular centrada em 15%.
+    # Para outro problema: ajuste o intervalo do linspace e a função mu abaixo.
     # Domínio de saída: 100 pontos igualmente espaçados entre 0% e 25%
     x = np.linspace(0, 25, 100)
 
     # Função de pertinência triangular representando "gorjeta boa"
     # Pico em 15% (pertinência = 1.0), zeros em 5% e 25%
     # Fórmula: max(0, 1 - |x - 15| / 10)
+    # SAÍDA FUZZY simulada: em um sistema real, este mu viria da etapa de
+    # agregação do Mamdani (GO1105), não de uma função manual.
     mu = np.maximum(0, 1 - np.abs(x - 15) / 10)
 
     # Aplica cada método de defuzzificação sobre a mesma distribuição mu
@@ -85,6 +89,9 @@ if __name__ == "__main__":
     gorjeta_som       = defuzzify_som(x, mu)
     gorjeta_lom       = defuzzify_lom(x, mu)
 
+    # Cada método produz um número diferente do mesmo mu — escolha o método
+    # conforme o requisito: centroide (mais comum), bisector (robusto),
+    # MOM/SOM/LOM (rápido, quando pico é mais importante que área).
     print("=== Resultados da Defuzzificação ===")
     print(f"Centroide (COG): {gorjeta_centroid:.1f}%  ← mais preciso, mais usado")
     print(f"Bisector:        {gorjeta_bisector:.1f}%  ← divide a área em 2 partes iguais")

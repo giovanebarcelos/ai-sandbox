@@ -21,6 +21,9 @@ except NameError:
 # 1. DEFINIR VARIÁVEIS E UNIVERSOS
 # =============================================================================
 
+# BLOCO 1 — VARIÁVEIS: para outro problema, substitua 'qualidade' e
+# 'servico' pelos nomes das suas entradas e 'gorjeta' pela sua saída.
+# Ajuste os arange() para os universos do seu domínio.
 # Variáveis de entrada
 qualidade = ctrl.Antecedent(np.arange(0, 11, 1), 'qualidade')
 servico = ctrl.Antecedent(np.arange(0, 11, 1), 'servico')
@@ -32,6 +35,9 @@ gorjeta = ctrl.Consequent(np.arange(0, 26, 1), 'gorjeta')
 # 2. FUNÇÕES DE PERTINÊNCIA
 # =============================================================================
 
+# BLOCO 2 — MFs: parâmetros trimf definidos para o problema de gorjeta.
+# Para outro problema: recalibre os parâmetros [a, b, c] para cada termo
+# do seu domínio. Regra prática: termos adjacentes devem se sobrepor em ~30%.
 # Qualidade (triangulares)
 qualidade['ruim'] = fuzz.trimf(qualidade.universe, [0, 0, 5])
 qualidade['media'] = fuzz.trimf(qualidade.universe, [0, 5, 10])
@@ -67,6 +73,9 @@ plt.tight_layout()
 # 4. DEFINIR BASE DE REGRAS
 # =============================================================================
 
+# BLOCO 3 — REGRAS: 5 regras cobrem os casos mais relevantes do exemplo.
+# Para outro problema: reescreva usando os termos dos seus dicionários.
+# Mais regras = mais precisão, mas também mais custo computacional.
 regra1 = ctrl.Rule(
     qualidade['ruim'] | servico['ruim'],
     gorjeta['baixa']
@@ -107,6 +116,8 @@ def calcular_gorjeta(qual, serv):
     simulacao.compute()
     return simulacao.output['gorjeta']
 
+# BLOCO 4 — CENÁRIOS DE TESTE: 6 combinações cobrindo todo o espaço de entrada.
+# Para outro problema, substitua pelos casos relevantes do seu domínio.
 # Casos de teste
 casos = [
     (2, 3),    # Baixa qualidade e serviço

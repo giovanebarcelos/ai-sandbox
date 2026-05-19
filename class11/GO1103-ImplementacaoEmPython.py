@@ -83,7 +83,12 @@ def grafico(var, t_exemplo, resultado, saida):
 
 
 if __name__ == "__main__":
+    # BLOCO 1 — VARIÁVEL: define o nome e o universo de discurso.
+    # Para outro problema: mude o nome e o intervalo (ex: 'PRESSÃO', (0, 300)).
     temp = VariavelLinguistica("TEMPERATURA", (0, 50))
+    # BLOCO 2 — TERMOS LINGUÍSTICOS: cada lambda define um termo com seus parâmetros.
+    # Para outro problema: substitua FRIO/AGRADÁVEL/QUENTE pelos termos do seu domínio
+    # e recalibre os números para que os graus somem ≈1 no ponto de teste.
     temp.adicionar_termo("FRIO",
         lambda x: max(0.0, min(1.0, (22 - x) / 10)))
     temp.adicionar_termo("AGRADÁVEL",
@@ -91,6 +96,8 @@ if __name__ == "__main__":
     temp.adicionar_termo("QUENTE",
         lambda x: max(0.0, min(1.0, (x - 25) / 10)))
 
+    # BLOCO 3 — PONTO DE TESTE: T=18°C é o exemplo do slide.
+    # Para outro problema, substitua pelo valor de entrada do seu domínio.
     T = 18
     resultado = relatorio(temp, T)
 

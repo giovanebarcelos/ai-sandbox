@@ -1,4 +1,13 @@
 # GO1121-Simpful
+# Simpful — biblioteca alternativa ao scikit-fuzzy com sintaxe mais próxima
+# da linguagem natural. Vantagem: regras escritas como strings legíveis
+# ("IF temperature IS cold THEN power IS high").
+#
+# Para usar: pip install simpful
+# Para outro problema: substitua os termos (cold/warm) e variáveis
+# (temperature/power) pelos do seu domínio. As classes TrapezoidFuzzySet
+# e TriangleFuzzySet recebem os mesmos parâmetros (a,b,c,d) / (a,b,c)
+# usados nos outros exemplos desta aula.
 from simpful import FuzzySystem, LinguisticVariable
 
 

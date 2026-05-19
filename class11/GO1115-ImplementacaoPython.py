@@ -12,10 +12,15 @@ try:
 except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
-# Gerar dados aleatórios
+# DADOS: 100 pontos 2D simulados aleatoriamente em [0,10]×[0,10].
+# Para outro problema: substitua por seus dados reais (ex: np.loadtxt, pd.read_csv).
+# O FCM aceita qualquer dimensionalidade — ajuste data.T conforme necessário.
 data = np.random.rand(100, 2) * 10
 
-# Aplicar FCM
+# HIPERPARÂMETROS do FCM:
+#   n_clusters: número de grupos esperados — ajuste conforme seu domínio
+#   m=2: fuzziness (1=k-means nítido, >2=clusters muito sobrepostos, 2 é padrão)
+# FPC (Fuzzy Partition Coefficient) no final indica qualidade: próximo de 1 = bom.
 n_clusters = 3
 m = 2  # fuzziness parameter
 cntr, u, u0, d, jm, p, fpc = fuzz.cluster.cmeans(

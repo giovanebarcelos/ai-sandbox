@@ -13,6 +13,9 @@ import matplotlib.gridspec as gridspec
 from matplotlib.patches import Patch
 
 
+# BLOCO 1 — FUNÇÕES DE PERTINÊNCIA: definem como cada valor numérico
+# mapeia para termos linguísticos. Para outro problema, substitua estas 6
+# funções pelos termos do seu domínio (ex: velocidade, pressão, pH…).
 # ── Funções de pertinência ────────────────────────────────────────────────────
 # Temperatura [0, 50]°C
 def temp_fria(x):   return max(0.0, min(1.0, (20 - x) / 10))
@@ -41,6 +44,9 @@ class RegraFuzzy:
                 f"umid={self.cond_umid} → AC {self.consequente}")
 
 
+# BLOCO 2 — BASE DE REGRAS: todas as 9 combinações (3 temp × 3 umid).
+# Para outro problema: redefina as regras de acordo com o conhecimento
+# especialista do seu domínio. O total de regras = nº_termos_A × nº_termos_B.
 # ── Base de regras ────────────────────────────────────────────────────────────
 BASE_REGRAS = [
     RegraFuzzy(1, "FRIA",   "BAIXA", "DESLIGADO"),
@@ -230,6 +236,8 @@ def grafico(T, U, graus_t, graus_u, ativacoes, saida):
 
 # ── Main ──────────────────────────────────────────────────────────────────────
 if __name__ == "__main__":
+    # BLOCO 3 — ENTRADAS DE TESTE: T=27°C e U=60% do slide 9.
+    # Para outro problema, substitua pelos valores de entrada do seu domínio.
     T, U = 27, 60
     graus_t, graus_u, ativacoes = relatorio(T, U)
 

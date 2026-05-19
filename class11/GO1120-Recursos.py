@@ -1,4 +1,15 @@
 # GO1120-Recursos
+# SNIPPET MÍNIMO de scikit-fuzzy — esqueleto para iniciar um sistema fuzzy.
+# Mostra apenas a estrutura básica: uma entrada, uma saída, uma regra.
+#
+# Este código é INCOMPLETO (note os '...' em rule1 e system).
+# Para um exemplo completo e funcional, veja:
+#   GO1108 — sistema básico de gorjeta
+#   GO1110 — sistema completo com múltiplos cenários de teste
+#   GO1111/GO1112 — controlador de temperatura (projeto completo)
+#
+# Para outro problema: substitua 'temperatura'/'potencia' pelas variáveis
+# do seu domínio e defina as MFs e regras correspondentes.
 import skfuzzy as fuzz
 from skfuzzy import control as ctrl
 
