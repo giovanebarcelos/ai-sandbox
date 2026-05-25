@@ -69,3 +69,59 @@ if __name__ == "__main__":
         validation_data=(x_test, y_test)
     )
     # Resultado esperado: ~85-90% accuracy
+
+    # ─── VISUALIZAÇÃO: CURVAS DE TREINAMENTO ───
+    import matplotlib
+    import matplotlib.pyplot as plt
+
+    try:
+        get_ipython().run_line_magic('matplotlib', 'inline')
+    except NameError:
+        pass
+
+    class_names = ['airplane', 'automobile', 'bird', 'cat', 'deer',
+                   'dog', 'frog', 'horse', 'ship', 'truck']
+
+    fig, axes = plt.subplots(1, 2, figsize=(14, 5))
+
+    # Loss
+    axes[0].plot(history.history['loss'], label='Train Loss', linewidth=2, color='#4e79a7')
+    axes[0].plot(history.history['val_loss'], label='Val Loss', linewidth=2, color='#e15759', linestyle='--')
+    axes[0].set_title('Loss por Época - CIFAR-10', fontsize=13)
+    axes[0].set_xlabel('Época')
+    axes[0].set_ylabel('Loss')
+    axes[0].legend()
+    axes[0].grid(True, alpha=0.3)
+
+    # Accuracy
+    axes[1].plot(history.history['accuracy'], label='Train Accuracy', linewidth=2, color='#4e79a7')
+    axes[1].plot(history.history['val_accuracy'], label='Val Accuracy', linewidth=2, color='#e15759', linestyle='--')
+    axes[1].axhline(y=0.85, color='green', linestyle=':', linewidth=1.5, label='Meta 85%')
+    axes[1].set_title('Acurácia por Época - CIFAR-10', fontsize=13)
+    axes[1].set_xlabel('Época')
+    axes[1].set_ylabel('Accuracy')
+    axes[1].legend()
+    axes[1].grid(True, alpha=0.3)
+
+    test_loss, test_acc = model.evaluate(x_test, y_test, verbose=0)
+    plt.suptitle(f'CNN CIFAR-10 com Data Augmentation — Acurácia Final: {test_acc:.4f}',
+                 fontsize=13, fontweight='bold')
+    plt.tight_layout()
+    plt.show()
+
+    # ─── VISUALIZAÇÃO: AMOSTRAS DO CIFAR-10 ───
+    x_test_display = (x_test * 255).astype('uint8')
+    preds = model.predict(x_test[:25], verbose=0)
+    pred_labels = preds.argmax(axis=1)
+    true_labels = y_test[:25].argmax(axis=1)
+
+    fig, axes = plt.subplots(5, 5, figsize=(12, 12))
+    for i, ax in enumerate(axes.flat):
+        ax.imshow(x_test_display[i])
+        color = 'green' if pred_labels[i] == true_labels[i] else 'red'
+        ax.set_title(f'P:{class_names[pred_labels[i]][:5]}\nR:{class_names[true_labels[i]][:5]}',
+                     fontsize=8, color=color)
+        ax.axis('off')
+    plt.suptitle('CIFAR-10: Predições (verde=correto, vermelho=erro)', fontsize=13, fontweight='bold')
+    plt.tight_layout()
+    plt.show()
