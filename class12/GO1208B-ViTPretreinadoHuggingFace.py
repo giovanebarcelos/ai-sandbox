@@ -16,9 +16,12 @@ except NameError:
 
 
 if __name__ == "__main__":
+    # from_pretrained: baixa pesos do HuggingFace Hub — modelo já treinado em 1.2M imagens ImageNet
+    # 'google/vit-base-patch16-224': ViT-Base com patches 16×16 para imagens 224×224
     model = ViTForImageClassification.from_pretrained(
         'google/vit-base-patch16-224'
     )
+    # ViTFeatureExtractor: pré-processa a imagem (redimensiona, normaliza) para o formato que o ViT espera
     feature_extractor = ViTFeatureExtractor.from_pretrained(
         'google/vit-base-patch16-224'
     )
@@ -27,21 +30,26 @@ if __name__ == "__main__":
     url = 'http://images.cocodataset.org/val2017/000000039769.jpg'
     image = Image.open(requests.get(url, stream=True).raw)
 
-    # Preprocessar
+    # Preprocessar: converte PIL Image em tensor PyTorch normalizado para o ViT
     inputs = feature_extractor(images=image, return_tensors="pt")
 
-    # Predição
+    # torch.no_grad(): desliga o cálculo de gradientes — economiza memória na inferência
     with torch.no_grad():
         outputs = model(**inputs)
+    # logits: pontuações brutas antes do softmax (uma por classe ImageNet)
     logits = outputs.logits
+    # argmax(-1): classe com maior pontuação — índice da predição mais provável
     predicted_class = logits.argmax(-1).item()
 
     print(f"Predicted class: {model.config.id2label[predicted_class]}")
     # Predicted class: Egyptian cat
 
     # ─── VISUALIZAÇÃO: IMAGEM + TOP-5 PREDIÇÕES ───
+    # softmax: transforma logits em probabilidades (soma = 1) para todas as 1000 classes
     probabilities = torch.softmax(logits, dim=-1)[0]
+    # topk: retorna os 5 maiores valores e seus índices — top-5 predições do modelo
     top5_probs, top5_indices = torch.topk(probabilities, 5)
+    # id2label: mapeia índice numérico de classe para rótulo legível (ex: 285 → 'Egyptian cat')
     top5_labels = [model.config.id2label[idx.item()] for idx in top5_indices]
     top5_values = top5_probs.numpy()
 
@@ -69,9 +77,9 @@ if __name__ == "__main__":
     plt.show()
 
     # ─── VISUALIZAÇÃO: PATCHES DO ViT ───
-    img_array = np.array(image.resize((224, 224)))
-    patch_size = 16
-    num_patches = 224 // patch_size
+    img_array = np.array(image.resize((224, 224)))  # redimensionar para tamanho padrão do ViT
+    patch_size = 16  # cada patch tem 16×16 pixels
+    num_patches = 224 // patch_size  # 14 patches por lado → 14×14 = 196 patches total
 
     fig, axes = plt.subplots(1, 2, figsize=(12, 5))
     axes[0].imshow(img_array)

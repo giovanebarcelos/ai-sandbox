@@ -6,45 +6,42 @@ def AlexNet(input_shape=(224, 224, 3), num_classes=1000):
     """
     AlexNet adaptado para Keras (versão simplificada)
     Original usava 2 GPUs - aqui unificamos
+    Arquitetura original (Krizhevsky, 2012) - venceu ImageNet com 15.3% top-5 error
     """
     model = Sequential([
-        # CONV1: 96 filtros 11×11, stride 4
-        Conv2D(96, (11, 11), strides=4, activation='relu', 
+        # CONV1: 96 filtros 11×11, stride 4 — campo receptivo grande para capturar estrutura global
+        # Input 224×224 → output (224-11)/4+1 = 54×54 → após pool: 26×26
+        Conv2D(96, (11, 11), strides=4, activation='relu',
                input_shape=input_shape, name='conv1'),
-        MaxPooling2D((3, 3), strides=2, name='pool1'),
+        MaxPooling2D((3, 3), strides=2, name='pool1'),  # 26×26 → 12×12
 
-        # CONV2: 256 filtros 5×5
+        # CONV2: 256 filtros 5×5 — padding='same' mantém dimensão
         Conv2D(256, (5, 5), padding='same', activation='relu', name='conv2'),
-        MaxPooling2D((3, 3), strides=2, name='pool2'),
+        MaxPooling2D((3, 3), strides=2, name='pool2'),  # 12×12 → 5×5
 
-        # CONV3: 384 filtros 3×3
+        # CONV3-5: 3 convoluções consecutivas sem pooling entre elas
+        # Features cada vez mais abstratas e específicas
         Conv2D(384, (3, 3), padding='same', activation='relu', name='conv3'),
-
-        # CONV4: 384 filtros 3×3
         Conv2D(384, (3, 3), padding='same', activation='relu', name='conv4'),
-
-        # CONV5: 256 filtros 3×3
         Conv2D(256, (3, 3), padding='same', activation='relu', name='conv5'),
-        MaxPooling2D((3, 3), strides=2, name='pool3'),
+        MaxPooling2D((3, 3), strides=2, name='pool3'),  # 5×5 → 2×2
 
-        # FC Layers
+        # FC Layers: 4096 → 4096 → num_classes
+        # As 2 camadas FC contêm ~58M parâmetros — 93% do total!
+        # Gargalo: por isso VGG/ResNet substituíram por GlobalAveragePooling
         Flatten(),
         Dense(4096, activation='relu', name='fc6'),
-        Dropout(0.5),
+        Dropout(0.5),  # Dropout 50% nas FC: inovador em 2012, agora padrão
         Dense(4096, activation='relu', name='fc7'),
         Dropout(0.5),
-        Dense(num_classes, activation='softmax', name='fc8')
-    ])
-
-    return model
-
+        Dense(num_classes, activation='softmax', name='fc8')  # 1000 classes ImageNet
 # Criar modelo
 
 
 if __name__ == "__main__":
-    model = AlexNet(num_classes=10)  # 10 classes para CIFAR-10
+    model = AlexNet(num_classes=10)  # adaptado para 10 classes (CIFAR-10)
 
-    # Compilar com otimizador SGD (como original)
+    # SGD: otimizador usado no paper original (melhor generalização que Adam em CNNs)
     model.compile(
         optimizer='sgd',
         loss='categorical_crossentropy',
@@ -52,11 +49,9 @@ if __name__ == "__main__":
     )
 
     model.summary()
-
-    # Output:
-    # Total params: 62,378,344
-    # Trainable params: 62,378,344
-    # Non-trainable params: 0
+    # Total params: ~62M
+    # FC6 + FC7: ~58M parâmetros (93% do modelo está nas camadas Dense!)
+    # Demonstra o problema das FC layers — motivou Global Average Pooling
 
     # ─── VISUALIZAÇÃO: PARÂMETROS POR CAMADA ───
     import matplotlib

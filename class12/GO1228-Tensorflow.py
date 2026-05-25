@@ -38,18 +38,23 @@ if __name__ == "__main__":
         [ 1,  0, -1],
     ], dtype=float)
 
-    # Aplicar convolução 'valid' manualmente (stride=1)
+    # Convolução 'valid': sem padding → output menor que input
+    # Fórmula: out_size = (in_size - kernel_size) / stride + 1
+    # Aqui: (5 - 3) / 1 + 1 = 3  →  saída 3×3
     h, w = input_map.shape
     kh, kw = kernel.shape
-    out_h, out_w = h - kh + 1, w - kw + 1
+    out_h, out_w = h - kh + 1, w - kw + 1  # dimensões da saída 'valid'
     feature_map_valid = np.zeros((out_h, out_w))
-    for i in range(out_h):
-        for j in range(out_w):
+    for i in range(out_h):          # desliza verticalmente
+        for j in range(out_w):      # desliza horizontalmente
+            # Produto elemento a elemento entre janela e kernel, depois soma tudo
             feature_map_valid[i, j] = np.sum(input_map[i:i+kh, j:j+kw] * kernel)
 
-    # 'same' padding (pad=1)
-    padded = np.pad(input_map, 1)
-    feature_map_same = np.zeros((h, w))
+    # Convolução 'same': padding de zeros → output IGUAL ao input
+    # np.pad(input, 1): adiciona 1 linha/coluna de zeros em cada borda
+    # Permite que as bordas da imagem também sejam processadas
+    padded = np.pad(input_map, 1)   # input 5×5 → padded 7×7
+    feature_map_same = np.zeros((h, w))  # saída mantém 5×5
     for i in range(h):
         for j in range(w):
             feature_map_same[i, j] = np.sum(padded[i:i+kh, j:j+kw] * kernel)

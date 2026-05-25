@@ -7,13 +7,17 @@ class PatchEncoder(layers.Layer):
     def __init__(self, num_patches, projection_dim):
         super().__init__()
         self.num_patches = num_patches
+        # camada Dense projeta cada patch achatado para o espaço de embedding (projection_dim)
         self.projection = layers.Dense(projection_dim)
+        # embedding posicional: informa ao transformer a posição de cada patch na imagem
         self.position_embedding = layers.Embedding(
             input_dim=num_patches, output_dim=projection_dim
         )
 
     def call(self, patch):
+        # gera índices 0..num_patches-1 para buscar o embedding posicional correspondente
         positions = tf.range(start=0, limit=self.num_patches, delta=1)
+        # soma projeção do conteúdo + posição — o transformer precisa de ambos para entender o contexto
         encoded = self.projection(patch) + self.position_embedding(positions)
         return encoded
 
@@ -30,10 +34,11 @@ def create_vit_classifier(
     # Input
     inputs = layers.Input(shape=(image_size, image_size, 3))
 
-    # Criar patches (14x14 = 196 patches de 16x16)
+    # Passo 1: calcular número de patches — imagem 224×224 com patches 16×16 → 14×14 = 196 patches
     num_patches = (image_size // patch_size) ** 2
 
-    # Extrair patches
+    # Passo 2: extrair patches com Conv2D — kernel=patch_size e stride=patch_size garante patches sem sobreposição
+    # cada filtro aprende uma projeção linear do patch bruto para o espaço de embedding
     patches = layers.Conv2D(
         filters=projection_dim,
         kernel_size=patch_size,
@@ -41,57 +46,62 @@ def create_vit_classifier(
         padding="valid"
     )(inputs)
 
+    # Passo 3: achatar dimensões espaciais → sequência 1D de patches (como tokens no NLP)
     patch_dims = patches.shape[-3] * patches.shape[-2]
     patches = layers.Reshape((patch_dims, projection_dim))(patches)
 
-    # Encode patches
+    # Passo 4: codificar patches com projeção linear + embedding posicional
     encoded_patches = PatchEncoder(num_patches, projection_dim)(patches)
 
-    # Transformer Encoder
+    # Passo 5: empilhar transformer_layers blocos encoder (ViT-Base usa 12 blocos)
     for _ in range(transformer_layers):
-        # Layer normalization 1
+        # Layer Normalization ANTES da atenção (Pre-LN) — mais estável que Post-LN durante treino
         x1 = layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
 
-        # Multi-head attention
+        # Multi-Head Attention: cada cabeça aprende a focar em diferentes regiões/relações da imagem
+        # key_dim = projection_dim // num_heads divide o espaço entre as cabeças
         attention_output = layers.MultiHeadAttention(
             num_heads=num_heads, 
             key_dim=projection_dim // num_heads
         )(x1, x1)
 
-        # Skip connection 1
+        # Skip connection 1: soma input + saída da atenção para evitar vanishing gradient
         x2 = layers.Add()([attention_output, encoded_patches])
 
-        # Layer normalization 2
+        # Layer Normalization 2 antes do MLP (também Pre-LN)
         x3 = layers.LayerNormalization(epsilon=1e-6)(x2)
 
-        # MLP
+        # MLP feed-forward: expande para 2× a dimensão e depois comprime — capta padrões complexos
+        # GELU: ativação suave que funciona melhor que ReLU em transformers
         x3 = layers.Dense(projection_dim * 2, activation="gelu")(x3)
-        x3 = layers.Dropout(0.1)(x3)
+        x3 = layers.Dropout(0.1)(x3)  # regularização: evita co-dependência entre neurônios
         x3 = layers.Dense(projection_dim)(x3)
         x3 = layers.Dropout(0.1)(x3)
 
-        # Skip connection 2
+        # Skip connection 2: soma input do MLP + saída do MLP (segunda conexão residual do bloco)
         encoded_patches = layers.Add()([x3, x2])
 
-    # Final layer norm
+    # Normalização final após todos os blocos transformer
     representation = layers.LayerNormalization(epsilon=1e-6)(encoded_patches)
 
-    # Global average pooling
+    # Global Average Pooling: agrega informação de todos os 196 patches em um único vetor
     representation = layers.GlobalAveragePooling1D()(representation)
 
-    # MLP head
-    features = layers.Dropout(0.3)(representation)
+    # MLP head: cabeçalho de classificação — transforma vetor agregado em probabilidades
+    features = layers.Dropout(0.3)(representation)  # dropout forte para regularizar
     features = layers.Dense(2048, activation="gelu")(features)
     features = layers.Dropout(0.3)(features)
 
-    # Output
+    # Softmax: converte logits em probabilidades que somam 1 para as num_classes classes
     outputs = layers.Dense(num_classes, activation="softmax")(features)
 
     # Create model
     model = Model(inputs=inputs, outputs=outputs)
     return model
 
-# Criar modelo
+# Instanciar ViT-Base (configuração original do paper): 768-dim, 12 cabeças, 12 blocos
+# projection_dim=768: dimensão do espaço de embedding (ViT-Base)
+# num_heads=12: divide 768/12 = 64 dims por cabeça de atenção
 model = create_vit_classifier(
     image_size=224,
     patch_size=16,

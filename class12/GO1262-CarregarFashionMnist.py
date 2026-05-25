@@ -13,10 +13,15 @@ except NameError:
 if __name__ == "__main__":
     from tensorflow import keras
 
+    # Fashion-MNIST: substituto drop-in para MNIST
+    # 60.000 treino + 10.000 teste, imagens 28×28 grayscale
+    # 10 classes de roupas e acessórios (mais desafiante que dígitos!)
+    # Criado pela Zalando (2017) para benchmark mais realista
     (x_train, y_train), (x_test, y_test) = \
         keras.datasets.fashion_mnist.load_data()
 
-    # Classes
+    # 10 classes numeradas 0-9 (rótulo é inteiro, não one-hot)
+    # CNN simples atinge ~93% accuracy; estado da arte > 99%
     class_names = ['T-shirt', 'Trouser', 'Pullover', 'Dress',
                    'Coat', 'Sandal', 'Shirt', 'Sneaker',
                    'Bag', 'Ankle boot']

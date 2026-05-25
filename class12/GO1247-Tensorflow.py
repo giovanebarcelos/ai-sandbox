@@ -11,16 +11,20 @@ except NameError:
 
 
 if __name__ == '__main__':
+    # ImageDataGenerator: gera augmentations em tempo real durante o treino
+    # Cada epoch recebe versões diferentes da mesma imagem → mais generalização
     datagen = ImageDataGenerator(
-        rotation_range=15,
-        width_shift_range=0.1,
-        height_shift_range=0.1,
-        horizontal_flip=True,
-        zoom_range=0.2,
-        brightness_range=[0.8, 1.2]
+        rotation_range=15,          # rotações ±15° — invariante a orientação
+        width_shift_range=0.1,      # translação h. ±10% — objeto pode não estar centrado
+        height_shift_range=0.1,     # translação v. ±10%
+        horizontal_flip=True,       # espelhar — simetria horizontal
+        zoom_range=0.2,             # zoom ±20% — distância do objeto varia
+        brightness_range=[0.8, 1.2] # brilho ±20% — condições de iluminação diferentes
     )
 
     # model.fit(datagen.flow(x_train, y_train, batch_size=32), ...)
+    # datagen.flow(): iterador que gera batches com augmentations aleatórias
+    # steps_per_epoch = len(x_train) // batch_size (calculado automaticamente)
 
     # ─── VISUALIZAÇÃO: AUGMENTATION NO CIFAR-10 ───
     from tensorflow import keras

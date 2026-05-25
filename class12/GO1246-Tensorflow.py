@@ -1,4 +1,9 @@
 # GO1246-Tensorflow
+# Dropout: técnica de regularização que desativa aleatoriamente p% dos neurônios
+# Taxa ideal: 0.5 para camadas FC, 0.2-0.3 para camadas Conv
+# Taxa muito alta: underfitting (modelo não aprende)
+# Taxa zero: overfitting (modelo memoriza treino)
+# model.add(Dropout(0.5))  ← desativa 50% dos neurônios aleatoriamente por batch
 from tensorflow.keras.layers import Dropout
 import numpy as np
 import matplotlib

@@ -78,17 +78,19 @@ print(f"  Val Accuracy: {max(history_base.history['val_accuracy']):.4f}")
 # ─── 4. MODELO COM DROPOUT ───
 print("\n🔧 Modelo 2: DROPOUT (0.5)")
 
+# Dropout(0.25): durante o treino, desativa 25% dos neurônios aleatoriamente a cada batch
+# força a rede a aprender features redundantes — o modelo não pode depender de poucos neurônios
 model_dropout = Sequential([
     Conv2D(32, (3, 3), activation='relu', input_shape=INPUT_SHAPE),
     MaxPooling2D((2, 2)),
-    Dropout(0.25),
+    Dropout(0.25),  # regularização após pooling: camadas conv geralmente têm dropout leve
     Conv2D(64, (3, 3), activation='relu'),
     MaxPooling2D((2, 2)),
     Dropout(0.25),
     Conv2D(64, (3, 3), activation='relu'),
     Flatten(),
     Dense(64, activation='relu'),
-    Dropout(0.5),
+    Dropout(0.5),  # dropout mais forte nas camadas densas (mais propensas a overfitting)
     Dense(NUM_CLASSES, activation='softmax')
 ], name='Dropout')
 
@@ -108,9 +110,12 @@ print(f"  Val Accuracy: {max(history_dropout.history['val_accuracy']):.4f}")
 # ─── 5. MODELO COM BATCH NORMALIZATION ───
 print("\n🔧 Modelo 3: BATCH NORMALIZATION")
 
+# BatchNormalization: normaliza ativações de cada mini-batch — média 0 e desvio 1
+# reduz dependência da inicialização, permite LR maior e acelera convergência
+# posicioná-la após a convolucao (antes ou depois do ReLU) é comum
 model_bn = Sequential([
     Conv2D(32, (3, 3), activation='relu', input_shape=INPUT_SHAPE),
-    BatchNormalization(),
+    BatchNormalization(),  # normaliza DEPOIS da ativação (possível antes também)
     MaxPooling2D((2, 2)),
     Conv2D(64, (3, 3), activation='relu'),
     BatchNormalization(),
@@ -139,6 +144,9 @@ print(f"  Val Accuracy: {max(history_bn.history['val_accuracy']):.4f}")
 # ─── 6. MODELO COM L2 REGULARIZATION ───
 print("\n🔧 Modelo 4: L2 REGULARIZATION (0.01)")
 
+# L2 Regularization (Weight Decay): adiciona penalidade proporcional ao quadrado dos pesos
+# loss_total = loss_original + lambda * sum(w^2) — força pesos pequenos (modelo mais simples)
+# lambda=0.01: penalidade moderada — muito alto pode subajustar (underfitting)
 model_l2 = Sequential([
     Conv2D(32, (3, 3), activation='relu', kernel_regularizer=l2(0.01), input_shape=INPUT_SHAPE),
     MaxPooling2D((2, 2)),
@@ -166,6 +174,8 @@ print(f"  Val Accuracy: {max(history_l2.history['val_accuracy']):.4f}")
 # ─── 7. MODELO COM TODAS AS TÉCNICAS ───
 print("\n🔧 Modelo 5: COMBO (Dropout + BN + L2)")
 
+# Modelo COMBO: combina todas as técnicas — demonstra que juntas são complementares
+# l2(0.001): valor menor que o modelo L2 isolado — já tem Dropout e BN para ajudar
 model_combo = Sequential([
     Conv2D(32, (3, 3), activation='relu', kernel_regularizer=l2(0.001), input_shape=INPUT_SHAPE),
     BatchNormalization(),
@@ -186,7 +196,8 @@ model_combo = Sequential([
 
 model_combo.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-# Early Stopping
+# EarlyStopping: para o treino quando val_loss não melhora em 5 epochs consecutivas
+# restore_best_weights: reverte para os pesos do melhor epoch — evita usar um modelo já degradado
 early_stop = EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True)
 
 history_combo = model_combo.fit(

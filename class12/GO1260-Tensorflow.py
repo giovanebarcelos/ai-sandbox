@@ -1,5 +1,12 @@
 # GO1260-Tensorflow
-# Treina 2x mais rápido em GPUs modernas
+# Precisão Mista (Mixed Precision Training) — IEEE 754
+# FP32 (float32): 32 bits — alta precisão, lento nas GPUs
+# FP16 (float16): 16 bits — 2× menos memória, até 8× mais rápido em GPUs modernas
+# Estratégia 'mixed_float16':
+#   - Forward pass em FP16 (rápido)
+#   - Pesos mantidos em FP32 (estável)
+#   - Acumulação de gradientes em FP32 (evita underflow)
+# Requer GPUs com Tensor Cores: NVIDIA V100, A100, RTX 30xx, 40xx
 from tensorflow.keras.mixed_precision import set_global_policy
 import numpy as np
 import matplotlib
@@ -12,6 +19,9 @@ except NameError:
 
 
 if __name__ == '__main__':
+    # Aplica mixed_float16 globalmente a todas as camadas criadas depois
+    # A camada de saída (softmax) é automaticamente convertida para float32
+    # para manter estabilidade numérica na perda final
     set_global_policy('mixed_float16')
 
     # ─── VISUALIZAÇÃO: PRECISÃO MISTA FP16 vs FP32 ───

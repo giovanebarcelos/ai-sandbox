@@ -14,11 +14,14 @@ except NameError:
 x = np.linspace(-6, 6, 300)
 
 # Funções de ativação
-tanh_y   = np.tanh(x)
-sigmoid_y = 1 / (1 + np.exp(-x))
+tanh_y   = np.tanh(x)                   # tanh(x) = (e^x - e^-x)/(e^x + e^-x)
+sigmoid_y = 1 / (1 + np.exp(-x))       # σ(x) = 1/(1+e^{-x})
 
-# Derivadas (gradientes)
-tanh_grad    = 1 - tanh_y ** 2          # d/dx tanh(x)
+# Derivadas analíticas (usadas na backpropagation)
+# d/dx tanh(x) = 1 - tanh²(x)  →  máximo 1.0 em x=0, mas → 0 quando |x| > 2
+tanh_grad    = 1 - tanh_y ** 2
+# d/dx σ(x) = σ(x)·(1-σ(x))    →  máximo 0.25 em x=0 (já é menor que tanh!)
+# Conclusão: em redes profundas, multiplicar N gradientes <1 → gradiente desaparece
 sigmoid_grad = sigmoid_y * (1 - sigmoid_y)
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))

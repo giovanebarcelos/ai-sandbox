@@ -45,13 +45,13 @@ print(f"  Test: {X_test.shape}")
 print("\n🎨 Definindo operações de augmentation...")
 
 def rotate(img, magnitude):
-    angle = magnitude * 30  # -30 a +30 graus
+    angle = magnitude * 30  # magnitude em [-1, 1] mapeia para rotação de -30 a +30 graus
     h, w = img.shape[:2]
     M = cv2.getRotationMatrix2D((w/2, h/2), angle, 1.0)
     return cv2.warpAffine(img, M, (w, h), borderMode=cv2.BORDER_REFLECT)
 
 def shear_x(img, magnitude):
-    shear = magnitude * 0.3
+    shear = magnitude * 0.3  # magnitude controla a intensidade do cisalhamento horizontal
     h, w = img.shape[:2]
     M = np.array([[1, shear, 0], [0, 1, 0]], dtype=np.float32)
     return cv2.warpAffine(img, M, (w, h), borderMode=cv2.BORDER_REFLECT)
@@ -90,7 +90,8 @@ print(f"  Operações disponíveis: {len(augmentation_ops)}")
 # ─── 3. DEFINIR POLÍTICAS ───
 print("\n📜 Definindo políticas de augmentation...")
 
-# Políticas (simplificadas, normalmente encontradas por RL)
+# Políticas de augmentation — em AutoAugment real, essas políticas são encontradas por RL (Reforço)
+# Aqui usamos políticas manuais simplificadas para ilustrar o conceito
 policies = [
     # Política 1: Geometria
     [(augmentation_ops[0], 0.8), (augmentation_ops[1], 0.6)],
@@ -108,6 +109,8 @@ print(f"  Número de políticas: {len(policies)}")
 print("\n⚙️ Aplicando augmentation com políticas...")
 
 def apply_policy(img, policy):
+    # aplicar cada operação da política sequencialmente
+    # a combinação de operações cria variações mais ricas que augmentações isoladas
     for (op_name, op_func), magnitude in policy:
         img = op_func(img, magnitude)
     return img

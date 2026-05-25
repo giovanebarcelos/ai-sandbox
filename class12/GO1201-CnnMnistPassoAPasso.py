@@ -10,6 +10,7 @@ import numpy as np
 
 # ─── 1. CARREGAR E EXPLORAR DADOS ───
 print("Carregando MNIST...")
+# MNIST: 70.000 imagens 28x28 em escala de cinza de dígitos manuscritos (0-9)
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 
 print(f"Train: {x_train.shape}, Labels: {y_train.shape}")  # (60000, 28, 28)
@@ -27,15 +28,16 @@ plt.tight_layout()
 plt.show()
 
 # ─── 2. PRÉ-PROCESSAMENTO ───
-# Reshape: adicionar canal (28, 28) → (28, 28, 1)
+# Reshape: CNN espera tensor 4D (amostras, altura, largura, canais) — canal=1 pois MNIST é grayscale
 x_train = x_train.reshape(-1, 28, 28, 1)
 x_test = x_test.reshape(-1, 28, 28, 1)
 
-# Normalizar: [0, 255] → [0, 1]
+# Normalização: pixels [0,255] → [0,1] para acelerar convergência e evitar explosão de gradientes
 x_train = x_train.astype('float32') / 255.0
 x_test = x_test.astype('float32') / 255.0
 
-# One-hot encoding
+# One-hot encoding: converte rótulo inteiro em vetor binário (ex: 3 → [0,0,0,1,0,0,0,0,0,0])
+# Necessário para usar categorical_crossentropy como função de perda
 y_train = keras.utils.to_categorical(y_train, 10)
 y_test = keras.utils.to_categorical(y_test, 10)
 
@@ -46,27 +48,31 @@ print(f"y_train: {y_train.shape}, y_test: {y_test.shape}")
 # ─── 3. CONSTRUIR MODELO CNN ───
 model = models.Sequential([
     # Bloco 1: Conv → ReLU → MaxPool
+    # 32 filtros 3x3: cada filtro aprende um padrão diferente (bordas, curvas, texturas)
+    # relu: f(x)=max(0,x) — introduz não-linearidade e evita vanishing gradient da sigmoid
     layers.Conv2D(32, (3, 3), activation='relu', input_shape=(28, 28, 1), name='conv1'),
+    # MaxPooling 2x2: reduz dimensão pela metade (26x26 → 13x13), preserva feature mais forte
     layers.MaxPooling2D((2, 2), name='pool1'),
     # Output: (13, 13, 32)
 
-    # Bloco 2: Conv → ReLU → MaxPool
+    # Bloco 2: mais filtros (64) para capturar padrões mais complexos que o Bloco 1
     layers.Conv2D(64, (3, 3), activation='relu', name='conv2'),
     layers.MaxPooling2D((2, 2), name='pool2'),
     # Output: (5, 5, 64)
 
-    # Bloco 3: Conv → ReLU
+    # Bloco 3: Conv → ReLU (sem pooling para não reduzir demais a dimensão espacial)
     layers.Conv2D(64, (3, 3), activation='relu', name='conv3'),
     # Output: (3, 3, 64)
 
-    # Flatten: (3, 3, 64) → (576)
+    # Flatten: converte tensor 3D (3,3,64) em vetor 1D (576) para entrada nas camadas densas
     layers.Flatten(name='flatten'),
 
-    # Fully Connected
+    # Fully Connected: aprende combinações de alto nível das features extraídas pelas Conv
     layers.Dense(64, activation='relu', name='fc1'),
+    # Dropout 50%: desativa aleatoriamente metade dos neurônios no treino — previne overfitting
     layers.Dropout(0.5, name='dropout'),
 
-    # Output layer
+    # Camada de saída: 10 neurônios (um por dígito), softmax converte em probabilidades somando 1
     layers.Dense(10, activation='softmax', name='output')
 ], name='MNIST_CNN')
 
@@ -80,7 +86,9 @@ print(f"Treináveis: {sum([tf.size(w).numpy() for w in model.trainable_weights])
 
 # ─── 4. COMPILAR ───
 model.compile(
+    # Adam: otimizador adaptativo que ajusta a taxa de aprendizado por parâmetro — robusto e eficiente
     optimizer='adam',
+    # categorical_crossentropy: mede divergência entre distribuição predita e real (one-hot)
     loss='categorical_crossentropy',
     metrics=['accuracy']
 )
@@ -104,12 +112,13 @@ callbacks = [
     ),
 
     # Reduce LR: reduzir learning rate se estagnar
+    # ReduceLROnPlateau: se val_loss estagnar por 2 épocas, reduz LR pela metade (fator=0.5)
     keras.callbacks.ReduceLROnPlateau(
         monitor='val_loss',
-        factor=0.5,
+        factor=0.5,   # novo_LR = LR * 0.5
         patience=2,
         verbose=1,
-        min_lr=1e-7
+        min_lr=1e-7   # limite inferior para não zerar o aprendizado
     )
 ]
 
@@ -117,9 +126,9 @@ callbacks = [
 print("\nTreinando modelo...")
 history = model.fit(
     x_train, y_train,
-    batch_size=128,
-    epochs=15,
-    validation_split=0.1,
+    batch_size=128,       # mini-batch: atualiza pesos a cada 128 amostras (equilíbrio velocidade/precisão)
+    epochs=15,            # máximo de passagens completas pelo dataset (EarlyStopping pode interromper antes)
+    validation_split=0.1, # reserva 10% do treino como validação para monitorar overfitting
     callbacks=callbacks,
     verbose=1
 )
@@ -155,9 +164,11 @@ plt.tight_layout()
 plt.show()
 
 # ─── 9. PREDIÇÕES E ANÁLISE DE ERROS ───
-# Fazer predições
+# Fazer predições: retorna matriz de probabilidades (10000, 10)
 y_pred = model.predict(x_test)
+# argmax: converte vetor de probabilidades no índice da classe mais provável (ex: [0.01,...,0.98] → 9)
 y_pred_classes = np.argmax(y_pred, axis=1)
+# Converte one-hot de volta para inteiros para comparação e métricas
 y_true_classes = np.argmax(y_test, axis=1)
 
 # Confusion Matrix
@@ -190,6 +201,7 @@ print(classification_report(y_true_classes, y_pred_classes,
 
 # ─── 10. VISUALIZAR PREDIÇÕES CORRETAS E ERRADAS ───
 # Encontrar erros
+# np.where: encontra índices onde a predição difere do rótulo real
 errors = np.where(y_pred_classes != y_true_classes)[0]
 
 print(f"\nTotal de erros: {len(errors)} / {len(y_test)} = {len(errors)/len(y_test)*100:.2f}%")

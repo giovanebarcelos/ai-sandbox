@@ -62,48 +62,56 @@ print("\n🏗️ Construindo U-Net...")
 def unet_model(input_shape=(128, 128, 3), num_classes=3):
     inputs = Input(input_shape)
 
-    # Encoder (contracting path)
+    # ─── ENCODER (caminho de contração) ───
+    # c’s: blocos convolucionais duplos — aprendem features ricas antes de fazer downsampling
+    # p’s: MaxPooling reduz resolução pela metade e dobra o contexto do receptor
     c1 = Conv2D(64, (3, 3), activation='relu', padding='same')(inputs)
-    c1 = Conv2D(64, (3, 3), activation='relu', padding='same')(c1)
-    p1 = MaxPooling2D((2, 2))(c1)
+    c1 = Conv2D(64, (3, 3), activation='relu', padding='same')(c1)  # dois convs = mais capacidade de aprendizado
+    p1 = MaxPooling2D((2, 2))(c1)  # 128→ 64 — salvar c1 para skip connection no decoder
 
     c2 = Conv2D(128, (3, 3), activation='relu', padding='same')(p1)
     c2 = Conv2D(128, (3, 3), activation='relu', padding='same')(c2)
-    p2 = MaxPooling2D((2, 2))(c2)
+    p2 = MaxPooling2D((2, 2))(c2)  # 64 → 32
 
     c3 = Conv2D(256, (3, 3), activation='relu', padding='same')(p2)
     c3 = Conv2D(256, (3, 3), activation='relu', padding='same')(c3)
-    p3 = MaxPooling2D((2, 2))(c3)
+    p3 = MaxPooling2D((2, 2))(c3)  # 32 → 16
 
     c4 = Conv2D(512, (3, 3), activation='relu', padding='same')(p3)
     c4 = Conv2D(512, (3, 3), activation='relu', padding='same')(c4)
-    p4 = MaxPooling2D((2, 2))(c4)
+    p4 = MaxPooling2D((2, 2))(c4)  # 16 → 8
 
-    # Bottleneck
+    # ─── BOTTLENECK ───
+    # representação mais comprimida: maior campo receptivo, máxima abstração
     c5 = Conv2D(1024, (3, 3), activation='relu', padding='same')(p4)
     c5 = Conv2D(1024, (3, 3), activation='relu', padding='same')(c5)
 
-    # Decoder (expansive path) com skip connections
-    u6 = Conv2DTranspose(512, (2, 2), strides=(2, 2), padding='same')(c5)
-    u6 = Concatenate()([u6, c4])
+    # ─── DECODER (caminho expansivo) ───
+    # Conv2DTranspose: aprende a fazer upsampling (ao invés de interpolação simples)
+    # Concatenate: skip connection que concatena features do encoder com o decoder
+    # isso preserva detalhes espaciais finos perdidos no pooling
+    u6 = Conv2DTranspose(512, (2, 2), strides=(2, 2), padding='same')(c5)  # 8 → 16
+    u6 = Concatenate()([u6, c4])  # skip connection: reúne informação de alta e baixa resolução
     c6 = Conv2D(512, (3, 3), activation='relu', padding='same')(u6)
     c6 = Conv2D(512, (3, 3), activation='relu', padding='same')(c6)
 
-    u7 = Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same')(c6)
+    u7 = Conv2DTranspose(256, (2, 2), strides=(2, 2), padding='same')(c6)  # 16 → 32
     u7 = Concatenate()([u7, c3])
     c7 = Conv2D(256, (3, 3), activation='relu', padding='same')(u7)
     c7 = Conv2D(256, (3, 3), activation='relu', padding='same')(c7)
 
-    u8 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(c7)
+    u8 = Conv2DTranspose(128, (2, 2), strides=(2, 2), padding='same')(c7)  # 32 → 64
     u8 = Concatenate()([u8, c2])
     c8 = Conv2D(128, (3, 3), activation='relu', padding='same')(u8)
     c8 = Conv2D(128, (3, 3), activation='relu', padding='same')(c8)
 
-    u9 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(c8)
+    u9 = Conv2DTranspose(64, (2, 2), strides=(2, 2), padding='same')(c8)  # 64 → 128
     u9 = Concatenate()([u9, c1])
     c9 = Conv2D(64, (3, 3), activation='relu', padding='same')(u9)
     c9 = Conv2D(64, (3, 3), activation='relu', padding='same')(c9)
 
+    # Ponto de saída: conv 1×1 converte canais para número de classes
+    # softmax: cada pixel recebe uma distribuição de probabilidades sobre as classes
     outputs = Conv2D(num_classes, (1, 1), activation='softmax')(c9)
 
     return Model(inputs=[inputs], outputs=[outputs], name='U-Net')

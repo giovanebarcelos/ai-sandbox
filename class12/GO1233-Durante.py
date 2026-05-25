@@ -13,16 +13,21 @@ except NameError:
 
 
 if __name__ == '__main__':
-    # Conceito: Dropout train vs test
+    # ─── Simular Dropout ───
+    # Cada batch gera uma máscara aleatória independente
+    # Apenas os neurônios "sobreviventes" participam do forward e backward pass
     np.random.seed(42)
     n_neurons = 8
-    dropout_rate = 0.5
+    dropout_rate = 0.5  # 50% desativados por batch
 
-    # Máscara de dropout (50%)
+    # mask[i]=True: neurônio i ATIVO; mask[i]=False: neurônio i DESATIVADO
     mask = np.random.rand(n_neurons) > dropout_rate
 
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))
 
+    # draw_layer: desenha uma camada de neurônios com setas de entrada/saída
+    # scale: fator de escalonamento dos pesos no teste (inverted dropout)
+    # No teste: todos ativos, mas pesos ÷ (1-p) para manter a mesma escala esperada
     def draw_layer(ax, title, active_mask, scale=1.0):
         ax.set_xlim(-1, 3)
         ax.set_ylim(-0.5, n_neurons + 0.5)

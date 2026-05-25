@@ -31,9 +31,11 @@ print("=" * 70)
 
 print("\n📐 Construindo arquiteturas...\n")
 
-# LeNet-5 (1998) - Baseline
+# LeNet-5 (1998) - Arquitetura pioneira de LeCun para classificação de dígitos (MNIST)
+# Apenas 5 camadas learnable — demonstrou o poder das CNNs há 25 anos
 def build_lenet(input_shape=(28, 28, 1), num_classes=10):
     model = Sequential([
+        # filtros 5×5 maiores que os 3×3 modernos — contexto da época (menor resolução de imagens)
         Conv2D(6, (5, 5), activation='relu', input_shape=input_shape),
         MaxPooling2D((2, 2)),
         Conv2D(16, (5, 5), activation='relu'),
@@ -82,9 +84,11 @@ def residual_block(x, filters, name=None):
     fx = Conv2D(filters, 3, padding='same', name=f'{name}_conv2')(fx)
     fx = BatchNormalization(name=f'{name}_bn2')(fx)
 
+    # Projeção do shortcut: se número de canais muda, precisa adaptar a dimensão da skip connection
     if x.shape[-1] != filters:
-        x = Conv2D(filters, 1, name=f'{name}_shortcut')(x)
+        x = Conv2D(filters, 1, name=f'{name}_shortcut')(x)  # conv 1×1 para mudar número de canais
 
+    # Add: conexão residual — soma o input diretamente com a saída (learn residual, não a função completa)
     out = Add(name=f'{name}_add')([fx, x])
     out = tf.keras.layers.Activation('relu')(out)
     return out
@@ -96,12 +100,15 @@ def build_mini_resnet(input_shape=(32, 32, 3), num_classes=10):
     x = BatchNormalization()(x)
     x = tf.keras.layers.Activation('relu')(x)
 
+    # empilhar blocos residuais com número crescente de filtros
+    # MaxPooling2D entre blocos: reduz resolução e aumenta campo receptivo
     x = residual_block(x, 32, name='res1')
     x = MaxPooling2D(2)(x)
     x = residual_block(x, 64, name='res2')
     x = MaxPooling2D(2)(x)
     x = residual_block(x, 128, name='res3')
 
+    # GlobalAveragePooling2D: alternativa ao Flatten — menos parâmetros e mais generalizável
     x = GlobalAveragePooling2D()(x)
     outputs = Dense(num_classes, activation='softmax')(x)
 

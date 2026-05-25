@@ -72,9 +72,11 @@ print(f"  Base Accuracy: {base_acc:.4f}")
 # ─── 3. MAGNITUDE-BASED PRUNING ───
 print("\n✂️ Aplicando Magnitude-Based Pruning...")
 
-# Configurar pruning (50% sparsity)
+# prune_low_magnitude: zerará pesos com menor magnitude (contribuíram menos para as predições)
 prune_low_magnitude = tfmot.sparsity.keras.prune_low_magnitude
 
+# PolynomialDecay: aumenta sparsity gradualmente de 0% até 50% ao longo do treino
+# começar suave evita degradar o modelo de uma vez só
 pruning_params = {
     'pruning_schedule': tfmot.sparsity.keras.PolynomialDecay(
         initial_sparsity=0.0,
@@ -98,6 +100,8 @@ print(f"  Parâmetros (com masks): {model_for_pruning.count_params():,}")
 # ─── 4. TREINAR COM PRUNING ───
 print("\n🚀 Fine-tuning com pruning...")
 
+# UpdatePruningStep: callback obrigatório — atualiza as máscaras de pruning a cada batch
+# sem isso o schedule de sparsity não é aplicado corretamente
 callbacks = [
     tfmot.sparsity.keras.UpdatePruningStep()
 ]
@@ -117,6 +121,8 @@ print(f"  Pruned Accuracy: {pruned_acc:.4f}")
 # ─── 5. EXPORTAR MODELO PRUNED ───
 print("\n💾 Exportando modelo pruned...")
 
+# strip_pruning: remove as máscaras binárias de pruning do modelo
+# mantendo apenas os pesos zerados — modelo fica menor e pode ser comprimido com zip/quantização
 model_for_export = tfmot.sparsity.keras.strip_pruning(model_for_pruning)
 
 print(f"  Parâmetros (sem masks): {model_for_export.count_params():,}")
@@ -125,12 +131,13 @@ print("  ✓ Modelo pruned exportado")
 # ─── 6. ANÁLISE DE SPARSITY ───
 print("\n🔍 Analisando sparsity por camada...")
 
+# Análise por camada: contar zerós para verificar se o pruning foi aplicado conforme esperado
 for layer in model_for_export.layers:
     if hasattr(layer, 'kernel'):
         weights = layer.get_weights()[0]
         total = weights.size
-        zeros = np.sum(weights == 0)
-        sparsity = zeros / total
+        zeros = np.sum(weights == 0)  # pesos zerados pelo pruning
+        sparsity = zeros / total  # fração de pesos inativos
 
         print(f"  {layer.name:20s}: {sparsity:.2%} sparse ({zeros}/{total} zeros)")
 

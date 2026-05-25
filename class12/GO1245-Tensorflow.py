@@ -11,6 +11,9 @@ except NameError:
 
 
 if __name__ == '__main__':
+    # Batch Normalization: normaliza a saída de cada camada
+    # Posicionamento mais comum: Conv2D → BatchNorm → ReLU
+    # Beneícios: treino mais rápido, menos sensível ao LR, age como regularizador
     # model.add(Conv2D(64, (3,3), activation='relu'))
     # model.add(BatchNormalization())  # Após Conv, antes/após ReLU
 
@@ -18,12 +21,16 @@ if __name__ == '__main__':
     np.random.seed(42)
     n = 500
 
-    # Simular ativações sem BN (distribuição arbitrária)
-    sem_bn = np.random.randn(n) * 8 + 15    # média=15, std=8 (covariata shift)
-    # Após BN: normalizado (μ=0, σ=1) e depois escalonado (gamma=2, beta=1)
-    gamma, beta_param = 2.0, 1.0
+    # Simular ativações sem BN (distribuição arbitrária — internal covariate shift)
+    sem_bn = np.random.randn(n) * 8 + 15    # média=15, std=8
+    # BN passo a passo:
+    # 1. μ = média do batch
+    # 2. σ = desvio padrão do batch
+    # 3. x̂ = (x - μ) / (σ + ε)  ← normaliza para N(0,1); ε=1e-8 evita divisão por zero
+    # 4. y = γ·x̂ + β           ← γ e β são parâmetros APRENDIDOS (não fixos)
+    gamma, beta_param = 2.0, 1.0  # valores de exemplo (rede aprende estes)
     bn_normalizado = (sem_bn - sem_bn.mean()) / (sem_bn.std() + 1e-8)
-    com_bn = gamma * bn_normalizado + beta_param
+    com_bn = gamma * bn_normalizado + beta_param  # distribuição resultante
 
     # Simular distribuições em diferentes camadas (internal covariate shift)
     fig, axes = plt.subplots(1, 3, figsize=(15, 5))

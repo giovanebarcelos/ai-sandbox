@@ -1,6 +1,15 @@
 # GO1243-PreencherComZeros
-# Preencher com zeros nos canais extras (zero-padding de canais)
+# Dois métodos para a Skip Connection quando in_ch != out_ch (ou stride > 1):
+#
+# OPTA A — Zero-Padding (ResNet Option A):
 #   identity = F.pad(x, [0, 0, 0, 0, 0, out_channels - in_channels])
+#   Vantagem: sem parâmetros extras, computacionalmente barato
+#   Desvantagem: canais adicionados têm apenas zeros (sem aprendizado)
+#
+# OPTA B — Projeção 1×1 (ResNet Option B, mais comum):
+#   identity = Conv2D(out_channels, kernel_size=1, stride=stride)(x)
+#   Vantagem: todos os canais têm informação aprendida, melhor desempenho
+#   Desvantagem: adiciona parâmetros (out_ch × in_ch pesos por bloco)
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt

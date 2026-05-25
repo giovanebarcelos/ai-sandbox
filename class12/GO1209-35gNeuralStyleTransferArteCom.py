@@ -48,23 +48,26 @@ print(f"  Style: {style_img.shape}")
 # ─── 2. CARREGAR VGG19 ───
 print("\n🏗️ Carregando VGG19 pré-treinado...")
 
+# VGG19 sem o topo (fully-connected) — usamos apenas como extrator de features convolucionais
+# weights='imagenet': pesos pré-treinados que já conhecem texturas e estruturas visuais
+# trainable=False: congela todos os pesos — não queremos mudar a VGG19, apenas usá-la
 vgg = VGG19(include_top=False, weights='imagenet')
 vgg.trainable = False
 
 print(f"  Layers: {len(vgg.layers)}")
 
 # ─── 3. DEFINIR LAYERS PARA CONTEÚDO E ESTILO ───
-# Content: camadas profundas (high-level)
+# Conteúdo: camada profunda (block5_conv2) captura estruturas de alto nível (formas, objetos)
 content_layers = ['block5_conv2']
 
-# Style: múltiplas camadas (low + high level)
+# Estilo: múltiplas camadas rasas e profundas — rasas detectam texturas finas, profundas texturas globais
 style_layers = ['block1_conv1', 'block2_conv1', 'block3_conv1', 
                 'block4_conv1', 'block5_conv1']
 
-print(f"\n📌 Content layers: {content_layers}")
-print(f"📌 Style layers: {style_layers}")
+print(f"\n\U0001f4cc Content layers: {content_layers}")
+print(f"\U0001f4cc Style layers: {style_layers}")
 
-# Criar extractor
+# Criar extractor que retorna saídas de múltiplas camadas de uma única vez
 outputs = [vgg.get_layer(name).output for name in (content_layers + style_layers)]
 extractor = tf.keras.Model(inputs=vgg.input, outputs=outputs)
 
@@ -106,8 +109,11 @@ def gram_matrix(tensor):
     """
     Calcula Gram Matrix para capturar correlações entre features
     """
+    # einsum 'bijc,bijd->bcd': produto interno entre todos os pares de canais c e d
+    # o resultado captura quais texturas/padrões coocorrem — isso representa o 'estilo'
     result = tf.linalg.einsum('bijc,bijd->bcd', tensor, tensor)
     input_shape = tf.shape(tensor)
+    # normalizar pelo número de locações espaciais para independência do tamanho
     num_locations = tf.cast(input_shape[1] * input_shape[2], tf.float32)
     return result / num_locations
 
@@ -133,12 +139,15 @@ def total_variation_loss(img):
 # ─── 8. OTIMIZAÇÃO ───
 print("\n🎯 Otimizando imagem...")
 
-# Inicializar com content image
+# A imagem gerada é a variável otimizável — os pesos da rede ficam fixos!
+# Inicializamos com a content image para começar de um ponto relevante
 generated_img = tf.Variable(content_processed, dtype=tf.float32)
 
+# Adam: otimizador adaptativo — ajusta a imagem iterativamente minimizando a loss combinada
 optimizer = tf.optimizers.Adam(learning_rate=0.02)
 
-# Pesos
+# Pesos das losses — style_weight << content_weight: priorizar conteúdo sobre estilo
+# tv_weight: suaviza a imagem reduzindo ruído (total variation)
 content_weight = 1e3
 style_weight = 1e-2
 tv_weight = 30
@@ -149,6 +158,7 @@ print(f"  TV weight: {tv_weight}")
 
 @tf.function
 def train_step():
+    # tf.GradientTape: registra operações para calcular gradientes em relação à imagem gerada
     with tf.GradientTape() as tape:
         outputs = extractor(generated_img)
         gen_content = outputs[:len(content_layers)]
@@ -158,12 +168,15 @@ def train_step():
         loss_s = style_loss(style_grams, gen_style)
         loss_tv = total_variation_loss(generated_img)
 
+        # loss total ponderada: cada termo contribui proporcionalmente ao seu peso
         total_loss = content_weight * loss_c + style_weight * loss_s + tv_weight * loss_tv
 
+    # gradientes da loss em relação à imagem (e não aos pesos da rede!)
     gradients = tape.gradient(total_loss, generated_img)
+    # aplicar gradientes: atualiza a imagem na direção que minimiza a loss
     optimizer.apply_gradients([(gradients, generated_img)])
 
-    # Clip para range válido
+    # manter valores de pixel no range válido para VGG19 pré-processado
     generated_img.assign(tf.clip_by_value(generated_img, -150, 150))
 
     return total_loss, loss_c, loss_s, loss_tv

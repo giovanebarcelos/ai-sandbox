@@ -37,10 +37,12 @@ X_train = X_train[:5000]
 y_train = y_train[:5000]
 
 model = Sequential([
+    # padding='same': mantém dimensões espaciais após a convolucao (adiciona zeros nas bordas)
     Conv2D(16, (3, 3), activation='relu', padding='same', input_shape=(28, 28, 1), name='conv1'),
     MaxPooling2D((2, 2), name='pool1'),
     Conv2D(32, (3, 3), activation='relu', padding='same', name='conv2'),
     MaxPooling2D((2, 2), name='pool2'),
+    # conv3 sem pool: mantém resolução para capturar detalhes finos antes do flatten
     Conv2D(64, (3, 3), activation='relu', padding='same', name='conv3'),
     Flatten(),
     Dense(64, activation='relu', name='dense1'),
@@ -58,6 +60,8 @@ print(f"  Test Accuracy: {test_acc:.4f}")
 # ─── 2. VISUALIZAR FILTROS DA PRIMEIRA CAMADA ───
 print("\n🎨 Visualizando filtros da primeira camada...")
 
+# get_weights()[0]: os pesos do kernel da camada conv (shape: altura, largura, canais_in, filtros)
+# cada filtro é um detector de padrão: bordas, gradientes, curvas, etc.
 conv1_weights = model.get_layer('conv1').get_weights()[0]
 
 print(f"  Shape: {conv1_weights.shape}")  # (3, 3, 1, 16)
@@ -87,11 +91,13 @@ test_label = y_test[0]
 
 print(f"  Imagem: Dígito {test_label}")
 
-# Criar modelos intermediários para cada camada conv
+# Criar modelos intermediários: captura saídas de cada camada conv individualmente
+# isso permite visualizar o que cada camada 'vê' na imagem de entrada
 layer_outputs = [layer.output for layer in model.layers if 'conv' in layer.name]
 activation_model = tf.keras.Model(inputs=model.input, outputs=layer_outputs)
 
 # Obter activations
+# ativações = mapas de características resultantes após aplicar os filtros na imagem
 activations = activation_model.predict(test_img, verbose=0)
 
 print(f"  Camadas conv: {len(activations)}")
@@ -135,18 +141,20 @@ print("✅ Feature maps salvos: cnn_feature_maps.png")
 print("\n🔥 Encontrando imagens que maximizam ativação...")
 
 # Para cada filtro da conv1, encontrar imagens do test set que mais ativam
+# Sub-modelo que retorna apenas a saída da conv1 — permite medir a ativação por filtro
 conv1_model = tf.keras.Model(inputs=model.input, outputs=model.get_layer('conv1').output)
 
+# Calcular ativações de 1000 imagens do test set para cada filtro da conv1
 conv1_activations = conv1_model.predict(X_test[:1000], verbose=0)  # 1000 imagens
 
 # Para filtro 0, encontrar top-5 imagens
 filter_idx = 0
 filter_activations = conv1_activations[:, :, :, filter_idx]
 
-# Max activation por imagem
+# Max activation por imagem: quanto cada imagem ativa maximamente esse filtro
 max_activations = np.max(filter_activations, axis=(1, 2))
 
-# Top 5 imagens
+# Top 5 imagens: as que mais ativam o filtro revelam o que ele detecta
 top5_indices = np.argsort(max_activations)[-5:][::-1]
 
 print(f"  Filtro {filter_idx}: Top 5 imagens que mais ativam")

@@ -39,10 +39,12 @@ print(f"  Imagem criada: {image.shape}")
 # ─── 2. PIPELINE LEVE (BASELINE) ───
 print("\n🔧 Pipeline LEVE (Baseline):")
 
+# Pipeline LEVE: transformações suaves que não distorcem muito a imagem
+# ideal quando o dataset é moderadamente grande e os objetos não são rotativamente invariantes
 datagen_light = ImageDataGenerator(
-    horizontal_flip=True,
-    brightness_range=[0.8, 1.2],
-    rotation_range=15
+    horizontal_flip=True,  # espelhamento horizontal — dobra o dataset sem mudar o significado
+    brightness_range=[0.8, 1.2],  # variação de brilho ±20% — simula diferentes iluminações
+    rotation_range=15  # rotação até ±15° — leve para não distorcer objetos orientados
 )
 
 print("  ✓ HorizontalFlip")
@@ -52,14 +54,16 @@ print("  ✓ Rotation (±15°)")
 # ─── 3. PIPELINE MÉDIO (PADRÃO) ───
 print("\n🔧 Pipeline MÉDIO (Padrão):")
 
+# Pipeline MÉDIO: balanço entre variabilidade e preservação das características
+# fill_mode='nearest': preenche pixels criados pela rotação/shift com o pixel mais próximo
 datagen_medium = ImageDataGenerator(
     horizontal_flip=True,
-    rotation_range=30,
-    width_shift_range=0.2,
+    rotation_range=30,  # maior rotação — bom para objetos sem orientação preferencial
+    width_shift_range=0.2,  # translacão horizontal até 20% — simula objetos descentralizados
     height_shift_range=0.2,
-    zoom_range=0.2,
+    zoom_range=0.2,  # zoom in/out até 20% — simula distâncias diferentes
     brightness_range=[0.7, 1.3],
-    fill_mode='nearest'
+    fill_mode='nearest'  # preencher bordas com o pixel mais próximo (alternativa: 'reflect', 'wrap')
 )
 
 print("  ✓ HorizontalFlip")
@@ -71,16 +75,18 @@ print("  ✓ Brightness (±30%)")
 # ─── 4. PIPELINE PESADO (AGRESSIVO) ───
 print("\n🔧 Pipeline PESADO (Agressivo):")
 
+# Pipeline PESADO: augmentação agressiva para datasets pequenos ou modelos que precisam de robustez
+# Use com cuidado — transformações excessivas podem criar imagens sem realismo (out-of-distribution)
 datagen_heavy = ImageDataGenerator(
     horizontal_flip=True,
-    vertical_flip=True,
-    rotation_range=45,
+    vertical_flip=True,  # flip vertical: útil para vista aérea/satélite onde orientação varia
+    rotation_range=45,   # até ±45° — alto impacto na apariência
     width_shift_range=0.3,
     height_shift_range=0.3,
     zoom_range=0.3,
-    shear_range=0.2,
-    brightness_range=[0.5, 1.5],
-    fill_mode='reflect'
+    shear_range=0.2,  # cisalhamento (inclinação) — simula perspectivas obliquas
+    brightness_range=[0.5, 1.5],  # variação ±50%: simula condições extremas de luz
+    fill_mode='reflect'  # espelha os pixels das bordas (parece mais natural que 'nearest')
 )
 
 print("  ✓ Horizontal + Vertical Flip")

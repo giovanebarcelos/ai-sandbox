@@ -13,13 +13,19 @@ try:
 except NameError:
     pass
 
-# Max Pooling 2×2
+# Max Pooling 2×2: seleciona o MAIOR valor de cada janela 2×2
+# Vantagem: preserva features mais fortes (bordas, picos de ativação)
+# Mais usado em CNNs de classificação onde “tem a feature” é mais importante que “where”
 MaxPooling2D(pool_size=(2, 2), strides=2)
 
-# Average Pooling
+# Average Pooling 2×2: calcula a MÉDIA de cada janela 2×2
+# Vantagem: preserva informação de fundo/contexto da região
+# Usado quando é importante a intensidade média (ex: regressão, redes de detecção)
 AveragePooling2D(pool_size=(2, 2))
 
-# Global Average Pooling
+# Global Average Pooling (GAP): média de CADA feature map inteiro → vetor 1D
+# Ex: tensor (7×7×512) → vetor (512,) — substitui Flatten+Dense(FC) em arquiteturas modernas
+# Vantagens: (1) muito menos parâmetros que FC, (2) combate overfitting, (3) agnosto a tamanho de entrada
 GlobalAveragePooling2D()
 
 # ─── VISUALIZAÇÃO: EFEITO DO POOLING ───
@@ -34,11 +40,14 @@ feature_map = np.array([
 ], dtype=float)
 
 # Max pooling 2×2 com stride 2
+# Aplicar convolução valid manualmente (stride=1, sem padding)
+# Para cada posição (i,j): soma element-wise da janela 3×3 com o kernel
 def max_pool2d(arr, size=2):
     h, w = arr.shape
     out = np.zeros((h // size, w // size))
     for i in range(0, h, size):
         for j in range(0, w, size):
+            # Seleciona o valor máximo da janela size×size
             out[i // size, j // size] = arr[i:i+size, j:j+size].max()
     return out
 
@@ -47,6 +56,7 @@ def avg_pool2d(arr, size=2):
     out = np.zeros((h // size, w // size))
     for i in range(0, h, size):
         for j in range(0, w, size):
+            # Calcula a média de todos os valores da janela size×size
             out[i // size, j // size] = arr[i:i+size, j:j+size].mean()
     return out
 

@@ -40,7 +40,11 @@ def draw_network_gradient(ax, title, with_skip):
             ax.annotate('', xy=(2.5, y_pos[i+1] - 0.35), xytext=(2.5, y + 0.35),
                         arrowprops=dict(arrowstyle='->', color='#333333', lw=1.5))
 
-    # Backprop (gradiente) - setas para baixo, no lado esquerdo
+    # Simular magnitudes do gradiente em cada camada:
+    # Sem skip: cada ReLU multiplica por ~0.5 (só pass a gradiente para neurônios ativos)
+    #   ∂L/∂x = 1.0 × 0.5 × 0.5 × 0.5 ≈ 0.1 (vanishing gradient!)
+    # Com skip: o "+1" garante que o gradiente nunca fica menor que 1.0
+    #   ∂L/∂x = 1.0 → 0.95 → 0.90 → 0.85 (quase sem perda!)
     grad_size = [1.0, 0.5, 0.25, 0.1] if not with_skip else [1.0, 0.95, 0.9, 0.85]
     grad_colors = ['#e15759'] * 4
     for i in range(len(y_pos) - 1):

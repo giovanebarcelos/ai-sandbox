@@ -11,13 +11,20 @@ except NameError:
     pass
 
 # Extrair saídas de cada camada
+# Técnica: criar um Model secundário que mantém a entrada original
+# mas expõe as saídas INTERMEDIÁRIAS de todas as camadas
+# ÚTIL para: Grad-CAM, visualização de filtros, debugging, transfer learning
 
 
 if __name__ == '__main__':
+    # [layer.output for layer in model.layers]: lista com o tensor de saída de cada camada
     layer_outputs = [layer.output for layer in model.layers]
+    # Model funcional: permite múltiplas saídas (1 entrada, N saídas)
+    # inputs=model.input: usa exatamente o mesmo tensor de entrada do modelo original
+    # outputs=layer_outputs: expõe todas as saídas intermediais
     activation_model = Model(inputs=model.input, outputs=layer_outputs)
 
-    # Visualizar o que cada camada "vê"
+    # predict() retorna uma lista: activations[i] = saída da camada i para img
     activations = activation_model.predict(img)
 
     # BLOCO 1 (conv1): Detecta bordas, cores básicas

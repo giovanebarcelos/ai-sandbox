@@ -17,12 +17,16 @@ except NameError:
 
 # ─── 1. CARREGAR DADOS ───
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
+# Pipeline de pré-processamento em cadeia: reshape + conversão de tipo + normalização
 x_train = x_train.reshape(-1, 28, 28, 1).astype('float32') / 255
 x_test = x_test.reshape(-1, 28, 28, 1).astype('float32') / 255
+# One-hot encoding necessário para categorical_crossentropy
 y_train = keras.utils.to_categorical(y_train, 10)
 y_test = keras.utils.to_categorical(y_test, 10)
 
 # ─── 2. CRIAR ImageDataGenerator ───
+# ImageDataGenerator: gera variações sintéticas em tempo real durante o treino
+# Objetivo: expor o modelo a transformações que ele encontrará em dados reais — reduz overfitting
 datagen = ImageDataGenerator(
     rotation_range=10,           # Rotação ±10 graus
     width_shift_range=0.1,       # Deslocamento horizontal 10%
@@ -32,7 +36,7 @@ datagen = ImageDataGenerator(
     fill_mode='nearest'          # Preencher pixels vazios
 )
 
-# Fit no train set
+# fit(): calcula estatísticas do dataset (média, desvio) para normalização interna do gerador
 datagen.fit(x_train)
 
 # ─── 3. VISUALIZAR AUGMENTATIONS ───
@@ -43,8 +47,9 @@ fig, axes = plt.subplots(3, 5, figsize=(12, 7))
 axes = axes.ravel()
 
 for i in range(15):
-    # Gerar variação augmentada
-    augmented = datagen.flow(sample_img, batch_size=1)[0][0]
+# datagen.flow(): retorna um iterador que aplica augmentations aleatórias a cada batch
+# [0][0]: acessa o primeiro batch (batch) e o primeiro item (imagem) do batch
+augmented = datagen.flow(sample_img, batch_size=1)[0][0]
     axes[i].imshow(augmented.reshape(28, 28), cmap='gray')
     axes[i].axis('off')
 
@@ -74,6 +79,8 @@ model_aug.compile(
 print("Treinando COM Data Augmentation...")
 
 # Treinar usando generator
+# steps_per_epoch: quantos batches constituem 1 época (total_amostras / batch_size)
+# Necessário quando se usa gerador pois ele não sabe o tamanho do dataset
 history_aug = model_aug.fit(
     datagen.flow(x_train, y_train, batch_size=128),
     steps_per_epoch=len(x_train) // 128,

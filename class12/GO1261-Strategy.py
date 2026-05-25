@@ -1,4 +1,12 @@
 # GO1261-Strategy
+# MirroredStrategy: treino distribuído em múltiplas GPUs (1 máquina)
+# Mecanismo AllReduce: cada GPU processa um mini-batch diferente,
+# ao final de cada step, os gradientes são sincronizados entre todas as GPUs
+# Resultado: batch efetivo = batch_size × n_gpus
+# Uso:
+#   strategy = tf.distribute.MirroredStrategy()
+#   with strategy.scope():
+#       model = create_model()  # modelo distribuído automaticamente
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt

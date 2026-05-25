@@ -39,10 +39,13 @@ else:
 # ─── 2. CONFIGURAR MIXED PRECISION ───
 print("\n⚙️  Configurando Mixed Precision...")
 
-# Ativar mixed precision policy
+# Passo 1: definir política 'mixed_float16' — computações em FP16, variáveis em FP32
+# FP16 usa metade da memória e é até 2-3× mais rápido em GPUs modernas (Tensor Cores)
 policy = mixed_precision.Policy('mixed_float16')
 mixed_precision.set_global_policy(policy)
 
+# compute_dtype: tipo usado nas operações (FP16 para velocidade)
+# variable_dtype: tipo dos pesos armazenados (FP32 para manter precisão nos updates)
 print(f"  Compute dtype: {policy.compute_dtype}")
 print(f"  Variable dtype: {policy.variable_dtype}")
 print("  ✓ Mixed precision ativado (float16 + float32)")
@@ -87,6 +90,8 @@ def create_model():
         Dropout(0.5),
         Dense(256, activation='relu'),
         Dropout(0.5),
+        # dtype='float32': saída DEVE ser float32 para evitar instabilidade numérica no softmax/loss
+        # FP16 pode causar underflow (valor muito pequeno vira zero) nas camadas finais
         Dense(10, activation='softmax', dtype='float32')  # Output em float32
     ], name='CNN_CIFAR10')
 
@@ -96,7 +101,9 @@ model_fp16 = create_model()
 
 print(f"  Parâmetros: {model_fp16.count_params():,}")
 
-# Compilar com loss scaling (importante para FP16)
+# Passo 2: envolver optimizer com LossScaleOptimizer
+# FP16 pode causar underflow nos gradientes — o loss scaling multiplica a loss antes
+# do backward pass e depois divide os gradientes, evitando que virem zero
 optimizer = tf.keras.optimizers.Adam()
 optimizer = mixed_precision.LossScaleOptimizer(optimizer)
 
@@ -132,7 +139,8 @@ print(f"  Final Loss: {history_fp16.history['loss'][-1]:.4f}")
 # ─── 6. COMPARAR COM FP32 (BASELINE) ───
 print("\n🐢 Treinando com Float32 (baseline)...")
 
-# Desativar mixed precision
+# Passo 3: desativar mixed precision para obter baseline justo de comparação
+# Ambos os modelos treinam com os mesmos dados e epochs — apenas o tipo numérico muda
 mixed_precision.set_global_policy('float32')
 
 model_fp32 = create_model()

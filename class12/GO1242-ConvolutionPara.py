@@ -1,7 +1,11 @@
 # GO1242-ConvolutionPara
-# 1×1 convolution para ajustar dimensões:
-#   if in_channels != out_channels or stride != 1:
-#       identity = Conv2D(out_channels, 1, stride)(x)
+# Convolucão 1×1 — "Network-in-Network" (Lin et al., 2013)
+# Objetivo: ajustar o número de canais (dimensão de profundidade) SEM alterar H×W
+# Usos:
+#   1. Manter dimenso (identity skip quando in_ch == out_ch)
+#   2. Aumentar canais (projetar para espaço de maior dimensão)
+#   3. Comprimir canais (bottleneck: reduz computacão antes de conv 3×3)
+#      Ex: ResNet bottleneck: 256 → 64 (1×1) → 64 (3×3) → 256 (1×1)
 import numpy as np
 import matplotlib
 import matplotlib.pyplot as plt

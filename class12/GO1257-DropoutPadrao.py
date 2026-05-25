@@ -12,6 +12,14 @@ except NameError:
 
 
 if __name__ == '__main__':
+    # Dropout padrão: desativa neurônios INDIVIDUAIS aleatoriamente
+    # Bom para: camadas Dense (FC) onde cada neurônio é independente
+    # Dropout(0.5) ← 50% dos neurônios desativados por batch
+
+    # SpatialDropout2D: desativa FEATURE MAPS INTEIROS aleatoriamente
+    # Bom para: camadas Conv onde pixels vizinhos são correlacionados
+    # Se pixels adjacentes são correlatos, dropout por pixel não é tao eficiente
+    # SpatialDropout2D(0.2) ← 20% dos canais (feature maps) completos desativados
     # Dropout(0.5)          # Dropout padrão: desativa neurônios individualmente
     # SpatialDropout2D(0.2) # Desativa feature maps inteiros
 

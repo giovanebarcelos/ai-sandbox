@@ -53,7 +53,8 @@ def generate_object_image(img_size=128, num_objects=3):
             pts = np.array([[x, y-size//2], [x-size//2, y+size//2], [x+size//2, y+size//2]])
             cv2.fillPoly(img, [pts], color)
 
-        # Bounding box (normalizado)
+        # Bounding box normalizado [0, 1]: independente de tamanho de imagem
+        # facilita o treino e permite usar o modelo em imagens de qualquer resolução
         x_min = max(0, (x - size//2)) / img_size
         y_min = max(0, (y - size//2)) / img_size
         x_max = min(img_size, (x + size//2)) / img_size
@@ -74,7 +75,8 @@ for _ in range(num_samples):
     img, boxes, labels = generate_object_image(img_size=128, num_objects=2)
     X_images.append(img)
 
-    # Preencher com zeros se menos de 3 objetos
+    # padding com zeros para normalizar tamanho — todas as amostras têm shape (3, 4)
+    # necessário porque redes neurais requerem shapes fixos nos batches
     padded_boxes = np.zeros((3, 4))
     padded_labels = np.zeros(3)
 
@@ -96,6 +98,8 @@ print(f"  Labels: {y_labels.shape}")
 # ─── 2. CONSTRUIR MODELO SSD ───
 print("\n🏗️ Construindo SSD model...")
 
+# Passo 1: backbone (extrator de features) — camadas convolucionais compartilhadas
+# aumenta canais progressivamente: 32 → 64 → 128 → 256 (mais abstração a cada nível)
 input_img = Input(shape=(128, 128, 3))
 
 # Backbone (feature extraction)
@@ -115,17 +119,21 @@ x = Flatten()(x)
 x = Dense(512, activation='relu')(x)
 x = Dropout(0.5)(x)
 
-# Detection heads (3 objetos * 5 outputs cada: 4 coords + 1 classe)
+# Passo 2: cabeçalhos de detecção paralelos (multi-task learning)
+# activation='sigmoid': boxes normalizadas entre 0 e 1
 box_output = Dense(12, activation='sigmoid', name='boxes')(x)  # 3 boxes * 4 coords
+# softmax: probabilidade de cada objeto ser quadrado, círculo ou triângulo
 label_output = Dense(3, activation='softmax', name='labels')(x)  # 3 labels
 
 model = Model(inputs=input_img, outputs=[box_output, label_output], name='SSD_Simple')
 
+# Passo 3: compilar com duas losses e pesos diferentes
+# loss_weights: prioriza a regressão de boxes (1.0) sobre classificação (0.5)
 model.compile(
     optimizer='adam',
     loss={
-        'boxes': 'mse',
-        'labels': 'sparse_categorical_crossentropy'
+        'boxes': 'mse',  # MSE para regressão de coordenadas
+        'labels': 'sparse_categorical_crossentropy'  # Cross-entropy para classificação
     },
     loss_weights={'boxes': 1.0, 'labels': 0.5},
     metrics={'labels': 'accuracy'}

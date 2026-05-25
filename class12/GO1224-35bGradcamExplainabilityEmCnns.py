@@ -75,31 +75,35 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
     """
     Gera heatmap Grad-CAM
     """
-    # Modelo que mapeia input → (last_conv_layer, predictions)
+    # Passo 1: criar modelo com duas saídas — saída da última conv E predição final
+    # a última camada conv contém informação espacial ainda não achatada
     grad_model = tf.keras.models.Model(
         inputs=[model.inputs],
         outputs=[model.get_layer(last_conv_layer_name).output, model.output]
     )
 
-    # Calcular gradientes
+    # Passo 2: calcular gradientes da classe alvo em relação aos feature maps da última conv
     with tf.GradientTape() as tape:
         conv_outputs, predictions = grad_model(img_array)
         if pred_index is None:
             pred_index = tf.argmax(predictions[0])
+        # selecionar o canal da classe predita (medir quanto cada feature map contribui para ESSA classe)
         class_channel = predictions[:, pred_index]
 
-    # Gradientes do output em relação à última conv layer
+    # Gradientes indicam "importância" de cada feature map para a classe predita
     grads = tape.gradient(class_channel, conv_outputs)
 
-    # Global average pooling dos gradientes
+    # Passo 3: Global Average Pooling dos gradientes — um peso por filtro
+    # filtros com gradientes maiores são mais importantes para a classificação
     pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
 
-    # Ponderar feature maps pelos gradientes
+    # Passo 4: ponderar feature maps pelos seus respectivos gradientes
+    # heatmap = combinação linear dos feature maps pesos pelos gradientes
     conv_outputs = conv_outputs[0]
     heatmap = conv_outputs @ pooled_grads[..., tf.newaxis]
     heatmap = tf.squeeze(heatmap)
 
-    # Normalizar [0, 1]
+    # Passo 5: normalizar para [0, 1] e aplicar ReLU (remover influências negativas)
     heatmap = tf.maximum(heatmap, 0) / tf.math.reduce_max(heatmap)
 
     return heatmap.numpy()
@@ -116,15 +120,16 @@ def overlay_heatmap_on_image(img, heatmap, alpha=0.4, colormap=cv2.COLORMAP_JET)
     """
     Sobrepõe heatmap na imagem original
     """
-    # Resize heatmap
+    # Redimensionar heatmap de 14×14 (saída da última conv) para o tamanho da imagem original
     heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
 
     # Converter para RGB
     heatmap_resized = np.uint8(255 * heatmap_resized)
+    # JET colormap: azul=baixa ativação, vermelho=alta ativação — fácil de interpretar visualmente
     heatmap_colored = cv2.applyColorMap(heatmap_resized, colormap)
     heatmap_colored = cv2.cvtColor(heatmap_colored, cv2.COLOR_BGR2RGB)
 
-    # Sobrepor
+    # alpha blending: misturar heatmap (40%) + imagem original (60%) para manter contexto visual
     img_uint8 = np.uint8(255 * img)
     superimposed = heatmap_colored * alpha + img_uint8 * (1 - alpha)
     superimposed = np.uint8(superimposed)

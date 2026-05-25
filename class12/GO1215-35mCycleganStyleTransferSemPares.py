@@ -78,20 +78,24 @@ def build_generator():
     """U-Net-like generator"""
     inputs = Input(shape=(64, 64, 3))
 
-    # Encoder
+    # Encoder: reduz resolução e aumenta canais (extrai features do domínio fonte)
+    # strides=2: downsampling — reduz dimensão espacial pela metade
     e1 = Conv2D(64, (4, 4), strides=2, padding='same')(inputs)
+    # LeakyReLU: permite gradiente negativo fraco — evita 'dying ReLU' no discriminador/encoder
     e1 = LeakyReLU(0.2)(e1)
 
     e2 = Conv2D(128, (4, 4), strides=2, padding='same')(e1)
-    e2 = BatchNormalization()(e2)
+    e2 = BatchNormalization()(e2)  # normaliza ativações — estabiliza o treino da GAN
     e2 = LeakyReLU(0.2)(e2)
 
-    # Decoder
+    # Decoder: aumenta resolução e reduz canais (gera imagem no domínio alvo)
+    # Conv2DTranspose: convolucao transposta (upsampling aprendido)
     d1 = Conv2DTranspose(64, (4, 4), strides=2, padding='same')(e2)
     d1 = BatchNormalization()(d1)
-    d1 = Activation('relu')(d1)
+    d1 = Activation('relu')(d1)  # ReLU no decoder (ao contrário do LeakyReLU no encoder)
 
     d2 = Conv2DTranspose(3, (4, 4), strides=2, padding='same')(d1)
+    # tanh: saída normalizada em [-1, 1] — padrão em GANs para imagens normalizadas
     outputs = Activation('tanh')(d2)
 
     return Model(inputs, outputs, name='Generator')
@@ -110,8 +114,10 @@ def build_discriminator():
     """PatchGAN discriminator"""
     inputs = Input(shape=(64, 64, 3))
 
+    # PatchGAN: classifica patches da imagem (real/falso) em vez da imagem inteira
+    # isso preserva detalhes de alta frequência e texturas locais
     x = Conv2D(64, (4, 4), strides=2, padding='same')(inputs)
-    x = LeakyReLU(0.2)(x)
+    x = LeakyReLU(0.2)(x)  # discriminadores usam LeakyReLU para gradientes mais suaves
 
     x = Conv2D(128, (4, 4), strides=2, padding='same')(x)
     x = BatchNormalization()(x)
@@ -121,6 +127,7 @@ def build_discriminator():
     x = BatchNormalization()(x)
     x = LeakyReLU(0.2)(x)
 
+    # Saída: mapa de 1 canal — cada posição indica se aquele patch é real ou falso
     x = Conv2D(1, (4, 4), padding='same')(x)
 
     return Model(inputs, x, name='Discriminator')
@@ -137,17 +144,19 @@ D_B.compile(optimizer=Adam(0.0002, 0.5), loss='mse')
 # ─── 4. CYCLEGAN MODEL ───
 print("\n🔄 Construindo CycleGAN...")
 
-# Freeze discriminators para treinar generators
+# Congelar discriminadores ao construir o modelo combinado
+# treinar discriminadores separadamente; aqui só treinamos os generators
 D_A.trainable = False
 D_B.trainable = False
 
-# Inputs
+# Ciclo A→B→A: verifica consistência — gerar B e depois voltar para A deve recuperar A original
+# Essa 'cycle consistency loss' elimina a necessidade de pares de imagens rotulados
 input_A = Input(shape=(64, 64, 3))
 input_B = Input(shape=(64, 64, 3))
 
 # Forward cycle: A → B → A
-fake_B = G(input_A)
-reconstructed_A = F(fake_B)
+fake_B = G(input_A)  # G gera imagem falsa no domínio B a partir de A
+reconstructed_A = F(fake_B)  # F reconstrói A a partir do B falso
 
 # Backward cycle: B → A → B
 fake_A = F(input_B)

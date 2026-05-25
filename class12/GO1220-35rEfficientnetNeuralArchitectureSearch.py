@@ -35,6 +35,8 @@ print(f"  Test: {X_test.shape}")
 # Resize para EfficientNet (mínimo 32x32, mas funciona melhor com 224x224)
 from tensorflow.keras.preprocessing.image import smart_resize
 
+# tf.image.resize: redimensiona CIFAR-10 (32×32) para 96×96
+# EfficientNet foi projetado para 224×224 mas funciona com 96×96 (mais rápido para demo)
 X_train_resized = tf.image.resize(X_train, (96, 96)).numpy()
 X_test_resized = tf.image.resize(X_test, (96, 96)).numpy()
 
@@ -83,15 +85,19 @@ print(f"  Training time: {baseline_time:.1f}s")
 # ─── 3. EFFICIENTNET-B0 ───
 print("\n🚀 EfficientNet-B0...")
 
-# Carregar EfficientNet pré-treinado
+# EfficientNet-B0: arquitetura base encontrada por Neural Architecture Search (NAS)
+# compound scaling: escala largura, profundidade E resolução simultaneamente (diferencial)
+# weights='imagenet': usar Transfer Learning com pesos treinados em 1.2M imagens
 base_model = EfficientNetB0(weights='imagenet', include_top=False, input_shape=(96, 96, 3))
 
-# Congelar base
+# Congelar base: preservar features aprendidas no ImageNet, treinar apenas o cabeçalho
 base_model.trainable = False
 
-# Adicionar cabeçalho
+# Adicionar cabeçalho de classificação para CIFAR-10 (10 classes)
 x = base_model.output
+# GlobalAveragePooling2D: comprime mapa de features espacial em um vetor 1D (mais eficiente que Flatten)
 x = GlobalAveragePooling2D()(x)
+# Dropout: regularização forte (50%) pois o conjunto de treino é pequeno (5000 amostras)
 x = Dropout(0.5)(x)
 output = Dense(10, activation='softmax')(x)
 

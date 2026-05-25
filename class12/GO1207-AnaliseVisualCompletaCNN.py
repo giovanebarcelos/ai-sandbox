@@ -14,7 +14,7 @@ try:
 except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
-# Carregar modelo treinado
+# Carrega modelo previamente treinado e salvo em disco (.h5 = formato HDF5 do Keras)
 model = keras.models.load_model('best_cifar10_model.h5')
 
 # 1. VISUALIZAR ARQUITETURA
@@ -32,7 +32,7 @@ def plot_model_architecture(model):
         else:
             output_shape = 'N/A'
 
-        # Contar parâmetros
+    # layer.count_params(): soma todos os pesos (filtros + bias) da camada
         params = layer.count_params()
 
         print(f"{i+1:2d}. {layer.name:15s} | {layer_type:20s} | "
@@ -48,14 +48,13 @@ def visualize_conv_filters(model, layer_name='conv1', num_filters=32):
     Visualiza filtros de uma camada convolucional
     """
     # Obter camada
-    layer = model.get_layer(layer_name)
-    filters, biases = layer.get_weights()
+    layer = model.get_layer(layer_name)    # get_weights() retorna [filtros, bias]; filtros shape: (kH, kW, in_ch, out_ch)    filters, biases = layer.get_weights()
 
     print(f"\n🔍 Filtros da camada '{layer_name}':")
     print(f"   Shape: {filters.shape}")
     print(f"   {filters.shape[3]} filtros de {filters.shape[0]}x{filters.shape[1]}x{filters.shape[2]}")
 
-    # Normalizar filtros para visualização
+    # Normalização min-max para mapear valores dos filtros para [0,1] visível como imagem
     f_min, f_max = filters.min(), filters.max()
     filters_normalized = (filters - f_min) / (f_max - f_min)
 
@@ -70,10 +69,11 @@ def visualize_conv_filters(model, layer_name='conv1', num_filters=32):
         # Obter filtro (3x3x3) e converter para RGB
         f = filters_normalized[:, :, :, i]
 
-        # Se tiver 3 canais, mostrar RGB; senão, converter pra grayscale
+        # Filtros RGB: exibir como imagem colorida (3 canais) para visualizar resposta por cor
         if f.shape[2] == 3:
             axes[i].imshow(f)
         else:
+            # Canal único: mapa de calor viridis para destacar áreas de alta ativação
             axes[i].imshow(f[:, :, 0], cmap='viridis')
 
         axes[i].set_title(f'F{i}', fontsize=8)
@@ -97,11 +97,11 @@ def visualize_feature_maps(model, img, layers_to_show=None):
         layers_to_show = [layer.name for layer in model.layers 
                          if 'conv' in layer.name.lower()]
 
-    # Criar modelos intermediários
+    # Modelo multi-saída: extrai ativações de várias camadas numa única passagem (mais eficiente)
     outputs = [model.get_layer(name).output for name in layers_to_show]
     feature_model = keras.Model(inputs=model.input, outputs=outputs)
 
-    # Obter feature maps
+    # np.expand_dims: adiciona dimensão de batch (32,32,3) → (1,32,32,3)
     img_batch = np.expand_dims(img, axis=0)
     feature_maps = feature_model.predict(img_batch, verbose=0)
 
@@ -133,9 +133,10 @@ def visualize_feature_maps(model, img, layers_to_show=None):
 
 # Carregar uma imagem de teste
 (X_train, _), (X_test, y_test) = keras.datasets.cifar10.load_data()
+# Normalização: converte uint8 [0,255] para float32 [0,1] para entrada no modelo
 X_test = X_test.astype('float32') / 255.0
 
-# Escolher uma imagem
+# Índice 42 escolhido arbitrariamente — pode ser alterado para explorar outras imagens
 test_img = X_test[42]  # Pode mudar o índice
 
 # Mostrar imagem original
@@ -153,32 +154,33 @@ visualize_feature_maps(model, test_img, layers_to_analyze)
 def generate_pattern(model, layer_name, filter_index, steps=50, learning_rate=1.0):
     """
     Gera padrão que maximiza ativação de um filtro específico
+    Técnica: gradient ascent no espaço de pixels (otimiza a IMAGEM, não os pesos)
     """
     # Criar modelo que retorna ativação do filtro
     layer = model.get_layer(layer_name)
     feature_extractor = keras.Model(inputs=model.input, outputs=layer.output)
 
-    # Inicializar com ruído
+    # Inicializar com ruído aleatório ao redor de 0.5 — ponto de partida neutro no espaço de pixels
     img = tf.random.uniform((1, 32, 32, 3), minval=0.4, maxval=0.6)
 
     for step in range(steps):
         with tf.GradientTape() as tape:
-            tape.watch(img)
+            tape.watch(img)  # Observar a imagem (não os pesos) para calcular gradiente
             activation = feature_extractor(img)
 
-            # Perda = negativo da ativação média do filtro
+            # Perda negativa: maximizar ativação média do filtro = minimizar seu negativo
             loss = -tf.reduce_mean(activation[:, :, :, filter_index])
 
-        # Calcular gradiente
+        # Passo 1: gradiente de perda em relação à imagem (direção de aumento da ativação)
         grads = tape.gradient(loss, img)
 
-        # Normalizar gradiente
+        # Passo 2: normalização L2 do gradiente — mantém magnitude estável entre iterações
         grads = tf.math.l2_normalize(grads)
 
-        # Atualizar imagem
+        # Passo 3: gradient ascent — atualiza a imagem na direção que maximiza a ativação
         img += grads * learning_rate
 
-        # Clipar valores para [0, 1]
+        # Passo 4: clipar para manter pixels no intervalo válido [0,1]
         img = tf.clip_by_value(img, 0, 1)
 
     return img[0].numpy()
@@ -208,11 +210,12 @@ def analyze_gradients(model, img, class_index):
     img_batch = np.expand_dims(img, axis=0)
 
     with tf.GradientTape() as tape:
+        # tf.Variable necessário: GradientTape só rastreia Variables por padrão (não tensores comuns)
         img_tensor = tf.Variable(img_batch, dtype=tf.float32)
         predictions = model(img_tensor)
         target_class = predictions[:, class_index]
 
-    # Gradientes
+    # Gradiente da probabilidade da classe em relação a CADA PIXEL da imagem
     gradients = tape.gradient(target_class, img_tensor)
 
     return gradients[0].numpy()
@@ -231,7 +234,8 @@ axes[0].imshow(test_img)
 axes[0].set_title('Imagem Original', fontsize=12)
 axes[0].axis('off')
 
-# Gradientes (abs)
+# np.abs(): valor absoluto — tanto gradientes positivos quanto negativos indicam influência
+# .mean(axis=2): média sobre os 3 canais RGB para obter mapa de importância 2D
 grad_vis = np.abs(grads).mean(axis=2)
 axes[1].imshow(grad_vis, cmap='hot')
 axes[1].set_title('Gradientes (Importância)', fontsize=12)

@@ -14,18 +14,24 @@ if __name__ == "__main__":
     from tensorflow.keras.callbacks import ReduceLROnPlateau
     from tensorflow.keras.optimizers.schedules import ExponentialDecay
 
+    # ReduceLROnPlateau: ajuste reativo do LR
+    # Monitora val_loss; quando não melhora por `patience` épocas, reduz LR
+    # LR_novo = LR_atual × factor  (ex: 0.001 × 0.5 = 0.0005)
+    # min_lr: limite mínimo — evita LR=0 (não aprenderia nada)
     ReduceLROnPlateau(
         monitor='val_loss',
-        factor=0.5,        # Multiplicar LR por 0.5
-        patience=3,        # Aguardar 3 épocas
-        min_lr=1e-7
+        factor=0.5,        # LR novo = LR atual × 0.5 (divide por 2 a cada platf)
+        patience=3,        # Aguardar 3 épocas sem melhora antes de reduzir
+        min_lr=1e-7        # Piso: nunca reduz abaixo deste valor
     )
 
-    # Decay exponencial
+    # ExponentialDecay: ajuste proativo do LR (decresce continuamente)
+    # LR(step) = initial_lr × decay_rate^(step/decay_steps)
+    # Ex: step=1000, decay_rate=0.9 → LR = 0.001 × 0.9^1 = 0.0009
     ExponentialDecay(
         initial_learning_rate=0.001,
-        decay_steps=1000,
-        decay_rate=0.9
+        decay_steps=1000,  # a cada 1000 passos (batches), aplica o decay
+        decay_rate=0.9     # LR multiplicado por 0.9 a cada decay_steps
     )
 
     # ─── VISUALIZAÇÃO: CURVAS DE LEARNING RATE ───

@@ -11,6 +11,10 @@ except NameError:
 
 
 if __name__ == '__main__':
+    # TensorFlow gerencia dispositivos automaticamente
+    # list_physical_devices: lista hardware disponível no sistema
+    # GPU é muito mais rápida para operações matriciais (GEMM) das CNNs
+    # TF usa GPU automaticamente se disponível; CPU como fallback
     gpus = tf.config.list_physical_devices('GPU')
     cpus = tf.config.list_physical_devices('CPU')
     print("GPUs disponíveis:", gpus)

@@ -75,19 +75,22 @@ print(f"  Test: {X_test.shape}")
 print("\n🏗️ Construindo 3D CNN...")
 
 model = Sequential([
-    # Primeira camada: convolução 3D
+    # Conv3D: aplica filtro 3D (temporal + espacial) — aprende padrões espaço-temporais
+    # kernel (3,3,3): 3 frames de contexto temporal + 3×3 pixels espaciais
+    # input_shape: (frames, altura, largura, canais) — dimensão extra temporal!
     Conv3D(32, kernel_size=(3, 3, 3), activation='relu', 
            input_shape=(16, 32, 32, 1)),
+    # MaxPooling3D: reduz dimensões temporais E espaciais — agrega informação de movimento
     MaxPooling3D(pool_size=(2, 2, 2)),
 
-    # Segunda camada
-    Conv3D(64, kernel_size=(3, 3, 3), activation='relu'),
+    Conv3D(64, kernel_size=(3, 3, 3), activation='relu'),  # aprende padrões mais complexos
     MaxPooling3D(pool_size=(2, 2, 2)),
 
-    # Flatten e dense
+    # Flatten: converte volume 4D em vetor 1D para classificação
     Flatten(),
     Dense(128, activation='relu'),
-    Dropout(0.5),
+    Dropout(0.5),  # regularização: essencial para evitar overfitting em vídeos (muitos parâmetros)
+    # sigmoid: classificação binária (2 classes: horizontal vs vertical)
     Dense(1, activation='sigmoid')
 ], name='3D_CNN')
 

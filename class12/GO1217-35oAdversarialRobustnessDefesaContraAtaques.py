@@ -71,18 +71,21 @@ def fgsm_attack(model, images, labels, epsilon=0.1):
     labels_tensor = tf.convert_to_tensor(labels)
 
     with tf.GradientTape() as tape:
+        # tape.watch: necessário porque imagens não são tf.Variable por padrão
         tape.watch(images_tensor)
         predictions = model(images_tensor)
         loss = tf.keras.losses.sparse_categorical_crossentropy(labels_tensor, predictions)
 
-    # Gradiente em relação à imagem
+    # Gradiente da loss em relação à imagem (não aos pesos da rede)
     gradient = tape.gradient(loss, images_tensor)
 
-    # Perturbação: sinal do gradiente * epsilon
+    # FGSM: pertubação = epsilon * sinal do gradiente
+    # sinal (+/-) indica a direção que MAXIMIZA a loss — enganando o modelo
     perturbation = epsilon * tf.sign(gradient)
 
-    # Exemplo adversarial
+    # Exemplo adversarial: imagem original + perturbação quase imperceptível
     adversarial = images_tensor + perturbation
+    # clipping para manter pixels em [0, 1] (range válido de imagens normalizadas)
     adversarial = tf.clip_by_value(adversarial, 0, 1)
 
     return adversarial.numpy()
@@ -116,12 +119,14 @@ model_robust = Sequential([
 
 model_robust.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
 
-# Treinar com mix de exemplos normais e adversariais
+# Adversarial Training: treinar o modelo com mix de exemplos normais e adversariais
+# expor o modelo a ataques durante o treino torna-o mais robusto na inferência
 for epoch in range(5):
-    # Dados normais
+    # Dados normais: treino clássico
     model_robust.fit(X_train, y_train, epochs=1, batch_size=128, verbose=0)
 
-    # Gerar adversariais do próprio modelo
+    # Gerar adversariais do próprio modelo: Data augmentation adversarial
+    # usar o modelo atual para gerar ataques mantém o treinamento adaptativo
     X_train_adv = fgsm_attack(model_robust, X_train[:1000], y_train[:1000], epsilon)
     model_robust.fit(X_train_adv, y_train[:1000], epochs=1, batch_size=128, verbose=0)
 

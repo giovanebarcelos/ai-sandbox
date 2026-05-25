@@ -12,10 +12,15 @@ except NameError:
 if __name__ == '__main__':
     from tensorflow.keras.callbacks import EarlyStopping
 
+    # EarlyStopping com restore_best_weights:
+    # - Para o treino quando val_loss não melhora por `patience` épocas
+    # - restore_best_weights=True: ao parar, RESTAURA os pesos da melhor época
+    #   Sem isso: modelo ficaria com os pesos da última época (pior!)
+    # - Economiza tempo: não treina épocas desnecessárias após o ótimo
     es = EarlyStopping(
-        monitor='val_loss',
-        patience=5,
-        restore_best_weights=True
+        monitor='val_loss',          # métrica a monitorar
+        patience=5,                  # aguardar 5 épocas sem melhora
+        restore_best_weights=True    # fundamental: retorna ao melhor ponto!
     )
 
     # ─── VISUALIZAÇÃO: EARLYSTOPPING COM restore_best_weights ───

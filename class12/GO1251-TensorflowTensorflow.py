@@ -1,49 +1,59 @@
 # GO1251-TensorflowTensorflow
+# Transfer Learning com VGG16 em 2 FASES:
+# FASE 1 — Feature Extraction: congela VGG16, treina apenas o topo (rápido, 10 épocas)
+# FASE 2 — Fine-tuning: descongela as últimas 4 camadas, refina com LR muito baixo
 from tensorflow.keras.applications import VGG16
 from tensorflow.keras.models import Model
 
-# Carregar VGG16 sem top (camadas FC)
+# ─── FASE 1: Feature Extraction ───
+# include_top=False: remove as 3 camadas FC do VGG16 original (ImageNet, 1000 classes)
+# weights='imagenet': carrega pesos treinados em 1.2M imagens — bagagem de conhecimento
 base_model = VGG16(
     weights='imagenet',
     include_top=False,
     input_shape=(224, 224, 3)
 )
 
-# Congelar camadas do VGG16
+# Congelar: layer.trainable=False → pesos não serão alterados no treino
+# Razão: queremos usar as features aprendidas no ImageNet sem destruí-las
 for layer in base_model.layers:
     layer.trainable = False
 
-# Adicionar novas camadas
+# Adicionar cabeçalho de classificação para NOSSO problema (10 classes)
+# GlobalAveragePooling2D: reduz cada feature map para 1 valor (sem params extras)
 x = base_model.output
 x = layers.GlobalAveragePooling2D()(x)
-x = layers.Dense(256, activation='relu')(x)
-x = layers.Dropout(0.5)(x)
-predictions = layers.Dense(10, activation='softmax')(x)
+x = layers.Dense(256, activation='relu')(x)  # camada de adaptação
+x = layers.Dropout(0.5)(x)                   # regularização para dados pequenos
+predictions = layers.Dense(10, activation='softmax')(x)  # saída para 10 classes
 
+# Model funcional: permite conectar base_model ao nosso topo
 model = Model(inputs=base_model.input, outputs=predictions)
 
-# Compilar
 model.compile(
-    optimizer='adam',
+    optimizer='adam',         # LR padrão (0.001) — ok pois só o topo treina
     loss='categorical_crossentropy',
     metrics=['accuracy']
 )
 
-# Treinar apenas novas camadas (rápido!)
+# Treinar apenas as novas camadas (rápido pois só ~131k params são treináveis)
 model.fit(x_train, y_train, epochs=10)
 
-# FINE-TUNING (opcional):
-# Descongelar últimas camadas do VGG16
+# ─── FASE 2: Fine-tuning (opcional) ───
+# Depois que o topo convergiu, podemos refinar as últimas camadas do VGG16
+# As últimas camadas têm features mais específicas (as primeiras têm features genéricas)
 for layer in base_model.layers[-4:]:
-    layer.trainable = True
+    layer.trainable = True  # descongela os últimos 4 layers (bloco 5 do VGG16)
 
+# LR muito baixo (1e-5 vs padrão 1e-3): evita destruir os pesos pré-treinados
+# Fine-tuning com LR alto = catastrofic forgetting
 model.compile(
-    optimizer=keras.optimizers.Adam(1e-5),
+    optimizer=keras.optimizers.Adam(1e-5),  # 100× menor que o padrão!
     loss='categorical_crossentropy',
     metrics=['accuracy']
 )
 
-model.fit(x_train, y_train, epochs=5)
+model.fit(x_train, y_train, epochs=5)  # poucas épocas: ajuste fino, não retreinar
 
 # ─── VISUALIZAÇÃO: CONCEITO DE TRANSFER LEARNING ───
 import matplotlib

@@ -14,25 +14,37 @@ except NameError:
 
 if __name__ == "__main__":
     model = Sequential([
-        # 1ª Camada Convolucional
+        # ─── Bloco Convolucional 1 ───
+        # 32 filtros 3×3: cada filtro aprende um padrão visual diferente
+        # activation='relu': introduz não-linearidade (f(x)=max(0,x))
+        # input_shape=(28,28,1): 28×28 pixels, 1 canal (grayscale MNIST)
         Conv2D(32, (3,3), activation='relu',
                input_shape=(28, 28, 1)),
-        # Output: (26, 26, 32)
+        # Output: (26, 26, 32) — fórmula: out = input - kernel + 1 = 28 - 3 + 1 = 26
 
-        # 2ª Camada Convolucional
+        # ─── Bloco Convolucional 2 ───
+        # 64 filtros: dobrar a capacidade de representação a cada bloco é uma prática comum
+        # Camadas mais profundas combinam features das camadas anteriores (padrões compostos)
         Conv2D(64, (3,3), activation='relu'),
-        # Output: (24, 24, 64)
+        # Output: (24, 24, 64) — 26 - 3 + 1 = 24
 
-        # Camada de Pooling
+        # ─── Pooling ───
+        # MaxPooling 2×2: reduz dimensão espacial pela metade selecionando o máximo
+        # Benefícios: (1) reduz parâmetros, (2) dá invariância a pequenas translações
         MaxPooling2D(pool_size=(2, 2)),
-        # Output: (12, 12, 64)
+        # Output: (12, 12, 64) — 24 ÷ 2 = 12
 
-        # Achatamento para camadas densas
+        # ─── Flatten ───
+        # Converte tensor 3D (12×12×64=9216) em vetor 1D para entrada nas camadas Dense
+        # Dense não entende topologia espacial — Flatten é a ponte entre conv e fc
         Flatten(),
-        # Output: 9216 neurônios
+        # Output: 9216 neurônios (12 × 12 × 64)
 
-        # Camadas totalmente conectadas
+        # ─── Classificador Fully Connected ───
+        # Dense(128): combina features de alto nível para decisão final
         Dense(128, activation='relu'),
+        # Dense(10) + softmax: 10 saídas (uma por classe MNIST 0-9)
+        # softmax: garante que as 10 probabilidades somam 1.0
         Dense(10, activation='softmax')  # 10 classes
     ])
 

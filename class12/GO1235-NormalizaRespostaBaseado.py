@@ -16,17 +16,25 @@ canais = 8
 ativacoes_brutas = np.abs(np.random.randn(canais) * 3) + 0.5  # Ativações brutas (positivas)
 
 # LRN: normaliza canal i pelos k vizinhos: a_i / (k + alpha * sum(a_{j}^2 for j in vizinhos))^beta
+# Fórmula completa de Krizhevsky (AlexNet 2012):
+#   b_i = a_i / (k + alpha * Σ_{j=max(0,i-n/2)}^{min(N-1,i+n/2)} a_j²) ^ beta
+# Intuito: neurônio com forte resposta suprime os vizinhos (competição lateral)
 def lrn(activations, k=2, alpha=0.0001, beta=0.75, n=3):
     result = np.zeros_like(activations)
     for i in range(len(activations)):
+        # Seleciona n vizinhos ao redor do canal i (janela de normalização)
         neighbors = activations[max(0, i-n//2):min(len(activations), i+n//2+1)]
+        # Normaliza: divide pela soma quadrática dos vizinhos elevada a beta
         result[i] = activations[i] / (k + alpha * np.sum(neighbors**2)) ** beta
     return result
 
 # Batch Normalization: normaliza para media=0, std=1, depois aplica gamma e beta
+# Passos: (1) μ = média do batch, (2) σ = desvio padrão, (3) x̂ = (x-μ)/σ
+# (4) aplica parâmetros treináveis: y = gamma * x̂ + beta (aprende a escala ideal)
 def batch_norm(activations, gamma=1.0, beta_param=0.0):
-    mean = np.mean(activations)
-    std  = np.std(activations) + 1e-8
+    mean = np.mean(activations)  # média de todas as ativações no batch
+    std  = np.std(activations) + 1e-8  # +1e-8 evita divisão por zero
+    # Normaliza e reescala com parâmetros treináveis gamma e beta
     return gamma * (activations - mean) / std + beta_param
 
 lrn_out = lrn(ativacoes_brutas)

@@ -13,8 +13,16 @@ if __name__ == '__main__':
     from tensorflow.keras.callbacks import EarlyStopping, ModelCheckpoint, ReduceLROnPlateau
 
     callbacks = [
+        # EarlyStopping: para o treino quando val_loss não melhora
+        # patience=5: aguarda 5 épocas sem melhora antes de parar
+        # restore_best_weights=True (padrão=False): restaura pesos da melhor época
         EarlyStopping(monitor='val_loss', patience=5),
+        # ModelCheckpoint: salva o modelo quando val_loss melhora
+        # save_best_only=True: não sobrescreve se não houver melhora
         ModelCheckpoint('best.h5', save_best_only=True),
+        # ReduceLROnPlateau: reduz LR por `factor` quando val_loss estagna
+        # factor=0.5: LR novo = LR atual × 0.5 (divide por 2)
+        # patience=3: aguarda 3 épocas antes de reduzir
         ReduceLROnPlateau(factor=0.5, patience=3)
     ]
 

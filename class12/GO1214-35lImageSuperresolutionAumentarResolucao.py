@@ -50,6 +50,7 @@ def downscale_image(img, scale=2):
     """
     h, w = img.shape[:2]
     new_h, new_w = h // scale, w // scale
+    # INTER_CUBIC: interpolação bicúbica preserva melhor a qualidade que nearest/bilinear
     return cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_CUBIC)
 
 def upscale_image(img, scale=2):
@@ -58,6 +59,7 @@ def upscale_image(img, scale=2):
     """
     h, w = img.shape[:2]
     new_h, new_w = h * scale, w * scale
+    # bicubic upscaling é o baseline clássico que a CNN deve superar em qualidade (PSNR)
     return cv2.resize(img, (new_w, new_h), interpolation=cv2.INTER_CUBIC)
 
 # Criar pares LR-HR
@@ -74,9 +76,16 @@ print("\n🏗️ Construindo SRCNN (Super-Resolution CNN)...")
 # Input é LR image upscaled
 input_lr = Input(shape=(32, 32, 3))
 
-# SRCNN architecture
+# SRCNN (Super-Resolution CNN, 2014): 3 camadas que aprendem extracão de patches,
+# mapeamento não-linear e reconstrução — arquitetura simples mas eficaz
+# Input é LR image upscaled
+input_lr = Input(shape=(32, 32, 3))
+
+# Camada 1: extração de patches — filtros grandes (9×9) capturam contexto amplo
 x = Conv2D(64, (9, 9), activation='relu', padding='same')(input_lr)
+# Camada 2: mapeamento não-linear — aprende correlações de alta resolução
 x = Conv2D(32, (5, 5), activation='relu', padding='same')(x)
+# Camada 3: reconstrução — activation='linear' (sem ativação) para prever valores contínuos de pixel
 output = Conv2D(3, (5, 5), activation='linear', padding='same')(x)
 
 model_srcnn = Model(inputs=input_lr, outputs=output, name='SRCNN')
@@ -89,12 +98,13 @@ print(f"  Parâmetros: {model_srcnn.count_params():,}")
 print("\n🚀 Treinando SRCNN...")
 
 # Upscale LR images para tamanho original (input para SRCNN)
+# A SRCNN recebe a imagem já aumentada e aprende a refinar os detalhes borrados
 X_train_lr_upscaled = np.array([upscale_image(img, scale_factor) for img in X_train_lr])
 X_test_lr_upscaled = np.array([upscale_image(img, scale_factor) for img in X_test_lr])
 
 history = model_srcnn.fit(
     X_train_lr_upscaled,
-    X_train,  # Target é HR original
+    X_train,  # Target é HR original: a rede aprende a recuperar detalhes perdidos
     validation_split=0.2,
     epochs=30,
     batch_size=64,
@@ -131,7 +141,8 @@ for i in range(5):
     srcnn = model_srcnn.predict(lr_upscaled[np.newaxis, ...], verbose=0)[0]
     srcnn = np.clip(srcnn, 0, 1)
 
-    # Calcular métricas
+    # PSNR (Peak Signal-to-Noise Ratio): quanto maior, melhor a qualidade (em dB)
+    # SSIM (Structural Similarity Index): métrica perceptual [0, 1], mais próxima da percepção humana
     psnr_bicubic = psnr(hr_original, bicubic, data_range=1.0)
     psnr_srcnn = psnr(hr_original, srcnn, data_range=1.0)
 

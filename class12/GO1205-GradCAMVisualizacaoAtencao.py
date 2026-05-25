@@ -33,7 +33,8 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
     Returns:
         heatmap: Mapa de calor (H, W)
     """
-    # Criar modelo que retorna ativações da última conv + predições
+    # Passo 1: criar modelo com duas saídas — ativações da última Conv E predições finais
+    # Isso permite capturar tanto os feature maps quanto os gradientes em uma única passagem
     grad_model = keras.models.Model(
         inputs=model.input,
         outputs=[
@@ -42,7 +43,8 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
         ]
     )
 
-    # Calcular gradientes
+    # Passo 2: GradientTape registra operações para calcular derivadas automaticamente
+    # Tudo dentro do bloco 'with' é monitorado para backpropagation
     with tf.GradientTape() as tape:
         conv_outputs, predictions = grad_model(img_array)
 
@@ -50,26 +52,28 @@ def make_gradcam_heatmap(img_array, model, last_conv_layer_name, pred_index=None
         if pred_index is None:
             pred_index = tf.argmax(predictions[0])
 
-        # Score da classe alvo
+        # Score (logit) da classe alvo — é este valor que vamos derivar
         class_channel = predictions[:, pred_index]
 
-    # Gradientes da classe em relação aos outputs da conv
+    # Passo 3: d(class_score)/d(conv_outputs) — quais ativações mais influenciaram a predição
     grads = tape.gradient(class_channel, conv_outputs)
 
-    # Pooling dos gradientes (importância de cada filtro)
+    # Passo 4: média global dos gradientes por canal (importância de cada filtro)
+    # axis=(0,1,2) agrega sobre batch, altura e largura — resultado: um escalar por filtro
     pooled_grads = tf.reduce_mean(grads, axis=(0, 1, 2))
 
-    # Multiplicar cada canal pelo seu "peso" (importância)
+    # Passo 5: ponderar cada canal do feature map pelo gradiente correspondente
+    # pooled_grads[i] indica "o quanto o filtro i importa para a predição"
     conv_outputs = conv_outputs[0]
     pooled_grads = pooled_grads.numpy()
 
     for i in range(pooled_grads.shape[-1]):
         conv_outputs[:, :, i] *= pooled_grads[i]
 
-    # Heatmap: média de todos os canais
+    # Passo 6: colapsar todos os canais em um único mapa de calor (média espacial)
     heatmap = np.mean(conv_outputs, axis=-1)
 
-    # Normalizar entre 0 e 1
+    # Passo 7: ReLU (zera negativos) + normalização [0,1] — só regiões que ATIVAM a classe importam
     heatmap = np.maximum(heatmap, 0) / np.max(heatmap)
 
     return heatmap
@@ -79,13 +83,13 @@ def overlay_gradcam(img, heatmap, alpha=0.4, colormap=cv2.COLORMAP_JET):
     """
     Sobrepõe heatmap Grad-CAM na imagem original
     """
-    # Redimensionar heatmap para tamanho da imagem
+    # Redimensionar heatmap de (H_conv, W_conv) para (H_img, W_img) — camadas conv têm resolução menor
     heatmap_resized = cv2.resize(heatmap, (img.shape[1], img.shape[0]))
 
-    # Converter heatmap para RGB usando colormap
+    # Aplicar colormap JET: azul (frio/baixa atenção) → vermelho (quente/alta atenção)
     heatmap_colored = cv2.applyColorMap(np.uint8(255 * heatmap_resized), colormap)
 
-    # Sobrepor
+    # Blending: combina imagem original (peso 1-alpha) com heatmap colorido (peso alpha)
     overlayed = cv2.addWeighted(img, 1-alpha, heatmap_colored, alpha, 0)
 
     return overlayed, heatmap_colored
@@ -95,7 +99,7 @@ def overlay_gradcam(img, heatmap, alpha=0.4, colormap=cv2.COLORMAP_JET):
 (x_train, y_train), (x_test, y_test) = keras.datasets.mnist.load_data()
 x_test_norm = x_test.reshape(-1, 28, 28, 1).astype('float32') / 255
 
-# Selecionar algumas imagens
+# Selecionar algumas imagens para demonstrar o Grad-CAM em diferentes dígitos
 sample_indices = [0, 10, 50, 100, 200]
 
 fig, axes = plt.subplots(len(sample_indices), 4, figsize=(14, 3*len(sample_indices)))
@@ -118,7 +122,7 @@ for idx, img_idx in enumerate(sample_indices):
         last_conv_layer_name='conv3'
     )
 
-    # Preparar imagem para overlay (converter grayscale para RGB)
+    # Preparar imagem para overlay: Grad-CAM usa BGR (OpenCV) — convém grayscale (1 canal) → RGB (3 canais)
     img_rgb = cv2.cvtColor(img, cv2.COLOR_GRAY2RGB)
     overlayed, heatmap_colored = overlay_gradcam(img_rgb, heatmap, alpha=0.5)
 
@@ -147,7 +151,7 @@ plt.tight_layout()
 plt.show()
 
 # ─── 4. ANÁLISE DE PREDIÇÕES ERRADAS COM GRAD-CAM ───
-# Encontrar predições erradas
+# Encontrar todos os índices onde a predição diverge do rótulo real
 preds_all = model.predict(x_test_norm, verbose=0)
 pred_labels = np.argmax(preds_all, axis=1)
 errors = np.where(pred_labels != y_test)[0]

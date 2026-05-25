@@ -12,16 +12,25 @@ except NameError:
 
 x = np.linspace(-4, 4, 400)
 
-# Variantes de ReLU
-relu        = np.maximum(0, x)
-leaky_relu  = np.where(x >= 0, x, 0.1 * x)
+# ─── Variantes de ReLU ───
+relu        = np.maximum(0, x)           # f(x) = max(0,x)  — gradiente: 0 ou 1
+leaky_relu  = np.where(x >= 0, x, 0.1 * x)  # f(x<0) = 0.1x   — evita dead neurons
+# ELU: f(x<0) = α·(e^x - 1)  — saídas negativas com média zero → acelera convergência
 elu         = np.where(x >= 0, x, 1.0 * (np.exp(x) - 1))
+# Swish (Google, 2017): f(x) = x·σ(x)  — auto-gated, supera ReLU em redes profundas
+# Diferenciável em todo ponto; levemente negativo para x próximo de -1
 swish       = x * (1 / (1 + np.exp(-x)))
+# GELU (Gaussian Error Linear Unit): f(x) = x·Φ(x) onde Φ é CDF da normal
+# Approximação: 0.5·x·(1 + tanh(√(2/π)·(x + 0.044715·x³)))
+# Usado no BERT, GPT e outros Transformers — suave e estocástico
 gelu        = 0.5 * x * (1 + np.tanh(np.sqrt(2/np.pi) * (x + 0.044715 * x**3)))
 
-# Gradientes
+# ─── Gradientes analíticos ───
+# ReLU: gradiente=1 para x>0 (sem saturação!), =0 para x<0 (dead neuron problem)
 relu_grad       = np.where(x >= 0, 1.0, 0.0)
+# Leaky ReLU: gradiente=0.1 para x<0 → neurônios nunca morrem completamente
 leaky_relu_grad = np.where(x >= 0, 1.0, 0.1)
+# ELU: gradiente=e^x para x<0 → suave e sempre positivo
 elu_grad        = np.where(x >= 0, 1.0, np.exp(np.minimum(x, 0)))
 
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))

@@ -1,68 +1,78 @@
 # GO1250-TensorflowTensorflow
+# CNN para CIFAR-10 com Data Augmentation e Batch Normalization
+# CIFAR-10: 60.000 imagens coloridas 32×32, 10 classes
+# Estratégias usadas: (1) BN após cada Conv, (2) Dropout crescente por bloco, (3) Data Aug
 from tensorflow.keras.datasets import cifar10
 from tensorflow.keras.preprocessing.image import ImageDataGenerator
 
-# Dados
-
-
 if __name__ == "__main__":
+    # ─── PASSO 1: Dados CIFAR-10 ───
     (x_train, y_train), (x_test, y_test) = cifar10.load_data()
+    # CIFAR-10: 50k treino + 10k teste, imagens 32×32 coloridas (RGB)
+    # Normalização [0,255] → [0,1] para estabilizar gradientes no treino
     x_train = x_train.astype('float32') / 255
     x_test = x_test.astype('float32') / 255
+    # one-hot: converte y_train (inteiro) em vetor binário para categorical_crossentropy
     y_train = keras.utils.to_categorical(y_train, 10)
     y_test = keras.utils.to_categorical(y_test, 10)
 
-    # Data Augmentation
+    # ─── PASSO 2: Data Augmentation ───
+    # Gera variações sintéticas em tempo real — simula mais dados, reduz overfitting
     datagen = ImageDataGenerator(
-        rotation_range=15,
-        width_shift_range=0.1,
-        height_shift_range=0.1,
-        horizontal_flip=True
+        rotation_range=15,        # rotações aleatórias ±15°
+        width_shift_range=0.1,    # translação horizontal ±10% da largura
+        height_shift_range=0.1,   # translação vertical ±10% da altura
+        horizontal_flip=True      # espelhar: avião, carro etc. podem aparecer invertidos
     )
-    datagen.fit(x_train)
+    datagen.fit(x_train)  # computa estatísticas do dataset para normalização interna
 
-    # Modelo mais profundo
+    # ─── PASSO 3: Modelo CNN com 3 Blocos ───
+    # Padrão: Conv → BN → Conv → BN → MaxPool → Dropout
+    # A taxa de Dropout AUMENTA com profundidade (0.2 → 0.3 → 0.4 → 0.5)
+    # porque camadas mais profundas são mais especializadas e tendem a overfittar mais
     model = keras.Sequential([
-        # Bloco 1
+        # Bloco 1: 32 filtros — detecta features primitivas (bordas, cores)
         layers.Conv2D(32, (3,3), padding='same', activation='relu',
-                      input_shape=(32,32,3)),
-        layers.BatchNormalization(),
+                      input_shape=(32,32,3)),  # padding='same': preserva dimensão 32×32
+        layers.BatchNormalization(),  # normaliza ativações → gradientes mais estáveis
         layers.Conv2D(32, (3,3), padding='same', activation='relu'),
         layers.BatchNormalization(),
-        layers.MaxPooling2D((2,2)),
-        layers.Dropout(0.2),
+        layers.MaxPooling2D((2,2)),   # 32×32 → 16×16 (reduz param, adiciona invariância)
+        layers.Dropout(0.2),          # 20% dropout: conservador nas camadas iniciais
 
-        # Bloco 2
+        # Bloco 2: 64 filtros — detecta texturas, gradientes, padrões locais
         layers.Conv2D(64, (3,3), padding='same', activation='relu'),
         layers.BatchNormalization(),
         layers.Conv2D(64, (3,3), padding='same', activation='relu'),
         layers.BatchNormalization(),
-        layers.MaxPooling2D((2,2)),
-        layers.Dropout(0.3),
+        layers.MaxPooling2D((2,2)),   # 16×16 → 8×8
+        layers.Dropout(0.3),          # 30% dropout
 
-        # Bloco 3
+        # Bloco 3: 128 filtros — detecta partes de objetos (rodas, asas, patas)
         layers.Conv2D(128, (3,3), padding='same', activation='relu'),
         layers.BatchNormalization(),
         layers.Conv2D(128, (3,3), padding='same', activation='relu'),
         layers.BatchNormalization(),
-        layers.MaxPooling2D((2,2)),
-        layers.Dropout(0.4),
+        layers.MaxPooling2D((2,2)),   # 8×8 → 4×4
+        layers.Dropout(0.4),          # 40% dropout
 
-        # Classificador
-        layers.Flatten(),
-        layers.Dense(128, activation='relu'),
+        # Classificador fully connected
+        layers.Flatten(),              # 4×4×128 = 2048 elementos → vetor 1D
+        layers.Dense(128, activation='relu'),   # combina features para decisão
         layers.BatchNormalization(),
-        layers.Dropout(0.5),
-        layers.Dense(10, activation='softmax')
+        layers.Dropout(0.5),           # 50% dropout: máxima regularização antes da saída
+        layers.Dense(10, activation='softmax')  # 10 classes CIFAR-10
     ])
 
-    # Compilar e treinar
+    # ─── PASSO 4: Compilar e Treinar ───
     model.compile(
-        optimizer='adam',
+        optimizer='adam',              # Adam: adapta LR por parâmetro automaticamente
         loss='categorical_crossentropy',
         metrics=['accuracy']
     )
 
+    # datagen.flow(): itera sobre x_train aplicando augmentations aleatórias por batch
+    # steps_per_epoch = len(x_train) // batch_size (automático quando usando gerador)
     history = model.fit(
         datagen.flow(x_train, y_train, batch_size=64),
         epochs=50,

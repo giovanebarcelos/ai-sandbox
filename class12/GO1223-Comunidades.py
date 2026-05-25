@@ -48,12 +48,17 @@ print(f"  Total de camadas: {len(base_model.layers)}")
 print(f"  Parâmetros totais: {base_model.count_params():,}")
 
 # ─── 3. CONSTRUIR CLASSIFICADOR CUSTOMIZADO ───
-base_model.trainable = False  # Congelar base inicialmente
+# Fase 1: congelar toda a base — treinar apenas o cabeçalho novo
+# Isso evita destruir os features do ImageNet com gradientes aleatórios iniciais
+base_model.trainable = False
 
 x = base_model.output
+# GlobalAveragePooling2D: colapsa mapa espacial em vetor 1D — mais eficiente e menos propenso a overfit que Flatten
 x = GlobalAveragePooling2D(name='global_avg_pool')(x)
+# BatchNormalization: normaliza ativações — estabiliza treino do cabeçalho novo
 x = BatchNormalization(name='bn1')(x)
 x = Dense(512, activation='relu', name='dense_512')(x)
+# Dropout(0.5): regularização agressiva — necessária com poucos dados
 x = Dropout(0.5, name='dropout1')(x)
 x = BatchNormalization(name='bn2')(x)
 x = Dense(256, activation='relu', name='dense_256')(x)
@@ -86,7 +91,9 @@ print("📚 FASE 1: TREINANDO APENAS CAMADAS SUPERIORES (base frozen)")
 print("="*70)
 
 callbacks_phase1 = [
+    # EarlyStopping: para o treino se val_loss não melhora — evita overfit e economiza tempo
     EarlyStopping(monitor='val_loss', patience=5, restore_best_weights=True, verbose=1),
+    # ReduceLROnPlateau: reduz LR quando perda estagna — ajuda a escapar de platores
     ReduceLROnPlateau(monitor='val_loss', factor=0.5, patience=3, min_lr=1e-7, verbose=1),
     ModelCheckpoint('resnet50_phase1.h5', monitor='val_accuracy', save_best_only=True)
 ]
@@ -107,9 +114,11 @@ print("\n" + "="*70)
 print("🔧 FASE 2: FINE-TUNING (descongelar últimas camadas)")
 print("="*70)
 
+# Fase 2: descongelar parte da base para fine-tuning
+# treinar TODA a base de uma vez pode destruir os features aprendidos
 base_model.trainable = True
 
-# Congelar tudo exceto últimas 30 layers
+# Congelar tudo exceto as últimas 30 camadas: camadas finais são mais específicas — mais fáceis de adaptar
 freeze_until = len(base_model.layers) - 30
 for layer in base_model.layers[:freeze_until]:
     layer.trainable = False
@@ -119,7 +128,7 @@ print(f"  Total layers: {len(base_model.layers)}")
 print(f"  Frozen: {freeze_until}")
 print(f"  Trainable: {len(base_model.layers) - freeze_until}")
 
-# Recompilar com LR muito menor
+# LR 100× menor que na Fase 1: evitar desfazer features pré-treinados — ajustes finos e suaves
 model.compile(
     optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),  # 100x menor!
     loss='categorical_crossentropy',

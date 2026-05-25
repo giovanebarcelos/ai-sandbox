@@ -10,12 +10,19 @@ except NameError:
     pass
 
 # Classification Report
+# Métricas por classe:
+#   Precision = TP / (TP + FP)  → "quando digo que é X, acerto quanto?"
+#   Recall    = TP / (TP + FN)  → "de todos os X reais, encontro quantos?"
+#   F1-score  = 2 × (P × R) / (P + R)  → média harmônica entre precision e recall
 
 
 if __name__ == "__main__":
     print(classification_report(y_true, y_pred, target_names=class_names))
 
-    # Confusion Matrix
+    # Confusion Matrix: matriz N×N onde cm[i,j] = qtd de amostras da classe i
+    # classificadas como classe j
+    # Diagonal principal: acertos (TP de cada classe)
+    # Fora da diagonal: erros (FP para coluna, FN para linha)
     cm = confusion_matrix(y_true, y_pred)
 
     # ─── VISUALIZAÇÃO: CONFUSION MATRIX HEATMAP ───

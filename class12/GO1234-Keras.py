@@ -11,16 +11,18 @@ except NameError:
 
 
 if __name__ == '__main__':
+    # Cada parâmetro simula uma transformação física realista da imagem:
+    # O modelo aprende invariabilidade a esses tipos de transformação
     datagen = ImageDataGenerator(
-        rotation_range=20,        # Rotação ±20°
-        width_shift_range=0.2,    # Deslocamento horizontal
-        height_shift_range=0.2,   # Deslocamento vertical
-        horizontal_flip=True,     # Espelhamento
-        zoom_range=0.15,          # Zoom ±15%
+        rotation_range=20,        # Rotação ±20° — objeto pode estar inclinado
+        width_shift_range=0.2,    # Deslocamento horizontal ±20% — objeto não centrado
+        height_shift_range=0.2,   # Deslocamento vertical ±20% — idem
+        horizontal_flip=True,     # Espelhamento — simetria (ex: gato de frente/costas)
+        zoom_range=0.15,          # Zoom ±15% — objeto mais perto ou longe
         # AlexNet usava PCA color augmentation também
     )
 
-    # 1 imagem → infinitas variações!
+    # 1 imagem → infinitas variações! Cada epoch usa uma variação diferente
 
     # ─── VISUALIZAÇÃO: EFEITOS DOS PARÂMETROS DE AUGMENTATION ───
     from tensorflow import keras

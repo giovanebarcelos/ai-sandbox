@@ -12,7 +12,13 @@ except NameError:
 
 
 if __name__ == '__main__':
+    # Feature Extractor: usa ResNet50 pré-treinado como extrator fixo de features
+    # include_top=False: remove as camadas FC do topo (1000 classes ImageNet)
+    # Saída: tensor 7×7×2048 (para input 224×224)
     base = ResNet50(weights='imagenet', include_top=False)
+    # base.trainable=False: congela TODOS os 25M parâmetros do ResNet50
+    # Os pesos aprendidos no ImageNet são preservados intactos
+    # Só as camadas que adicionarmos acima serão treinadas
     base.trainable = False  # Congelar
 
     # ─── VISUALIZAÇÃO: RESNET50 COMO EXTRATOR DE FEATURES ───

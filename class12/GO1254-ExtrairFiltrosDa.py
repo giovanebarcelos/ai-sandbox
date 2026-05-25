@@ -28,13 +28,19 @@ if __name__ == '__main__':
     model.compile('adam', 'sparse_categorical_crossentropy', metrics=['accuracy'])
     model.fit(x_train[:2000], y_train[:2000], epochs=2, verbose=0)
 
+    # get_weights(): retorna [pesos, biases] da camada
+    # filters.shape = (kernel_h, kernel_w, in_channels, n_filters)
+    # Para conv1 com 32 filtros 3×3 grayscale: (3, 3, 1, 32)
     filters, biases = model.layers[0].get_weights()
     print(f"Shape: {filters.shape}")  # (3, 3, 1, 32)
 
-    # Extrair feature maps
+    # Extrair feature maps usando Model secundário
+    # Filtra apenas camadas de nome 'conv' (ignora pooling, dense etc.)
     layer_outputs = [layer.output for layer in model.layers if 'conv' in layer.name]
+    # Model funcional com múltiplas saídas: 1 entrada, N saídas de ativação
     feature_model = Model(inputs=model.input, outputs=layer_outputs)
     image = x_train[0:1]
+    # feature_maps[i] = ativação da i-ésima camada conv para 'image'
     feature_maps = feature_model.predict(image, verbose=0)
 
     # ─── VISUALIZAÇÃO: FILTROS E FEATURE MAPS ───

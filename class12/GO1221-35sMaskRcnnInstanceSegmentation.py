@@ -92,28 +92,30 @@ print("\n🏗️ Mask R-CNN (versão simplificada)...")
 # Esta é uma demonstração conceitual dos componentes
 
 print("\n  COMPONENTES DO MASK R-CNN:")
-print("  1. Backbone: ResNet/FPN (feature extraction)")
-print("  2. RPN: Region Proposal Network (propostas de objetos)")
-print("  3. ROI Align: Extrair features das regiões")
-print("  4. Box Head: Classificação + bounding box")
-print("  5. Mask Head: Segmentação de cada instância")
+print("  1. Backbone: ResNet/FPN (extractor de features convolucional compartilhado)")
+print("  2. RPN: Region Proposal Network (proposta regiões onde podem haver objetos)")
+print("  3. ROI Align: Extrai features das regiões propostas com subpixel accuracy")
+print("  4. Box Head: Classificação da classe + refinamento da bounding box")
+print("  5. Mask Head: Gera máscara de segmentação para CADA instância detectada")
 
 # Modelo de detecção simples (conceito)
 def simple_detection_model(input_shape=(128, 128, 3)):
     inputs = Input(input_shape)
 
-    # Feature extraction (backbone simplificado)
+    # Backbone simplificado: extrai representações hierarq. de features (como ResNet)
     x = Conv2D(32, (3, 3), activation='relu', padding='same')(inputs)
-    x = MaxPooling2D((2, 2))(x)
+    x = MaxPooling2D((2, 2))(x)  # 128 → 64
     x = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
-    x = MaxPooling2D((2, 2))(x)
+    x = MaxPooling2D((2, 2))(x)  # 64 → 32
     x = Conv2D(128, (3, 3), activation='relu', padding='same')(x)
 
-    # Mask branch (segmentação)
+    # Mask branch: faz upsampling para recuperar resolução original e gerar máscara pixel a pixel
+    # UpSampling2D: dobra a resolução espacial (ao contrário do pooling)
     mask = Conv2D(64, (3, 3), activation='relu', padding='same')(x)
-    mask = UpSampling2D((2, 2))(mask)
+    mask = UpSampling2D((2, 2))(mask)  # 32 → 64
     mask = Conv2D(32, (3, 3), activation='relu', padding='same')(mask)
-    mask = UpSampling2D((2, 2))(mask)
+    mask = UpSampling2D((2, 2))(mask)  # 64 → 128
+    # sigmoid: cada pixel tem probabilidade [0,1] de pertencer à máscara do objeto
     mask_output = Conv2D(1, (1, 1), activation='sigmoid')(mask)
 
     model = Model(inputs=inputs, outputs=mask_output)

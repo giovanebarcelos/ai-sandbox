@@ -11,8 +11,13 @@ except NameError:
 
 
 if __name__ == '__main__':
-    # Conv2D(64, (3,3), kernel_regularizer=l2(0.01))
-    # Dense(128, kernel_regularizer=l2(0.01))
+    # Regularização L2 (Weight Decay): adiciona penalidade proporcional aos pesos
+    # Loss_total = Loss_original + λ × Σ(w²)
+    # λ (lambda) = 0.01: controla a intensidade da penalidade
+    # Efeito: força pesos menores → modelo mais simples → menos overfitting
+    # Con. 1°: pequenas diferenças nos pesos importam mais que 1 peso grande
+    # Conv2D(64, (3,3), kernel_regularizer=l2(0.01))  ← aplicar nas convoluções
+    # Dense(128, kernel_regularizer=l2(0.01))         ← aplicar nas FC layers
 
     # ─── VISUALIZAÇÃO: EFEITO DA REGULARIZAÇÃO L2 ───
     np.random.seed(42)

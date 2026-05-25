@@ -24,6 +24,8 @@ print(f"Train: {x_train.shape}, Test: {x_test.shape}")
 x_train = x_train.astype('float32')
 x_test = x_test.astype('float32')
 
+# preprocess_input do ResNet50: normaliza com média e desvio do ImageNet (não apenas /255)
+# Importante: usar SEMPRE o preprocess_input específico da arquitetura (ResNet ≠ VGG ≠ EfficientNet)
 from tensorflow.keras.applications.resnet50 import preprocess_input
 x_train = preprocess_input(x_train)
 x_test = preprocess_input(x_test)
@@ -37,11 +39,12 @@ print("\nCarregando ResNet50 pré-treinado (ImageNet)...")
 
 base_model = ResNet50(
     weights='imagenet',      # Pesos do ImageNet
-    include_top=False,       # Remover camadas FC originais
+    include_top=False,       # Remover camadas FC originais (1000 classes do ImageNet)
     input_shape=(32, 32, 3)  # CIFAR-10 é 32x32
 )
 
 # Congelar todas as camadas do ResNet (Feature Extraction)
+# Congelar = não atualizar pesos durante o backpropagation — preserva conhecimento do ImageNet
 base_model.trainable = False
 
 print(f"Base model: {len(base_model.layers)} camadas congeladas")
@@ -50,12 +53,15 @@ print(f"Base model: {len(base_model.layers)} camadas congeladas")
 model_transfer = models.Sequential([
     base_model,
 
-    # Global Average Pooling (reduz dimensão)
+    # GlobalAveragePooling2D: converte mapa de features (H,W,C) em vetor (C,) tirando média espacial
+    # Alternativa ao Flatten — reduz parâmetros e combate overfitting
     layers.GlobalAveragePooling2D(),
 
-    # Camadas densas
+    # Camadas densas customizadas para as 10 classes do CIFAR-10
     layers.Dense(256, activation='relu'),
+    # Dropout: reduz coadaptação entre neurônios, essencial quando base_model é grande
     layers.Dropout(0.5),
+    # Softmax na saída: cada valor é P(classe_i | imagem), somando 1
     layers.Dense(10, activation='softmax')
 ], name='ResNet50_CIFAR10')
 
@@ -83,7 +89,9 @@ print(f"Fase 1 - Test Accuracy: {test_acc_p1:.4f}")
 # ─── 6. FINE-TUNING (FASE 2: Descongelar últimas camadas) ───
 print("\n🔴 FASE 2: Fine-Tuning (descongelar últimas 10 camadas)")
 
-# Descongelar últimas camadas
+# Fine-Tuning: descongela apenas as últimas 10 camadas do ResNet
+# Camadas iniciais detectam features genéricas (bordas) — manter congeladas
+# Camadas finais são mais específicas ao domínio — adaptar ao CIFAR-10
 base_model.trainable = True
 
 # Congelar todas exceto últimas 10
@@ -93,6 +101,7 @@ for layer in base_model.layers[:-10]:
 print(f"Camadas treináveis: {len([l for l in base_model.layers if l.trainable])}")
 
 # Recompilar com learning rate menor
+# LR muito pequeno no fine-tuning para não destruir os pesos pré-treinados com atualizações grandes
 model_transfer.compile(
     optimizer=tf.keras.optimizers.Adam(learning_rate=1e-5),  # LR pequeno!
     loss='categorical_crossentropy',

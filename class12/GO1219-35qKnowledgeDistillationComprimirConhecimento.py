@@ -94,17 +94,20 @@ def distillation_loss(y_true, y_pred, teacher_pred, temperature=3.0, alpha=0.1):
     - Hard targets: Cross-entropy com labels verdadeiros
     - Soft targets: KL divergence com predições do teacher
     """
-    # Hard loss (com labels)
+    # Hard loss: aprende a classificação correta diretamente dos rótulos
     hard_loss = tf.keras.losses.sparse_categorical_crossentropy(y_true, y_pred)
 
-    # Soft loss (com teacher)
-    # Aplicar temperatura para suavizar distribuições
+    # Soft loss: aprende da distribuição de predições suavizada do teacher
+    # Temperatura > 1: suaviza o softmax — revela relações entre classes (conhecimento oculto)
+    # Ex: teacher diz 85% gato, 10% leão, 5% tigre — informa que gatos são parecidos com felinos
     teacher_soft = tf.nn.softmax(teacher_pred / temperature)
     student_soft = tf.nn.softmax(y_pred / temperature)
 
+    # KL Divergence: mede quanto a distribuição do student diverge do teacher
     soft_loss = tf.keras.losses.kullback_leibler_divergence(teacher_soft, student_soft)
 
-    # Combinar
+    # temperature**2: compensa a redução de magnitude dos gradientes ao dividir por T
+    # alpha: peso do hard loss — alpha pequeno prioriza aprender do teacher
     return alpha * hard_loss + (1 - alpha) * (temperature**2) * soft_loss
 
 print("  ✓ Distillation loss definido (temperature=3.0, alpha=0.1)")
@@ -120,13 +123,14 @@ student_distilled = Sequential([
     MaxPooling2D((2, 2)),
     Flatten(),
     Dense(32, activation='relu'),
+    # Dense(10, activation='linear'): saída em logits — aplicamos softmax manualmente com temperatura
     Dense(10, activation='linear')  # Logits (antes de softmax)
 ], name='Student_Distilled')
 
-# Gerar soft labels do teacher
+# Gerar soft labels do teacher UMA vez antes do treino (eficiênte: evita reprocessar)
 teacher_logits = teacher.predict(X_train, verbose=0)
 
-# Custom training loop
+# Custom training loop: necessário porque precisamos passar os logits do teacher a cada batch
 optimizer = tf.keras.optimizers.Adam()
 loss_metric = tf.keras.metrics.Mean()
 
@@ -142,16 +146,17 @@ for epoch in range(15):
         with tf.GradientTape() as tape:
             student_logits = student_distilled(batch_x, training=True)
 
-            # Hard loss
+            # Hard loss: cross-entropy com os rótulos verdadeiros
             student_probs = tf.nn.softmax(student_logits)
             hard_loss = tf.keras.losses.sparse_categorical_crossentropy(batch_y, student_probs)
 
-            # Soft loss
+            # Soft loss: KL divergence com distribuição suavizada do professor
+            # dividir por T suaviza as probabilidades revelando relações entre classes
             teacher_soft = tf.nn.softmax(batch_teacher / temperature)
             student_soft = tf.nn.softmax(student_logits / temperature)
             soft_loss = tf.keras.losses.kullback_leibler_divergence(teacher_soft, student_soft)
 
-            # Total loss
+            # combinar as duas losses: alpha controla o balanço hard/soft
             loss = alpha * hard_loss + (1 - alpha) * (temperature**2) * soft_loss
             loss = tf.reduce_mean(loss)
 

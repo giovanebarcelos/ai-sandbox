@@ -36,17 +36,18 @@ model = keras.models.Sequential([
 ])
 
 model.compile(optimizer='adam', loss='sparse_categorical_crossentropy', metrics=['accuracy'])
+# Treino rápido em apenas 5000 amostras e 3 épocas: suficiente para aprender filtros básicos de visualização
 model.fit(x_train[:5000], y_train[:5000], epochs=3, verbose=0)  # Treino rápido
 
 print("Modelo treinado!")
 model.summary()
 
 # ─── 2. VISUALIZAR FILTROS (KERNELS) DA PRIMEIRA CAMADA ───
-# Filtros da primeira camada Conv2D
+# get_weights(): retorna [filtros, bias] da camada — filtros shape (3,3,in_channels,out_channels)
 filters, biases = model.layers[0].get_weights()
 print(f"\nFiltros shape: {filters.shape}")  # (3, 3, 1, 32) = 32 filtros 3x3
 
-# Normalizar filtros para visualização
+# Normalização para visualização: min-max scaling [filtro_min, filtro_max] → [0,1] para exibir como imagem
 f_min, f_max = filters.min(), filters.max()
 filters_norm = (filters - f_min) / (f_max - f_min)
 
@@ -70,10 +71,13 @@ test_img = x_test[0:1]  # Shape: (1, 28, 28, 1)
 test_img_norm = test_img.astype('float32') / 255
 
 # Criar modelos intermediários para cada camada Conv
+# List comprehension: coleta as saídas de todas as camadas Conv para criar modelo multi-saída
 layer_outputs = [layer.output for layer in model.layers if 'conv' in layer.name]
+# Modelo intermediário: mesma entrada que o modelo original, mas saídas em cada camada Conv
+# Permite inspecionar ativações internas sem modificar o modelo original
 feature_map_model = keras.models.Model(inputs=model.input, outputs=layer_outputs)
 
-# Gerar feature maps
+# Fazer uma passagem (forward pass) para obter os feature maps da imagem de teste
 feature_maps = feature_map_model.predict(test_img_norm)
 
 print(f"\nNúmero de camadas Conv: {len(feature_maps)}")
@@ -84,7 +88,7 @@ for i, fm in enumerate(feature_maps):
 layer_names = ['conv1', 'conv2', 'conv3']
 
 for layer_name, feature_map in zip(layer_names, feature_maps):
-    # feature_map shape: (1, height, width, channels)
+    # feature_map shape: (1, height, width, channels) — primeiro dim é o batch de tamanho 1
     n_features = feature_map.shape[-1]  # Número de filtros
 
     # Plotar primeiros 16 feature maps
@@ -92,7 +96,7 @@ for layer_name, feature_map in zip(layer_names, feature_maps):
 
     for i, ax in enumerate(axes.flat):
         if i < n_features and i < 16:
-            # Extrair feature map individual
+            # Extrair feature map individual: [0] remove dim de batch, [:,:,i] seleciona filtro i
             fm = feature_map[0, :, :, i]
             ax.imshow(fm, cmap='viridis')
             ax.set_title(f'Filter {i+1}', fontsize=10)
@@ -104,6 +108,7 @@ for layer_name, feature_map in zip(layer_names, feature_maps):
     plt.show()
 
 # ─── 5. MOSTRAR IMAGEM ORIGINAL ───
+# test_img[0] tem shape (28,28,1); reshape para (28,28) para exibir sem canal
 plt.figure(figsize=(5, 5))
 plt.imshow(test_img[0].reshape(28, 28), cmap='gray')
 plt.title(f'Imagem Original - Label: {y_test[0]}', fontsize=14)

@@ -4,44 +4,51 @@ from tensorflow.keras.layers import Conv2D, MaxPooling2D, Dense, Flatten, Dropou
 
 def VGG16(input_shape=(224, 224, 3), num_classes=1000):
     """
-    VGG-16 original (sem Batch Normalization)
+    VGG-16 original (sem Batch Normalization) — Simonyan & Zisserman, 2014
+    138 milhões de parâmetros totais:
+      - Blocos conv 1-5: ~14.7M parâmetros
+      - Camadas FC (fc1+fc2+pred): ~123.6M parâmetros (89% do total!)
+    Inovacão: empilhar convoluções 3×3 pequenas equivale a campos receptivos maiores
+      com menos parâmetros e mais não-linearidades
     """
     model = Sequential()
 
-    # ========== BLOCO 1 ==========
-    model.add(Conv2D(64, (3, 3), activation='relu', padding='same', 
+    # Bloco 1: 2 conv 3×3 com 64 filtros — input 224×224 → após pool: 112×112
+    model.add(Conv2D(64, (3, 3), activation='relu', padding='same',
                      input_shape=input_shape, name='block1_conv1'))
     model.add(Conv2D(64, (3, 3), activation='relu', padding='same', name='block1_conv2'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block1_pool'))  # 224→112
 
-    # ========== BLOCO 2 ==========
+    # Bloco 2: 2 conv 3×3 com 128 filtros — 112×112 → 56×56
     model.add(Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv1'))
     model.add(Conv2D(128, (3, 3), activation='relu', padding='same', name='block2_conv2'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block2_pool'))  # 112→56
 
-    # ========== BLOCO 3 ==========
+    # Bloco 3: 3 conv 3×3 com 256 filtros — 56×56 → 28×28
     model.add(Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv1'))
     model.add(Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv2'))
     model.add(Conv2D(256, (3, 3), activation='relu', padding='same', name='block3_conv3'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block3_pool'))  # 56→28
 
-    # ========== BLOCO 4 ==========
+    # Bloco 4: 3 conv 3×3 com 512 filtros — 28×28 → 14×14
     model.add(Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv1'))
     model.add(Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv2'))
     model.add(Conv2D(512, (3, 3), activation='relu', padding='same', name='block4_conv3'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block4_pool'))  # 28→14
 
-    # ========== BLOCO 5 ==========
+    # Bloco 5: 3 conv 3×3 com 512 filtros — 14×14 → 7×7
     model.add(Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv1'))
     model.add(Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv2'))
     model.add(Conv2D(512, (3, 3), activation='relu', padding='same', name='block5_conv3'))
-    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool'))
+    model.add(MaxPooling2D((2, 2), strides=(2, 2), name='block5_pool'))   # 14→7
 
-    # ========== CLASSIFICADOR ==========
+    # Classificador FC: 7×7×512 = 25.088 → 4096 → 4096 → num_classes
+    # GARGALO: estas 3 camadas Dense contêm ~123M dos 138M parâmetros do VGG!
+    # Motivação para GlobalAveragePooling em arquiteturas modernas (ResNet, Inception)
     model.add(Flatten(name='flatten'))
-    model.add(Dense(4096, activation='relu', name='fc1'))
+    model.add(Dense(4096, activation='relu', name='fc1'))   # 25088 × 4096 = ~103M
     model.add(Dropout(0.5))
-    model.add(Dense(4096, activation='relu', name='fc2'))
+    model.add(Dense(4096, activation='relu', name='fc2'))   # 4096 × 4096 = ~16M
     model.add(Dropout(0.5))
     model.add(Dense(num_classes, activation='softmax', name='predictions'))
 

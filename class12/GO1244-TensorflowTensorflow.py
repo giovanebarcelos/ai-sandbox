@@ -7,6 +7,8 @@ import numpy as np
 # ========================================
 # 1. CARREGAR MODELO PRÉ-TREINADO
 # ========================================
+# weights='imagenet': baixa pesos treinados em 1.2M imagens, 1000 classes
+# include_top=True (padrão): inclui camadas Dense finais para classificação ImageNet
 model = ResNet50(weights='imagenet')
 
 print(f"Total parâmetros: {model.count_params():,}")
@@ -16,9 +18,11 @@ print(f"Total parâmetros: {model.count_params():,}")
 # 2. FAZER PREDIÇÃO EM IMAGEM
 # ========================================
 img_path = 'elephant.jpg'
-img = image.load_img(img_path, target_size=(224, 224))
-x = image.img_to_array(img)
-x = np.expand_dims(x, axis=0)
+img = image.load_img(img_path, target_size=(224, 224))  # ResNet espera 224×224
+x = image.img_to_array(img)       # PIL Image → numpy array (224, 224, 3)
+x = np.expand_dims(x, axis=0)     # adiciona dimensão de batch: (1, 224, 224, 3)
+# preprocess_input: normaliza com média e desvio do ImageNet (canal a canal)
+# NÃO usar apenas /255 — cada arquitetura tem seu próprio preprocess!
 x = preprocess_input(x)
 
 # Predição
