@@ -47,9 +47,9 @@ fig, axes = plt.subplots(3, 5, figsize=(12, 7))
 axes = axes.ravel()
 
 for i in range(15):
-# datagen.flow(): retorna um iterador que aplica augmentations aleatórias a cada batch
+    # datagen.flow(): retorna um iterador que aplica augmentations aleatórias a cada batch
 # [0][0]: acessa o primeiro batch (batch) e o primeiro item (imagem) do batch
-augmented = datagen.flow(sample_img, batch_size=1)[0][0]
+    augmented = datagen.flow(sample_img, batch_size=1)[0][0]
     axes[i].imshow(augmented.reshape(28, 28), cmap='gray')
     axes[i].axis('off')
 

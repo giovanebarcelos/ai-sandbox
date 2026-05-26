@@ -9,10 +9,8 @@ import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+import matplotlib
+matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
 class AdvancedChunker:
     """
@@ -247,123 +245,127 @@ class AdvancedChunker:
 
 # === EXEMPLO DE USO ===
 
-print("\n📚 Advanced Document Chunking Demo\n")
-print("="*70)
 
-# Sample document (markdown with structure)
-sample_doc = """# Machine Learning Fundamentals
+if __name__ == "__main__":
+    print("\n📚 Advanced Document Chunking Demo\n")
+    print("="*70)
 
-Machine learning is a subset of artificial intelligence. It enables computers to learn from data without being explicitly programmed.
+    # Sample document (markdown with structure)
+    sample_doc = """# Machine Learning Fundamentals
 
-## Types of Learning
+    Machine learning is a subset of artificial intelligence. It enables computers to learn from data without being explicitly programmed.
 
-There are three main types of machine learning approaches.
+    ## Types of Learning
 
-### Supervised Learning
+    There are three main types of machine learning approaches.
 
-In supervised learning, we train models on labeled data. The algorithm learns to map inputs to outputs. Common algorithms include linear regression, decision trees, and neural networks.
+    ### Supervised Learning
 
-### Unsupervised Learning
+    In supervised learning, we train models on labeled data. The algorithm learns to map inputs to outputs. Common algorithms include linear regression, decision trees, and neural networks.
 
-Unsupervised learning works with unlabeled data. The goal is to discover patterns. Clustering and dimensionality reduction are key techniques.
+    ### Unsupervised Learning
 
-### Reinforcement Learning
+    Unsupervised learning works with unlabeled data. The goal is to discover patterns. Clustering and dimensionality reduction are key techniques.
 
-Reinforcement learning involves agents learning through interaction. They receive rewards or penalties for actions. This approach is used in robotics and game playing.
+    ### Reinforcement Learning
 
-## Applications
+    Reinforcement learning involves agents learning through interaction. They receive rewards or penalties for actions. This approach is used in robotics and game playing.
 
-Machine learning powers many modern applications. It's used in recommendation systems, computer vision, natural language processing, and autonomous vehicles.
+    ## Applications
 
-## Conclusion
+    Machine learning powers many modern applications. It's used in recommendation systems, computer vision, natural language processing, and autonomous vehicles.
 
-Understanding these fundamentals is crucial for anyone working in AI. The field continues to evolve rapidly with new techniques emerging regularly.
-"""
+    ## Conclusion
 
-chunker = AdvancedChunker()
+    Understanding these fundamentals is crucial for anyone working in AI. The field continues to evolve rapidly with new techniques emerging regularly.
+    """
 
-# Compare all strategies
-results = chunker.compare_strategies(sample_doc)
+    chunker = AdvancedChunker()
 
-print("\n📊 COMPARAÇÃO DE ESTRATÉGIAS\n")
-print("-"*70)
+    # Compare all strategies
+    results = chunker.compare_strategies(sample_doc)
 
-for strategy, chunks in results.items():
-    print(f"\n{strategy.upper()}:")
-    print(f"  Total chunks: {len(chunks)}")
+    print("\n📊 COMPARAÇÃO DE ESTRATÉGIAS\n")
+    print("-"*70)
 
-    if chunks:
-        sizes = [len(c['text'].split()) for c in chunks]
-        print(f"  Avg size: {np.mean(sizes):.0f} words")
-        print(f"  Size range: {min(sizes)}-{max(sizes)} words")
+    for strategy, chunks in results.items():
+        print(f"\n{strategy.upper()}:")
+        print(f"  Total chunks: {len(chunks)}")
 
-        # Show first chunk
-        print(f"  First chunk preview: {chunks[0]['text'][:80]}...")
+        if chunks:
+            sizes = [len(c['text'].split()) for c in chunks]
+            print(f"  Avg size: {np.mean(sizes):.0f} words")
+            print(f"  Size range: {min(sizes)}-{max(sizes)} words")
 
-# === VISUALIZAÇÃO ===
+            # Show first chunk
+            print(f"  First chunk preview: {chunks[0]['text'][:80]}...")
 
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    # === VISUALIZAÇÃO ===
 
-# 1. Number of chunks per strategy
-ax = axes[0, 0]
-strategies = list(results.keys())
-chunk_counts = [len(results[s]) for s in strategies]
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-ax.bar(range(len(strategies)), chunk_counts, color='skyblue', alpha=0.7)
-ax.set_xticks(range(len(strategies)))
-ax.set_xticklabels(strategies, rotation=45, ha='right')
-ax.set_ylabel('Number of Chunks')
-ax.set_title('Chunks por Estratégia')
-ax.grid(axis='y', alpha=0.3)
+    # 1. Number of chunks per strategy
+    ax = axes[0, 0]
+    strategies = list(results.keys())
+    chunk_counts = [len(results[s]) for s in strategies]
 
-# 2. Average chunk size
-ax = axes[0, 1]
-avg_sizes = [np.mean([len(c['text'].split()) for c in results[s]]) 
-             for s in strategies]
+    ax.bar(range(len(strategies)), chunk_counts, color='skyblue', alpha=0.7)
+    ax.set_xticks(range(len(strategies)))
+    ax.set_xticklabels(strategies, rotation=45, ha='right')
+    ax.set_ylabel('Number of Chunks')
+    ax.set_title('Chunks por Estratégia')
+    ax.grid(axis='y', alpha=0.3)
 
-ax.barh(strategies, avg_sizes, color='lightgreen', alpha=0.7)
-ax.set_xlabel('Average Words per Chunk')
-ax.set_title('Tamanho Médio dos Chunks')
-ax.grid(axis='x', alpha=0.3)
+    # 2. Average chunk size
+    ax = axes[0, 1]
+    avg_sizes = [np.mean([len(c['text'].split()) for c in results[s]]) 
+                 for s in strategies]
 
-# 3. Size distribution (box plot)
-ax = axes[1, 0]
-size_data = [[len(c['text'].split()) for c in results[s]] for s in strategies]
+    ax.barh(strategies, avg_sizes, color='lightgreen', alpha=0.7)
+    ax.set_xlabel('Average Words per Chunk')
+    ax.set_title('Tamanho Médio dos Chunks')
+    ax.grid(axis='x', alpha=0.3)
 
-ax.boxplot(size_data, labels=strategies)
-ax.set_xticklabels(strategies, rotation=45, ha='right')
-ax.set_ylabel('Words per Chunk')
-ax.set_title('Distribuição de Tamanhos')
-ax.grid(axis='y', alpha=0.3)
+    # 3. Size distribution (box plot)
+    ax = axes[1, 0]
+    size_data = [[len(c['text'].split()) for c in results[s]] for s in strategies]
 
-# 4. Chunk size histogram for one strategy
-ax = axes[1, 1]
-fixed_sizes = [len(c['text'].split()) for c in results['fixed_size']]
-semantic_sizes = [len(c['text'].split()) for c in results['semantic']]
+    ax.boxplot(size_data, labels=strategies)
+    ax.set_xticklabels(strategies, rotation=45, ha='right')
+    ax.set_ylabel('Words per Chunk')
+    ax.set_title('Distribuição de Tamanhos')
+    ax.grid(axis='y', alpha=0.3)
 
-ax.hist([fixed_sizes, semantic_sizes], label=['Fixed Size', 'Semantic'],
-        bins=15, alpha=0.6)
-ax.set_xlabel('Words per Chunk')
-ax.set_ylabel('Frequency')
-ax.set_title('Comparação: Fixed vs Semantic')
-ax.legend()
-ax.grid(axis='y', alpha=0.3)
+    # 4. Chunk size histogram for one strategy
+    ax = axes[1, 1]
+    fixed_sizes = [len(c['text'].split()) for c in results['fixed_size']]
+    semantic_sizes = [len(c['text'].split()) for c in results['semantic']]
 
-plt.tight_layout()
-plt.show()
-print("\n📊 Gráfico salvo: chunking_strategies_comparison.png")
+    ax.hist([fixed_sizes, semantic_sizes], label=['Fixed Size', 'Semantic'],
+            bins=15, alpha=0.6)
+    ax.set_xlabel('Words per Chunk')
+    ax.set_ylabel('Frequency')
+    ax.set_title('Comparação: Fixed vs Semantic')
+    ax.legend()
+    ax.grid(axis='y', alpha=0.3)
 
-# Recommendations
-print("\n💡 RECOMENDAÇÕES:")
-print("="*70)
-print("✅ Fixed Size: Rápido, consistente, boa baseline")
-print("✅ Sentence Window: Melhor contexto, bom para Q&A")
-print("✅ Semantic: Preserva coerência semântica")
-print("✅ Hierarchical: Permite busca multi-nível")
-print("✅ Document-Aware: Melhor para docs estruturados (MD, HTML)")
-print("\n🎯 Escolha baseado em:")
-print("  - Tipo de documento (estruturado vs não estruturado)")
-print("  - Tipo de query (específica vs exploratória)")
-print("  - Trade-off precisão vs recall")
+    plt.tight_layout()
+    plt.savefig('go1705_chunking_strategies.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1705_chunking_strategies.png")
+    plt.show()
+    print("\n📊 Gráfico salvo: chunking_strategies_comparison.png")
 
-print("\n✅ Advanced Chunking implementado!")
+    # Recommendations
+    print("\n💡 RECOMENDAÇÕES:")
+    print("="*70)
+    print("✅ Fixed Size: Rápido, consistente, boa baseline")
+    print("✅ Sentence Window: Melhor contexto, bom para Q&A")
+    print("✅ Semantic: Preserva coerência semântica")
+    print("✅ Hierarchical: Permite busca multi-nível")
+    print("✅ Document-Aware: Melhor para docs estruturados (MD, HTML)")
+    print("\n🎯 Escolha baseado em:")
+    print("  - Tipo de documento (estruturado vs não estruturado)")
+    print("  - Tipo de query (específica vs exploratória)")
+    print("  - Trade-off precisão vs recall")
+
+    print("\n✅ Advanced Chunking implementado!")

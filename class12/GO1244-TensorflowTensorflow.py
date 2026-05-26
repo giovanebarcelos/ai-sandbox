@@ -38,14 +38,14 @@ for i, (imagenet_id, label, score) in enumerate(decode_predictions(preds, top=3)
 # 2. Indian_elephant: 7.23%
 # 3. tusker: 0.18%
 
-    # ─── VISUALIZAÇÃO: TOP-10 PREDIÇÕES ───
-    import matplotlib
-    import matplotlib.pyplot as plt
+# ─── VISUALIZAÇÃO: TOP-10 PREDIÇÕES ───
+import matplotlib
+import matplotlib.pyplot as plt
 
-    try:
-        get_ipython().run_line_magic('matplotlib', 'inline')
-    except NameError:
-        pass
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass
 
     top10 = decode_predictions(preds, top=10)[0]
     labels_top10 = [item[1] for item in top10]
@@ -65,7 +65,7 @@ for i, (imagenet_id, label, score) in enumerate(decode_predictions(preds, top=3)
     ax.grid(True, alpha=0.3, axis='x')
     plt.tight_layout()
     plt.show()
-                      input_shape=(224, 224, 3))
+# input_shape=(224, 224, 3))  # stray - part of ResNet50() call below
 
 # Congelar primeiros 140 layers (keep features gerais)
 for layer in base_model.layers[:140]:

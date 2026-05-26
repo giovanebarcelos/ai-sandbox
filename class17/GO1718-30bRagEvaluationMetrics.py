@@ -187,197 +187,199 @@ class RAGEvaluator:
 
 # === DEMO ===
 
-evaluator = RAGEvaluator()
 
-# Test cases
-test_cases = [
-    {
-        'question': 'What is machine learning?',
-        'answer': 'Machine learning is a subset of AI that enables computers to learn from data without explicit programming.',
-        'retrieved_docs': [
-            'Machine learning is a subset of artificial intelligence.',
-            'Deep learning uses neural networks with multiple layers.',
-            'Supervised learning requires labeled training data.'
-        ],
-        'relevant_docs': [
-            'Machine learning is a subset of artificial intelligence.',
-            'Machine learning enables computers to learn from data.'
-        ],
-        'ground_truth': 'Machine learning is a branch of AI focused on learning from data.'
-    },
-    {
-        'question': 'How do neural networks work?',
-        'answer': 'Neural networks consist of interconnected nodes that process information in layers.',
-        'retrieved_docs': [
-            'Neural networks are inspired by biological neurons.',
-            'Backpropagation trains neural networks by adjusting weights.',
-            'Activation functions introduce non-linearity.'
-        ],
-        'relevant_docs': [
-            'Neural networks are inspired by biological neurons.',
-            'Backpropagation trains neural networks by adjusting weights.'
-        ],
-        'ground_truth': 'Neural networks use layers of neurons with weighted connections trained via backpropagation.'
-    },
-    {
-        'question': 'Explain transformers',
-        'answer': 'Transformers use attention.',  # Poor answer
-        'retrieved_docs': [
-            'Transformers revolutionized NLP with self-attention mechanisms.',
-            'BERT and GPT are based on transformer architecture.'
-        ],
-        'relevant_docs': [
-            'Transformers revolutionized NLP with self-attention mechanisms.'
-        ],
-        'ground_truth': 'Transformers are neural network architectures using self-attention to process sequences in parallel.'
-    }
-]
+if __name__ == "__main__":
+    evaluator = RAGEvaluator()
 
-print("📊 Avaliando Sistema RAG\n")
-print("="*70)
-
-for i, tc in enumerate(test_cases, 1):
-    print(f"\n📌 Test Case {i}")
-    print(f"Question: {tc['question']}")
-    print(f"Answer: {tc['answer']}\n")
-
-    result = evaluator.evaluate(
-        tc['question'],
-        tc['answer'],
-        tc['retrieved_docs'],
-        tc['relevant_docs'],
-        tc['ground_truth']
-    )
-
-    print(f"RETRIEVAL METRICS:")
-    print(f"  Precision@K: {result.retrieval_precision:.3f}")
-    print(f"  Recall@K: {result.retrieval_recall:.3f}")
-    print(f"  MRR: {result.retrieval_mrr:.3f}")
-
-    print(f"\nGENERATION METRICS:")
-    print(f"  Relevance: {result.answer_relevance:.3f}")
-    print(f"  Faithfulness: {result.answer_faithfulness:.3f}")
-    print(f"  Completeness: {result.answer_completeness:.3f}")
-
-    print(f"\n⭐ RAGAS SCORE: {result.ragas_score:.3f}")
-
-# Visualize results
-results = [r['evaluation'] for r in evaluator.results]
-
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
-
-# 1. Radar chart for each test case
-ax = axes[0, 0]
-categories = ['Precision', 'Recall', 'MRR', 'Relevance', 'Faithfulness', 'Completeness']
-angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
-angles += angles[:1]
-
-for i, res in enumerate(results, 1):
-    values = [
-        res.retrieval_precision,
-        res.retrieval_recall,
-        res.retrieval_mrr,
-        res.answer_relevance,
-        res.answer_faithfulness,
-        res.answer_completeness
+    # Test cases
+    test_cases = [
+        {
+            'question': 'What is machine learning?',
+            'answer': 'Machine learning is a subset of AI that enables computers to learn from data without explicit programming.',
+            'retrieved_docs': [
+                'Machine learning is a subset of artificial intelligence.',
+                'Deep learning uses neural networks with multiple layers.',
+                'Supervised learning requires labeled training data.'
+            ],
+            'relevant_docs': [
+                'Machine learning is a subset of artificial intelligence.',
+                'Machine learning enables computers to learn from data.'
+            ],
+            'ground_truth': 'Machine learning is a branch of AI focused on learning from data.'
+        },
+        {
+            'question': 'How do neural networks work?',
+            'answer': 'Neural networks consist of interconnected nodes that process information in layers.',
+            'retrieved_docs': [
+                'Neural networks are inspired by biological neurons.',
+                'Backpropagation trains neural networks by adjusting weights.',
+                'Activation functions introduce non-linearity.'
+            ],
+            'relevant_docs': [
+                'Neural networks are inspired by biological neurons.',
+                'Backpropagation trains neural networks by adjusting weights.'
+            ],
+            'ground_truth': 'Neural networks use layers of neurons with weighted connections trained via backpropagation.'
+        },
+        {
+            'question': 'Explain transformers',
+            'answer': 'Transformers use attention.',  # Poor answer
+            'retrieved_docs': [
+                'Transformers revolutionized NLP with self-attention mechanisms.',
+                'BERT and GPT are based on transformer architecture.'
+            ],
+            'relevant_docs': [
+                'Transformers revolutionized NLP with self-attention mechanisms.'
+            ],
+            'ground_truth': 'Transformers are neural network architectures using self-attention to process sequences in parallel.'
+        }
     ]
-    values += values[:1]
 
-    ax.plot(angles, values, 'o-', linewidth=2, label=f'Test {i}')
-    ax.fill(angles, values, alpha=0.15)
+    print("📊 Avaliando Sistema RAG\n")
+    print("="*70)
 
-ax.set_xticks(angles[:-1])
-ax.set_xticklabels(categories, size=8)
-ax.set_ylim(0, 1)
-ax.set_title('RAG Evaluation: All Metrics')
-ax.legend(loc='upper right')
-ax.grid(True)
+    for i, tc in enumerate(test_cases, 1):
+        print(f"\n📌 Test Case {i}")
+        print(f"Question: {tc['question']}")
+        print(f"Answer: {tc['answer']}\n")
 
-# 2. RAGAS scores comparison
-ax = axes[0, 1]
-ragas_scores = [r.ragas_score for r in results]
-colors = ['lightgreen' if s >= 0.7 else 'yellow' if s >= 0.5 else 'lightcoral' for s in ragas_scores]
-bars = ax.barh([f'Test {i}' for i in range(1, len(results)+1)], ragas_scores, color=colors, alpha=0.7)
-ax.set_xlabel('RAGAS Score')
-ax.set_title('Overall RAGAS Scores')
-ax.axvline(0.7, color='green', linestyle='--', alpha=0.5, label='Good threshold')
-ax.axvline(0.5, color='orange', linestyle='--', alpha=0.5, label='Acceptable threshold')
-ax.legend()
-ax.grid(axis='x', alpha=0.3)
+        result = evaluator.evaluate(
+            tc['question'],
+            tc['answer'],
+            tc['retrieved_docs'],
+            tc['relevant_docs'],
+            tc['ground_truth']
+        )
 
-for bar, score in zip(bars, ragas_scores):
-    width = bar.get_width()
-    ax.text(width + 0.02, bar.get_y() + bar.get_height()/2,
-            f'{score:.3f}', ha='left', va='center')
+        print(f"RETRIEVAL METRICS:")
+        print(f"  Precision@K: {result.retrieval_precision:.3f}")
+        print(f"  Recall@K: {result.retrieval_recall:.3f}")
+        print(f"  MRR: {result.retrieval_mrr:.3f}")
 
-# 3. Retrieval vs Generation
-ax = axes[1, 0]
-retrieval_avg = np.mean([
-    [r.retrieval_precision, r.retrieval_recall, r.retrieval_mrr] 
-    for r in results
-], axis=1)
-generation_avg = np.mean([
-    [r.answer_relevance, r.answer_faithfulness, r.answer_completeness]
-    for r in results
-], axis=1)
+        print(f"\nGENERATION METRICS:")
+        print(f"  Relevance: {result.answer_relevance:.3f}")
+        print(f"  Faithfulness: {result.answer_faithfulness:.3f}")
+        print(f"  Completeness: {result.answer_completeness:.3f}")
 
-x = np.arange(len(results))
-width = 0.35
+        print(f"\n⭐ RAGAS SCORE: {result.ragas_score:.3f}")
 
-ax.bar(x - width/2, retrieval_avg, width, label='Retrieval', color='skyblue', alpha=0.8)
-ax.bar(x + width/2, generation_avg, width, label='Generation', color='lightcoral', alpha=0.8)
+    # Visualize results
+    results = [r['evaluation'] for r in evaluator.results]
 
-ax.set_ylabel('Average Score')
-ax.set_title('Retrieval vs Generation Quality')
-ax.set_xticks(x)
-ax.set_xticklabels([f'Test {i}' for i in range(1, len(results)+1)])
-ax.legend()
-ax.grid(axis='y', alpha=0.3)
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-# 4. Metric correlation heatmap
-ax = axes[1, 1]
-import pandas as pd
-metric_data = {
-    'Precision': [r.retrieval_precision for r in results],
-    'Recall': [r.retrieval_recall for r in results],
-    'Relevance': [r.answer_relevance for r in results],
-    'Faithfulness': [r.answer_faithfulness for r in results],
-    'RAGAS': [r.ragas_score for r in results]
-}
-df = pd.DataFrame(metric_data)
-corr = df.corr()
+    # 1. Radar chart for each test case
+    ax = axes[0, 0]
+    categories = ['Precision', 'Recall', 'MRR', 'Relevance', 'Faithfulness', 'Completeness']
+    angles = np.linspace(0, 2 * np.pi, len(categories), endpoint=False).tolist()
+    angles += angles[:1]
 
-import seaborn as sns
+    for i, res in enumerate(results, 1):
+        values = [
+            res.retrieval_precision,
+            res.retrieval_recall,
+            res.retrieval_mrr,
+            res.answer_relevance,
+            res.answer_faithfulness,
+            res.answer_completeness
+        ]
+        values += values[:1]
 
-import matplotlib
-import matplotlib.pyplot as plt
+        ax.plot(angles, values, 'o-', linewidth=2, label=f'Test {i}')
+        ax.fill(angles, values, alpha=0.15)
 
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+    ax.set_xticks(angles[:-1])
+    ax.set_xticklabels(categories, size=8)
+    ax.set_ylim(0, 1)
+    ax.set_title('RAG Evaluation: All Metrics')
+    ax.legend(loc='upper right')
+    ax.grid(True)
 
-sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', center=0,
-            square=True, ax=ax, cbar_kws={'label': 'Correlation'})
-ax.set_title('Metric Correlations')
+    # 2. RAGAS scores comparison
+    ax = axes[0, 1]
+    ragas_scores = [r.ragas_score for r in results]
+    colors = ['lightgreen' if s >= 0.7 else 'yellow' if s >= 0.5 else 'lightcoral' for s in ragas_scores]
+    bars = ax.barh([f'Test {i}' for i in range(1, len(results)+1)], ragas_scores, color=colors, alpha=0.7)
+    ax.set_xlabel('RAGAS Score')
+    ax.set_title('Overall RAGAS Scores')
+    ax.axvline(0.7, color='green', linestyle='--', alpha=0.5, label='Good threshold')
+    ax.axvline(0.5, color='orange', linestyle='--', alpha=0.5, label='Acceptable threshold')
+    ax.legend()
+    ax.grid(axis='x', alpha=0.3)
 
-plt.tight_layout()
-plt.show()
-print("\n\n📊 Gráfico salvo: rag_evaluation_results.png")
+    for bar, score in zip(bars, ragas_scores):
+        width = bar.get_width()
+        ax.text(width + 0.02, bar.get_y() + bar.get_height()/2,
+                f'{score:.3f}', ha='left', va='center')
 
-# Summary
-avg_ragas = np.mean([r.ragas_score for r in results])
-print(f"\n📈 SUMMARY:")
-print(f"   Average RAGAS Score: {avg_ragas:.3f}")
-print(f"   Tests passed (>0.7): {sum(1 for r in results if r.ragas_score >= 0.7)}/{len(results)}")
-print(f"\n💡 RECOMMENDATIONS:")
-if avg_ragas < 0.5:
-    print("   ⚠️  Sistema precisa de melhorias significativas")
-elif avg_ragas < 0.7:
-    print("   ⚡ Sistema funcional, mas pode melhorar")
-else:
-    print("   ✅ Sistema com boa qualidade")
+    # 3. Retrieval vs Generation
+    ax = axes[1, 0]
+    retrieval_avg = np.mean([
+        [r.retrieval_precision, r.retrieval_recall, r.retrieval_mrr] 
+        for r in results
+    ], axis=1)
+    generation_avg = np.mean([
+        [r.answer_relevance, r.answer_faithfulness, r.answer_completeness]
+        for r in results
+    ], axis=1)
 
-print("\n✅ Framework de avaliação RAG implementado!")
+    x = np.arange(len(results))
+    width = 0.35
+
+    ax.bar(x - width/2, retrieval_avg, width, label='Retrieval', color='skyblue', alpha=0.8)
+    ax.bar(x + width/2, generation_avg, width, label='Generation', color='lightcoral', alpha=0.8)
+
+    ax.set_ylabel('Average Score')
+    ax.set_title('Retrieval vs Generation Quality')
+    ax.set_xticks(x)
+    ax.set_xticklabels([f'Test {i}' for i in range(1, len(results)+1)])
+    ax.legend()
+    ax.grid(axis='y', alpha=0.3)
+
+    # 4. Metric correlation heatmap
+    ax = axes[1, 1]
+    import pandas as pd
+    metric_data = {
+        'Precision': [r.retrieval_precision for r in results],
+        'Recall': [r.retrieval_recall for r in results],
+        'Relevance': [r.answer_relevance for r in results],
+        'Faithfulness': [r.answer_faithfulness for r in results],
+        'RAGAS': [r.ragas_score for r in results]
+    }
+    df = pd.DataFrame(metric_data)
+    corr = df.corr()
+
+    import seaborn as sns
+
+    import matplotlib
+    import matplotlib.pyplot as plt
+
+    # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+    # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+    import matplotlib
+    matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
+
+    sns.heatmap(corr, annot=True, fmt='.2f', cmap='coolwarm', center=0,
+                square=True, ax=ax, cbar_kws={'label': 'Correlation'})
+    ax.set_title('Metric Correlations')
+
+    plt.tight_layout()
+    plt.savefig('go1718_rag_evaluation.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1718_rag_evaluation.png")
+    plt.show()
+    print("\n\n📊 Gráfico salvo: rag_evaluation_results.png")
+
+    # Summary
+    avg_ragas = np.mean([r.ragas_score for r in results])
+    print(f"\n📈 SUMMARY:")
+    print(f"   Average RAGAS Score: {avg_ragas:.3f}")
+    print(f"   Tests passed (>0.7): {sum(1 for r in results if r.ragas_score >= 0.7)}/{len(results)}")
+    print(f"\n💡 RECOMMENDATIONS:")
+    if avg_ragas < 0.5:
+        print("   ⚠️  Sistema precisa de melhorias significativas")
+    elif avg_ragas < 0.7:
+        print("   ⚡ Sistema funcional, mas pode melhorar")
+    else:
+        print("   ✅ Sistema com boa qualidade")
+
+    print("\n✅ Framework de avaliação RAG implementado!")

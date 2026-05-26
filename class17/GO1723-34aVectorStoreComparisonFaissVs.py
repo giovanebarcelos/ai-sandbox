@@ -11,10 +11,8 @@ import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+import matplotlib
+matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
 class VectorStoreComparison:
     """
@@ -165,112 +163,116 @@ class VectorStoreComparison:
 
 # === EXECUTAR BENCHMARK ===
 
-benchmark = VectorStoreComparison(dimension=384)
 
-# Inicializar estrutura de resultados
-for method in ['numpy', 'faiss']:
-    benchmark.results[method] = {
-        'sizes': [],
-        'build_times': [],
-        'search_times': [],
-        'total_times': []
-    }
-benchmark.results['faiss']['recalls'] = []
+if __name__ == "__main__":
+    benchmark = VectorStoreComparison(dimension=384)
 
-# Run benchmark
-benchmark.run_comparison(sizes=[1000, 5000, 10000, 25000])
+    # Inicializar estrutura de resultados
+    for method in ['numpy', 'faiss']:
+        benchmark.results[method] = {
+            'sizes': [],
+            'build_times': [],
+            'search_times': [],
+            'total_times': []
+        }
+    benchmark.results['faiss']['recalls'] = []
 
-# === VISUALIZAÇÃO ===
+    # Run benchmark
+    benchmark.run_comparison(sizes=[1000, 5000, 10000, 25000])
 
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    # === VISUALIZAÇÃO ===
 
-# 1. Search time comparison
-ax = axes[0, 0]
-sizes = benchmark.results['numpy']['sizes']
-numpy_times = np.array(benchmark.results['numpy']['search_times']) * 1000  # to ms
-faiss_times = np.array(benchmark.results['faiss']['search_times']) * 1000
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-ax.plot(sizes, numpy_times, marker='o', label='NumPy Brute-Force',
-        linewidth=2, markersize=8, color='coral')
-ax.plot(sizes, faiss_times, marker='s', label='FAISS',
-        linewidth=2, markersize=8, color='skyblue')
-ax.set_xlabel('Database Size (vectors)')
-ax.set_ylabel('Avg Search Time (ms)')
-ax.set_title('Search Latency: FAISS vs NumPy')
-ax.set_xscale('log')
-ax.set_yscale('log')
-ax.legend()
-ax.grid(alpha=0.3)
+    # 1. Search time comparison
+    ax = axes[0, 0]
+    sizes = benchmark.results['numpy']['sizes']
+    numpy_times = np.array(benchmark.results['numpy']['search_times']) * 1000  # to ms
+    faiss_times = np.array(benchmark.results['faiss']['search_times']) * 1000
 
-# 2. Build time
-ax = axes[0, 1]
-faiss_build_times = np.array(benchmark.results['faiss']['build_times'])
+    ax.plot(sizes, numpy_times, marker='o', label='NumPy Brute-Force',
+            linewidth=2, markersize=8, color='coral')
+    ax.plot(sizes, faiss_times, marker='s', label='FAISS',
+            linewidth=2, markersize=8, color='skyblue')
+    ax.set_xlabel('Database Size (vectors)')
+    ax.set_ylabel('Avg Search Time (ms)')
+    ax.set_title('Search Latency: FAISS vs NumPy')
+    ax.set_xscale('log')
+    ax.set_yscale('log')
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-ax.bar(range(len(sizes)), faiss_build_times, color='lightgreen', alpha=0.7)
-ax.set_xlabel('Database Size Index')
-ax.set_ylabel('Build Time (s)')
-ax.set_title('FAISS Index Build Time')
-ax.set_xticks(range(len(sizes)))
-ax.set_xticklabels([f'{s:,}' for s in sizes], rotation=45)
-ax.grid(axis='y', alpha=0.3)
+    # 2. Build time
+    ax = axes[0, 1]
+    faiss_build_times = np.array(benchmark.results['faiss']['build_times'])
 
-# 3. Speedup factor
-ax = axes[1, 0]
-speedups = numpy_times / faiss_times
+    ax.bar(range(len(sizes)), faiss_build_times, color='lightgreen', alpha=0.7)
+    ax.set_xlabel('Database Size Index')
+    ax.set_ylabel('Build Time (s)')
+    ax.set_title('FAISS Index Build Time')
+    ax.set_xticks(range(len(sizes)))
+    ax.set_xticklabels([f'{s:,}' for s in sizes], rotation=45)
+    ax.grid(axis='y', alpha=0.3)
 
-ax.bar(range(len(sizes)), speedups, color='purple', alpha=0.7)
-ax.set_xlabel('Database Size')
-ax.set_ylabel('Speedup Factor (x)')
-ax.set_title('FAISS Speedup over NumPy')
-ax.set_xticks(range(len(sizes)))
-ax.set_xticklabels([f'{s:,}' for s in sizes], rotation=45)
-ax.axhline(1, color='red', linestyle='--', label='Baseline')
-ax.legend()
-ax.grid(axis='y', alpha=0.3)
+    # 3. Speedup factor
+    ax = axes[1, 0]
+    speedups = numpy_times / faiss_times
 
-# 4. Recall@k
-ax = axes[1, 1]
-recalls = benchmark.results['faiss']['recalls']
+    ax.bar(range(len(sizes)), speedups, color='purple', alpha=0.7)
+    ax.set_xlabel('Database Size')
+    ax.set_ylabel('Speedup Factor (x)')
+    ax.set_title('FAISS Speedup over NumPy')
+    ax.set_xticks(range(len(sizes)))
+    ax.set_xticklabels([f'{s:,}' for s in sizes], rotation=45)
+    ax.axhline(1, color='red', linestyle='--', label='Baseline')
+    ax.legend()
+    ax.grid(axis='y', alpha=0.3)
 
-ax.plot(sizes, recalls, marker='o', linewidth=2, markersize=8,
-        color='green', label='FAISS Recall@5')
-ax.axhline(1.0, color='red', linestyle='--', alpha=0.5, label='Perfect (1.0)')
-ax.set_xlabel('Database Size (vectors)')
-ax.set_ylabel('Recall@5')
-ax.set_title('FAISS Accuracy (vs Exact Search)')
-ax.set_ylim([0.95, 1.01])
-ax.legend()
-ax.grid(alpha=0.3)
+    # 4. Recall@k
+    ax = axes[1, 1]
+    recalls = benchmark.results['faiss']['recalls']
 
-plt.tight_layout()
-plt.show()
+    ax.plot(sizes, recalls, marker='o', linewidth=2, markersize=8,
+            color='green', label='FAISS Recall@5')
+    ax.axhline(1.0, color='red', linestyle='--', alpha=0.5, label='Perfect (1.0)')
+    ax.set_xlabel('Database Size (vectors)')
+    ax.set_ylabel('Recall@5')
+    ax.set_title('FAISS Accuracy (vs Exact Search)')
+    ax.set_ylim([0.95, 1.01])
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-# === SUMMARY TABLE ===
+    plt.tight_layout()
+    plt.savefig('go1723_vectorstore_comparison.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1723_vectorstore_comparison.png")
+    plt.show()
 
-print("\n" + "="*70)
-print("📊 TABELA COMPARATIVA FINAL")
-print("="*70)
-print(f"\n{'Size':<10} {'Method':<10} {'Build(s)':<10} {'Search(ms)':<12} {'Speedup':<10} {'Recall@5':<10}")
-print("-"*70)
+    # === SUMMARY TABLE ===
 
-for i, size in enumerate(sizes):
-    numpy_time = benchmark.results['numpy']['search_times'][i] * 1000
-    faiss_time = benchmark.results['faiss']['search_times'][i] * 1000
-    faiss_build = benchmark.results['faiss']['build_times'][i]
-    speedup = numpy_time / faiss_time
-    recall = benchmark.results['faiss']['recalls'][i]
+    print("\n" + "="*70)
+    print("📊 TABELA COMPARATIVA FINAL")
+    print("="*70)
+    print(f"\n{'Size':<10} {'Method':<10} {'Build(s)':<10} {'Search(ms)':<12} {'Speedup':<10} {'Recall@5':<10}")
+    print("-"*70)
 
-    print(f"{size:<10,} {'NumPy':<10} {'-':<10} {numpy_time:<12.2f} {'-':<10} {'-':<10}")
-    print(f"{'':<10} {'FAISS':<10} {faiss_build:<10.4f} {faiss_time:<12.2f} {speedup:<10.1f}x {recall:<10.3f}")
-    print()
+    for i, size in enumerate(sizes):
+        numpy_time = benchmark.results['numpy']['search_times'][i] * 1000
+        faiss_time = benchmark.results['faiss']['search_times'][i] * 1000
+        faiss_build = benchmark.results['faiss']['build_times'][i]
+        speedup = numpy_time / faiss_time
+        recall = benchmark.results['faiss']['recalls'][i]
 
-print("\n💡 RECOMENDAÇÕES:")
-print("-"*70)
-print("✅ FAISS: Melhor para produção com grandes volumes (>10K docs)")
-print("✅ NumPy: OK para protótipos pequenos (<1K docs)")
-print("✅ ChromaDB: Melhor developer experience, persistência fácil")
-print("✅ FAISS + ChromaDB: Combinar ambos para melhor resultado")
-print("\n🔗 FAISS Advanced:")
-print("  - IndexIVFFlat: Inverted file index (mais rápido, aprox.)")
-print("  - IndexHNSW: Hierarchical NSW (melhor recall)")
-print("  - IndexPQ: Product Quantization (menor memória)")
+        print(f"{size:<10,} {'NumPy':<10} {'-':<10} {numpy_time:<12.2f} {'-':<10} {'-':<10}")
+        print(f"{'':<10} {'FAISS':<10} {faiss_build:<10.4f} {faiss_time:<12.2f} {speedup:<10.1f}x {recall:<10.3f}")
+        print()
+
+    print("\n💡 RECOMENDAÇÕES:")
+    print("-"*70)
+    print("✅ FAISS: Melhor para produção com grandes volumes (>10K docs)")
+    print("✅ NumPy: OK para protótipos pequenos (<1K docs)")
+    print("✅ ChromaDB: Melhor developer experience, persistência fácil")
+    print("✅ FAISS + ChromaDB: Combinar ambos para melhor resultado")
+    print("\n🔗 FAISS Advanced:")
+    print("  - IndexIVFFlat: Inverted file index (mais rápido, aprox.)")
+    print("  - IndexHNSW: Hierarchical NSW (melhor recall)")
+    print("  - IndexPQ: Product Quantization (menor memória)")

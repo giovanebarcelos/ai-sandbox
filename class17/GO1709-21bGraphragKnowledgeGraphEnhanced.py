@@ -8,10 +8,8 @@ import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+import matplotlib
+matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
 class GraphRAG:
     """
@@ -232,62 +230,66 @@ class GraphRAG:
 
 # === DEMO ===
 
-print("📐 GraphRAG Demo\n")
-print("="*70)
 
-graph_rag = GraphRAG()
+if __name__ == "__main__":
+    print("📐 GraphRAG Demo\n")
+    print("="*70)
 
-# Add documents with entities and relations
-documents = [
-    ("doc1", "Machine Learning is a subset of Artificial Intelligence. ML uses algorithms to learn from data."),
-    ("doc2", "Deep Learning is a subset of Machine Learning. Deep Learning uses Neural Networks."),
-    ("doc3", "Neural Networks are computational models inspired by biological neurons."),
-    ("doc4", "Transformers are a type of Neural Networks. Transformers use attention mechanisms."),
-    ("doc5", "BERT is a Transformer model. BERT uses masked language modeling."),
-]
+    graph_rag = GraphRAG()
 
-for doc_id, text in documents:
-    graph_rag.add_document(doc_id, text)
-    print(f"✅ Added {doc_id}")
+    # Add documents with entities and relations
+    documents = [
+        ("doc1", "Machine Learning is a subset of Artificial Intelligence. ML uses algorithms to learn from data."),
+        ("doc2", "Deep Learning is a subset of Machine Learning. Deep Learning uses Neural Networks."),
+        ("doc3", "Neural Networks are computational models inspired by biological neurons."),
+        ("doc4", "Transformers are a type of Neural Networks. Transformers use attention mechanisms."),
+        ("doc5", "BERT is a Transformer model. BERT uses masked language modeling."),
+    ]
 
-print(f"\n📊 Graph Statistics:")
-print(f"   Nodes: {graph_rag.graph.number_of_nodes()}")
-print(f"   Edges: {graph_rag.graph.number_of_edges()}")
+    for doc_id, text in documents:
+        graph_rag.add_document(doc_id, text)
+        print(f"✅ Added {doc_id}")
 
-# Test queries
-test_queries = [
-    "What is Deep Learning?",
-    "Explain Transformers",
-    "How do Neural Networks work?"
-]
+    print(f"\n📊 Graph Statistics:")
+    print(f"   Nodes: {graph_rag.graph.number_of_nodes()}")
+    print(f"   Edges: {graph_rag.graph.number_of_edges()}")
 
-for query in test_queries:
-    print(f"\n📌 Query: '{query}'")
-    print("-"*70)
+    # Test queries
+    test_queries = [
+        "What is Deep Learning?",
+        "Explain Transformers",
+        "How do Neural Networks work?"
+    ]
 
-    results = graph_rag.query_with_graph(query, k=3, hops=2)
+    for query in test_queries:
+        print(f"\n📌 Query: '{query}'")
+        print("-"*70)
 
-    print(f"Found {len(results)} documents:\n")
-    for i, result in enumerate(results, 1):
-        print(f"{i}. [{result['doc_id']}] (score={result['score']:.2f})")
-        print(f"   Text: {result['text'][:80]}...")
-        print(f"   Related entities: {', '.join(result['related_entities'][:5])}")
+        results = graph_rag.query_with_graph(query, k=3, hops=2)
 
-# Visualize graph
-print("\n📊 Visualizing knowledge graph...")
-query_entities = graph_rag._extract_entities("Deep Learning Transformers")
-plt = graph_rag.visualize_graph(highlight_entities=query_entities)
-plt.show()
-print("✅ Graph saved: knowledge_graph.png")
+        print(f"Found {len(results)} documents:\n")
+        for i, result in enumerate(results, 1):
+            print(f"{i}. [{result['doc_id']}] (score={result['score']:.2f})")
+            print(f"   Text: {result['text'][:80]}...")
+            print(f"   Related entities: {', '.join(result['related_entities'][:5])}")
 
-print("\n✅ GraphRAG implementado!")
-print("\n💡 ADVANTAGES:")
-print("   - Multi-hop reasoning")
-print("   - Explicit knowledge structure")
-print("   - Better for complex queries")
-print("   - Handles relationships well")
-print("\n⚠️  CHALLENGES:")
-print("   - Entity extraction quality critical")
-print("   - Relation extraction is hard")
-print("   - Graph construction overhead")
-print("   - Scalability for large graphs")
+    # Visualize graph
+    print("\n📊 Visualizing knowledge graph...")
+    query_entities = graph_rag._extract_entities("Deep Learning Transformers")
+    plt = graph_rag.visualize_graph(highlight_entities=query_entities)
+    plt.savefig('go1709_graphrag.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1709_graphrag.png")
+    plt.show()
+    print("✅ Graph saved: knowledge_graph.png")
+
+    print("\n✅ GraphRAG implementado!")
+    print("\n💡 ADVANTAGES:")
+    print("   - Multi-hop reasoning")
+    print("   - Explicit knowledge structure")
+    print("   - Better for complex queries")
+    print("   - Handles relationships well")
+    print("\n⚠️  CHALLENGES:")
+    print("   - Entity extraction quality critical")
+    print("   - Relation extraction is hard")
+    print("   - Graph construction overhead")
+    print("   - Scalability for large graphs")

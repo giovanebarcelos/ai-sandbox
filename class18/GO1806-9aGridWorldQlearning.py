@@ -1,17 +1,37 @@
-# GO1806-9aGridWorldQlearning
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+GO1806-9aGridWorldQlearning
+Aula 18 - Reinforcement Learning
+Curso: Inteligência Artificial - FAPA
+
+Q-LEARNING EM GRID WORLD 4×4
+==============================
+Ambiente tabular clássico para aprender Q-Learning.
+
+Layout do Grid:
+  ┌───┬───┬───┬───┐
+  │ S │ 1 │ 2 │ G │  S(0) = Start, G(3) = Objetivo (+10)
+  ├───┼───┼───┼───┤
+  │ 4 │ X │ 6 │ 7 │  X(5) = Obstáculo (-5)
+  ├───┼───┼───┼───┤
+  │ 8 │ 9 │ X │11 │  X(10) = Obstáculo (-5)
+  ├───┼───┼───┼───┤
+  │12 │13 │14 │15 │  Cada passo: -0.1
+  └───┴───┴───┴───┘
+
+O algoritmo Q-Learning aprende a Q-table Q[s,a] com a regra de Bellman:
+  Q(s,a) ← Q(s,a) + α * [r + γ * max_a' Q(s',a') - Q(s,a)]
+
+Após treinamento, a política ótima é: π*(s) = argmax_a Q(s,a)
+
+Instalação: pip install matplotlib numpy seaborn
+"""
+
 import numpy as np
+import matplotlib.pyplot as plt
 from matplotlib.patches import Rectangle
 import seaborn as sns
-
-import matplotlib
-import matplotlib.pyplot as plt
-
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ═══════════════════════════════════════════════════════════════════
 # 1. DEFINIR AMBIENTE GRID WORLD
@@ -69,7 +89,10 @@ class GridWorld:
 
     def step(self, action):
         """
-        Executar ação e retornar (next_state, reward, done)
+        Executa ação e retorna (next_state, reward, done).
+
+        O ambiente é DETERMINÍSTICO: mesma ação → mesmo resultado sempre.
+        Isso simplifica o aprendizado (vs. FrozenLake que é estocástico).
 
         Ações: 0=UP, 1=DOWN, 2=LEFT, 3=RIGHT
         """
@@ -153,22 +176,26 @@ class GridWorld:
 # 2. ALGORITMO Q-LEARNING
 # ═══════════════════════════════════════════════════════════════════
 
-def q_learning(env, num_episodes=1000, alpha=0.1, gamma=0.99, 
+def q_learning(env, num_episodes=1000, alpha=0.1, gamma=0.99,
                epsilon_start=1.0, epsilon_min=0.01, epsilon_decay=0.995):
     """
-    Algoritmo Q-Learning tabular
+    Algoritmo Q-Learning tabular (Watkins, 1989).
+
+    Q-Learning é um algoritmo OFF-POLICY: aprende sobre a política ótima
+    mesmo enquanto executa uma política diferente (ε-greedy).
 
     Parâmetros:
-        env: ambiente GridWorld
-        num_episodes: número de episódios de treinamento
-        alpha: learning rate
-        gamma: discount factor
-        epsilon_start: epsilon inicial para ε-greedy
-        epsilon_min: epsilon mínimo
-        epsilon_decay: taxa de decaimento do epsilon
+        alpha: learning rate [0,1] - quão rápido atualiza Q-values
+               Muito alto → instável. Muito baixo → aprende devagar.
+        gamma: discount factor [0,1] - importância de recompensas futuras
+               γ=0: míope (só recompensa imediata). γ=1: previsão total.
+        epsilon: controla exploração vs. exploitação:
+               Início: explorar bastante (descobrir o ambiente)
+               Final: exploitar a política aprendida
     """
 
-    # Inicializar Q-table
+    # Q-table: tabela de valores Q para cada (estado, ação)
+    # Inicializar com zeros = agente "otimista" (vai explorar!)
     Q = np.zeros((env.n_states, env.n_actions))
 
     epsilon = epsilon_start
@@ -186,16 +213,22 @@ def q_learning(env, num_episodes=1000, alpha=0.1, gamma=0.99,
         steps = 0
 
         while not done and steps < 100:  # Limite de 100 steps por episódio
-            # Escolher ação (ε-greedy)
+            # ε-greedy: balancear exploração e exploitação
             if np.random.random() < epsilon:
-                action = np.random.randint(env.n_actions)  # Exploração
+                action = np.random.randint(env.n_actions)  # Exploração: ação aleatória
             else:
-                action = np.argmax(Q[state])  # Exploitação
+                action = np.argmax(Q[state])               # Exploitação: melhor ação conhecida
 
-            # Executar ação
+            # Executar ação e observar resultado
             next_state, reward, done = env.step(action)
 
-            # Atualizar Q-value (TD Update)
+            # REGRA DE ATUALIZAÇÃO Q-LEARNING (Bellman Equation):
+            # Q(s,a) ← Q(s,a) + α * [r + γ * max_a' Q(s',a') - Q(s,a)]
+            #
+            # Onde:
+            #   td_target = r + γ * max Q(s') → o que "deveria ser" o Q-value
+            #   td_error  = td_target - Q(s,a) → erro de estimativa atual
+            #   α * td_error               → correção proporcional ao erro
             td_target = reward + gamma * np.max(Q[next_state])
             td_error = td_target - Q[state, action]
             Q[state, action] = Q[state, action] + alpha * td_error

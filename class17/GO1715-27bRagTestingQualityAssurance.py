@@ -249,12 +249,8 @@ class MockRAGForTesting:
 import matplotlib
 import matplotlib.pyplot as plt
 
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+import matplotlib
+matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
 if __name__ == "__main__":
     test_cases = [
@@ -348,7 +344,8 @@ if __name__ == "__main__":
     ax.grid(axis='x', alpha=0.3)
 
     plt.tight_layout()
+    plt.savefig('go1715_rag_test_results.png', dpi=120, bbox_inches='tight')
+    print("Grafico salvo: go1715_rag_test_results.png")
     plt.show()
-    print("\n📊 Gráfico salvo: rag_test_results.png")
 
     print("\n✅ RAG Testing Suite implementado!")

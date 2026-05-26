@@ -35,6 +35,8 @@ def AlexNet(input_shape=(224, 224, 3), num_classes=1000):
         Dense(4096, activation='relu', name='fc7'),
         Dropout(0.5),
         Dense(num_classes, activation='softmax', name='fc8')  # 1000 classes ImageNet
+    ])  # end Sequential
+    return model
 # Criar modelo
 
 

@@ -122,33 +122,33 @@ def tournament_selection(population, fitness_values, k=5):
 
 ### 📈 Exemplo de Evolução do AG
 
-**PROBLEMA:** Maximizar f(x) = -x**2 + 10x  (parábola)
+# **PROBLEMA:** Maximizar f(x) = -x**2 + 10x  (parábola)
 
-**DOMÍNIO:** x ∈ [0, 10]
+# **DOMÍNIO:** x ∈ [0, 10]
 
-**ÓTIMO TEÓRICO:** x* = 5, f(x*) = 25
+# **ÓTIMO TEÓRICO:** x* = 5, f(x*) = 25
 
-**GERAÇÃO 0 (inicial aleatória):**
-- x: [1.2, 8.7, 3.4, 9.1, 2.8, ...]
-- fitness: [9.56, -13.69, 20.44, -17.81, 20.16, ...]
-- MELHOR: x=3.4, f=20.44
+# **GERAÇÃO 0 (inicial aleatória):**
+# - x: [1.2, 8.7, 3.4, 9.1, 2.8, ...]
+# - fitness: [9.56, -13.69, 20.44, -17.81, 20.16, ...]
+# - MELHOR: x=3.4, f=20.44
 
-**GERAÇÃO 10:**
-- x: [4.2, 5.3, 4.8, 5.1, 4.5, ...]
-- fitness: [24.36, 24.91, 24.96, 24.99, 24.75, ...]
-- MELHOR: x=5.1, f=24.99  ← próximo do ótimo!
+# **GERAÇÃO 10:**
+# - x: [4.2, 5.3, 4.8, 5.1, 4.5, ...]
+# - fitness: [24.36, 24.91, 24.96, 24.99, 24.75, ...]
+# - MELHOR: x=5.1, f=24.99  ← próximo do ótimo!
 
-**GERAÇÃO 50:**
-- x: [5.0, 5.0, 5.0, 5.0, 4.9, ...]
-- fitness: [25.00, 25.00, 25.00, 25.00, 24.99, ...]
-- MELHOR: x=5.0, f=25.00  ✔ CONVERGIU!
+# **GERAÇÃO 50:**
+# - x: [5.0, 5.0, 5.0, 5.0, 4.9, ...]
+# - fitness: [25.00, 25.00, 25.00, 25.00, 24.99, ...]
+# - MELHOR: x=5.0, f=25.00  ✔ CONVERGIU!
 
-**EVOLUÇÃO FITNESS:**
-- Gen 0:  melhor=20.44, média=8.23
-- Gen 10: melhor=24.99, média=23.50
-- Gen 50: melhor=25.00, média=24.98  ← população convergiu
+# **EVOLUÇÃO FITNESS:**
+# - Gen 0:  melhor=20.44, média=8.23
+# - Gen 10: melhor=24.99, média=23.50
+# - Gen 50: melhor=25.00, média=24.98  ← população convergiu
 
-![Gráfico mostrando evolução do fitness ao longo das gerações](images/Aula19_03.png)
+# ![Gráfico mostrando evolução do fitness ao longo das gerações](images/Aula19_03.png)
 
 population = create_population_rosenbrock(POP_SIZE, BOUNDS)
 best_fitness_history = []

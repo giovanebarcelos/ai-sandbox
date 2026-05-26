@@ -1,70 +1,97 @@
-# GO1821-35ResumoEPróximaAula
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+GO1821-35ResumoEProximaAula
+Aula 18 - Reinforcement Learning
+Curso: Inteligência Artificial - FAPA
+
+FROZEN LAKE - Q-LEARNING EM AMBIENTE ESTOCÁSTICO
+=================================================
+Cenário: Robô navega por lago congelado (4×4 grid)
+  S F F F
+  F H F H
+  F F F H
+  H F F G
+
+Legenda: S=Start, F=Frozen (seguro), H=Hole (buraco!), G=Goal (+1 recompensa)
+Desafio: O ambiente é SLIPPERY (escorregadio): ao escolher ir à direita,
+          há 33% de chance de escorregar para cima ou para baixo.
+
+Isso demonstra Q-Learning em MDPs ESTOCÁSTICOS - muito mais próximo de problemas reais!
+
+Instalação: pip install gymnasium matplotlib seaborn numpy
+"""
+
 import numpy as np
-import gym
+import gymnasium as gym   # gymnasium é a versão moderna do OpenAI gym
+import matplotlib.pyplot as plt
 import seaborn as sns
 from collections import defaultdict
 import pandas as pd
-
-import matplotlib
-import matplotlib.pyplot as plt
-
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ═══════════════════════════════════════════════════════════════════
 # 1. AMBIENTE E HIPERPARÂMETROS
 # ═══════════════════════════════════════════════════════════════════
 
-# Criar ambiente
+# Criar ambiente com gymnasium (versão moderna do gym)
+# is_slippery=True: a ação tomada pode resultar em movimento perpendicular (33%)
 env = gym.make('FrozenLake-v1', map_name="4x4", is_slippery=True, render_mode=None)
 n_states = env.observation_space.n  # 16
 n_actions = env.action_space.n      # 4
 
-print("="*70)
+print("=" * 70)
 print("FROZEN LAKE - Q-LEARNING COM AMBIENTE ESTOCÁSTICO")
-print("="*70)
-print(f"Estados: {n_states}")
-print(f"Ações: {n_actions}")
-print(f"Mapa:")
+print("=" * 70)
+print(f"Estados: {n_states}  (16 posições no grid 4×4)")
+print(f"Ações: {n_actions}   (0=Esquerda, 1=Baixo, 2=Direita, 3=Cima)")
+print(f"Slippery: TRUE  (ação escolhida pode escorregar para lado)")
+print(f"\nMapa 4×4:")
 print("""
-    S F F F
-    F H F H
-    F F F H
-    H F F G
+    S F F F    ← Linha 0: Start (estado 0..3)
+    F H F H    ← Linha 1: Holes em estados 5 e 7
+    F F F H    ← Linha 2: Hole em estado 11
+    H F F G    ← Linha 3: Hole em 12, Goal em 15
 """)
 
-# Hiperparâmetros
-alpha = 0.8           # Learning rate (alto por ambiente estocástico)
-gamma = 0.95          # Discount factor
-epsilon_start = 1.0   # Exploração inicial
-epsilon_min = 0.01    # Exploração mínima
-epsilon_decay = 0.9995
-num_episodes = 15000  # Muitos episódios necessários
+# Hiperparâmetros do Q-Learning
+# alpha alto (0.8): aprende rápido mesmo com estocasticidade alta
+# gamma (0.95): valoriza bem recompensas futuras (goal pode estar longe)
+# epsilon alto e decay lento: muita exploração necessária no lago escorregadio
+alpha = 0.8           # Learning rate: quão rápido atualiza os Q-values
+gamma = 0.95          # Discount factor: importância das recompensas futuras
+epsilon_start = 1.0   # Começa com 100% de exploração aleatória
+epsilon_min = 0.01    # Garante no mínimo 1% de exploração sempre
+epsilon_decay = 0.9995  # Decai lentamente: precisa explorar bastante
+num_episodes = 15000  # Precisa de muitos episódios (ambiente difícil!)
 
 # ═══════════════════════════════════════════════════════════════════
 # 2. Q-LEARNING ALGORITHM
 # ═══════════════════════════════════════════════════════════════════
 
-def q_learning_frozen_lake(env, num_episodes, alpha, gamma, epsilon_start, 
+def q_learning_frozen_lake(env, num_episodes, alpha, gamma, epsilon_start,
                            epsilon_min, epsilon_decay):
-    """Q-Learning com decay exponencial de epsilon"""
+    """
+    Q-Learning com decay exponencial de epsilon para FrozenLake.
 
-    # Inicializar Q-table
+    A estocasticidade do ambiente torna isso mais difícil que Grid World:
+    - Mesma ação pode levar a estados diferentes
+    - Q-values aprendem a MÉDIA das recompensas esperadas
+    - Precisa de muito mais episódios para convergir
+    """
+
+    # Q-table: zeros iniciais → agente não sabe nada ainda
+    # Shape: (16 estados, 4 ações) = 64 valores Q
     Q = np.zeros((n_states, n_actions))
 
-    # Métricas
-    rewards_history = []
-    success_history = []
-    epsilon_history = []
-    steps_history = []
+    rewards_history = []   # Recompensa total por episódio (0 ou 1)
+    success_history = []   # 1 se chegou ao Goal, 0 se caiu no buraco
+    epsilon_history = []   # Evolução do epsilon ao longo do treino
+    steps_history = []     # Quantos steps até terminar o episódio
 
     epsilon = epsilon_start
 
     for episode in range(num_episodes):
+        # gymnasium: reset() retorna (state, info)
         state, _ = env.reset()
         done = False
         truncated = False
@@ -72,16 +99,18 @@ def q_learning_frozen_lake(env, num_episodes, alpha, gamma, epsilon_start,
         steps = 0
 
         while not (done or truncated):
-            # Epsilon-greedy
+            # ε-greedy: explora ou explota com base no epsilon atual
             if np.random.random() < epsilon:
-                action = env.action_space.sample()
+                action = env.action_space.sample()  # Exploração aleatória
             else:
-                action = np.argmax(Q[state])
+                action = np.argmax(Q[state])         # Exploitação da política atual
 
-            # Executar ação
+            # Passo no ambiente: gymnasium retorna 5 valores
             next_state, reward, done, truncated, info = env.step(action)
 
-            # Q-Learning update
+            # Q-Learning update (regra de Bellman):
+            # Q(s,a) ← Q(s,a) + α * [r + γ * max_a' Q(s',a') - Q(s,a)]
+            # O termo entre colchetes é o "TD Error" (erro de diferença temporal)
             best_next_action = np.argmax(Q[next_state])
             td_target = reward + gamma * Q[next_state, best_next_action]
             td_error = td_target - Q[state, action]
@@ -91,19 +120,20 @@ def q_learning_frozen_lake(env, num_episodes, alpha, gamma, epsilon_start,
             total_reward += reward
             steps += 1
 
-            if steps > 100:  # Limite de steps
+            # Evitar loops infinitos em casos patológicos
+            if steps > 100:
                 break
 
-        # Decay epsilon
+        # Decair epsilon gradualmente (mais exploração no início, menos no final)
         epsilon = max(epsilon_min, epsilon * epsilon_decay)
 
-        # Armazenar métricas
         rewards_history.append(total_reward)
+        # Recompensa +1 significa que chegou ao Goal
         success_history.append(1 if total_reward > 0 else 0)
         epsilon_history.append(epsilon)
         steps_history.append(steps)
 
-        # Print progresso
+        # Reportar progresso a cada 2000 episódios
         if (episode + 1) % 2000 == 0:
             recent_success = np.mean(success_history[-500:]) * 100
             recent_steps = np.mean(steps_history[-500:])
@@ -285,8 +315,13 @@ print(f"📊 Steps Médios (sucessos): {avg_steps:.1f}")
 print("\n💡 Análise do Ambiente Estocástico:")
 print("   • FrozenLake é SLIPPERY: ação escolhida pode resultar em movimento lateral")
 print("   • Isso torna o ambiente não-determinístico (mesma ação → resultados diferentes)")
-print("   • Q-Learning aprende Q-values esperados considerando estocasticidade")
-print(f"   • Taxa de sucesso ~{test_success_rate:.0f}% é razoável dado o desafio")
+print("   • Q-Learning aprende Q-values ESPERADOS considerando a estocasticidade")
+print(f"   • Taxa de sucesso ~{test_success_rate:.0f}% é razoável dado o desafio elevado")
 print("   • Ambiente determinístico (is_slippery=False) alcança ~100% de sucesso")
+print("   • Isso mostra a diferença entre RL em ambientes determinísticos vs estocásticos")
+print()
+print("   Comparação esperada:")
+print("   is_slippery=True  → ~60-75% de sucesso após 15.000 episódios")
+print("   is_slippery=False → ~100% de sucesso após 3.000 episódios")
 
 env.close()

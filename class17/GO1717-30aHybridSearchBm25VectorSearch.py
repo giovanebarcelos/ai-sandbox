@@ -158,140 +158,142 @@ class HybridSearchRAG:
 # === DEMO ===
 
 # Create documents
-documents = [
-    {'text': 'Machine learning is a subset of artificial intelligence', 'metadata': {'source': 'ml_basics.pdf'}},
-    {'text': 'Neural networks are computational models inspired by biological neurons', 'metadata': {'source': 'nn_intro.pdf'}},
-    {'text': 'Deep learning uses multiple layers to learn representations', 'metadata': {'source': 'dl_guide.pdf'}},
-    {'text': 'Reinforcement learning trains agents through rewards', 'metadata': {'source': 'rl_tutorial.pdf'}},
-    {'text': 'Natural language processing enables computers to understand human language', 'metadata': {'source': 'nlp_basics.pdf'}},
-    {'text': 'Computer vision allows machines to interpret visual information', 'metadata': {'source': 'cv_intro.pdf'}},
-    {'text': 'Transformers revolutionized NLP with attention mechanisms', 'metadata': {'source': 'transformers.pdf'}},
-    {'text': 'Convolutional neural networks excel at image recognition tasks', 'metadata': {'source': 'cnn_guide.pdf'}},
-]
 
-print("🔍 Testando Hybrid Search\n")
+if __name__ == "__main__":
+    documents = [
+        {'text': 'Machine learning is a subset of artificial intelligence', 'metadata': {'source': 'ml_basics.pdf'}},
+        {'text': 'Neural networks are computational models inspired by biological neurons', 'metadata': {'source': 'nn_intro.pdf'}},
+        {'text': 'Deep learning uses multiple layers to learn representations', 'metadata': {'source': 'dl_guide.pdf'}},
+        {'text': 'Reinforcement learning trains agents through rewards', 'metadata': {'source': 'rl_tutorial.pdf'}},
+        {'text': 'Natural language processing enables computers to understand human language', 'metadata': {'source': 'nlp_basics.pdf'}},
+        {'text': 'Computer vision allows machines to interpret visual information', 'metadata': {'source': 'cv_intro.pdf'}},
+        {'text': 'Transformers revolutionized NLP with attention mechanisms', 'metadata': {'source': 'transformers.pdf'}},
+        {'text': 'Convolutional neural networks excel at image recognition tasks', 'metadata': {'source': 'cnn_guide.pdf'}},
+    ]
 
-# Test different alpha values
-queries = [
-    "neural networks deep learning",  # Both keywords and semantic
-    "how do agents learn",  # More semantic
-    "CNN image",  # Exact keywords
-]
+    print("🔍 Testando Hybrid Search\n")
 
-results_data = []
+    # Test different alpha values
+    queries = [
+        "neural networks deep learning",  # Both keywords and semantic
+        "how do agents learn",  # More semantic
+        "CNN image",  # Exact keywords
+    ]
 
-for query in queries:
-    print(f"\n📌 Query: '{query}'")
-    print("="*70)
+    results_data = []
 
+    for query in queries:
+        print(f"\n📌 Query: '{query}'")
+        print("="*70)
+
+        for method in ['bm25', 'vector', 'rrf', 'hybrid']:
+            searcher = HybridSearchRAG(documents, alpha=0.5)
+            results = searcher.search(query, k=3, method=method)
+
+            print(f"\n{method.upper()}:")
+            for i, doc in enumerate(results, 1):
+                text_preview = doc['text'][:50] + '...'
+                print(f"  {i}. [score={doc['score']:.3f}] {text_preview}")
+
+                results_data.append({
+                    'query': query,
+                    'method': method,
+                    'rank': i,
+                    'score': doc['score'],
+                    'doc': text_preview
+                })
+
+    # Visualize comparison
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+
+    # 1. Score distribution by method
+    ax = axes[0, 0]
+    import pandas as pd
+
+    import matplotlib
+    import matplotlib.pyplot as plt
+
+    # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+    # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+    import matplotlib
+    matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
+
+    df = pd.DataFrame(results_data)
     for method in ['bm25', 'vector', 'rrf', 'hybrid']:
-        searcher = HybridSearchRAG(documents, alpha=0.5)
-        results = searcher.search(query, k=3, method=method)
+        method_df = df[df['method'] == method]
+        ax.plot(method_df.groupby('query')['score'].mean(), 
+                marker='o', label=method, linewidth=2)
+    ax.set_xlabel('Query')
+    ax.set_ylabel('Average Score')
+    ax.set_title('Score Distribution by Method')
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-        print(f"\n{method.upper()}:")
-        for i, doc in enumerate(results, 1):
-            text_preview = doc['text'][:50] + '...'
-            print(f"  {i}. [score={doc['score']:.3f}] {text_preview}")
+    # 2. Alpha sensitivity (hybrid only)
+    ax = axes[0, 1]
+    alphas = np.linspace(0, 1, 11)
+    avg_scores = []
 
-            results_data.append({
-                'query': query,
-                'method': method,
-                'rank': i,
-                'score': doc['score'],
-                'doc': text_preview
-            })
+    for alpha in alphas:
+        searcher = HybridSearchRAG(documents, alpha=alpha)
+        scores = []
+        for q in queries:
+            results = searcher.search(q, k=3, method='hybrid')
+            scores.extend([r['score'] for r in results])
+        avg_scores.append(np.mean(scores))
 
-# Visualize comparison
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    ax.plot(alphas, avg_scores, marker='o', linewidth=2, color='purple')
+    ax.axvline(0.5, color='red', linestyle='--', alpha=0.5, label='α=0.5 (balanced)')
+    ax.set_xlabel('Alpha (BM25 weight)')
+    ax.set_ylabel('Average Score')
+    ax.set_title('Hybrid Search: Alpha Sensitivity')
+    ax.legend()
+    ax.grid(alpha=0.3)
+    ax.annotate('Pure vector', xy=(0, avg_scores[0]), xytext=(0.1, avg_scores[0]-0.02),
+                arrowprops=dict(arrowstyle='->', color='blue'))
+    ax.annotate('Pure BM25', xy=(1, avg_scores[-1]), xytext=(0.85, avg_scores[-1]+0.02),
+                arrowprops=dict(arrowstyle='->', color='red'))
 
-# 1. Score distribution by method
-ax = axes[0, 0]
-import pandas as pd
+    # 3. Method comparison heatmap
+    ax = axes[1, 0]
+    pivot = df.pivot_table(values='score', index='method', columns='query', aggfunc='mean')
+    sns.heatmap(pivot, annot=True, fmt='.3f', cmap='YlOrRd', ax=ax, cbar_kws={'label': 'Score'})
+    ax.set_title('Average Scores: Method vs Query')
+    ax.set_xlabel('Query')
+    ax.set_ylabel('Method')
 
-import matplotlib
-import matplotlib.pyplot as plt
+    # 4. Rank consistency
+    ax = axes[1, 1]
+    methods = df['method'].unique()
+    rank_stds = []
+    for method in methods:
+        method_df = df[df['method'] == method]
+        rank_std = method_df.groupby('query')['rank'].std().mean()
+        rank_stds.append(rank_std)
 
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+    bars = ax.barh(methods, rank_stds, color='skyblue', alpha=0.7)
+    ax.set_xlabel('Rank Std Dev (lower = more consistent)')
+    ax.set_title('Ranking Consistency Across Queries')
+    ax.grid(axis='x', alpha=0.3)
 
-df = pd.DataFrame(results_data)
-for method in ['bm25', 'vector', 'rrf', 'hybrid']:
-    method_df = df[df['method'] == method]
-    ax.plot(method_df.groupby('query')['score'].mean(), 
-            marker='o', label=method, linewidth=2)
-ax.set_xlabel('Query')
-ax.set_ylabel('Average Score')
-ax.set_title('Score Distribution by Method')
-ax.legend()
-ax.grid(alpha=0.3)
+    # Annotate bars
+    for bar, std in zip(bars, rank_stds):
+        width = bar.get_width()
+        ax.text(width, bar.get_y() + bar.get_height()/2, 
+                f'{std:.3f}', ha='left', va='center', fontsize=10)
 
-# 2. Alpha sensitivity (hybrid only)
-ax = axes[0, 1]
-alphas = np.linspace(0, 1, 11)
-avg_scores = []
+    plt.tight_layout()
+    plt.savefig('go1717_hybrid_search.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1717_hybrid_search.png")
+    plt.show()
+    print("\n\n📊 Gráfico salvo: hybrid_search_comparison.png")
 
-for alpha in alphas:
-    searcher = HybridSearchRAG(documents, alpha=alpha)
-    scores = []
-    for q in queries:
-        results = searcher.search(q, k=3, method='hybrid')
-        scores.extend([r['score'] for r in results])
-    avg_scores.append(np.mean(scores))
+    # Summary
+    print("\n📈 RECOMENDAÇÕES:")
+    print("- Use BM25 para queries com keywords exatas")
+    print("- Use vector search para queries conceituais")
+    print("- Use RRF quando precisar de diversidade")
+    print("- Use hybrid com α=0.5 para caso geral")
+    print("- Ajuste α baseado no seu domínio (teste A/B)")
 
-ax.plot(alphas, avg_scores, marker='o', linewidth=2, color='purple')
-ax.axvline(0.5, color='red', linestyle='--', alpha=0.5, label='α=0.5 (balanced)')
-ax.set_xlabel('Alpha (BM25 weight)')
-ax.set_ylabel('Average Score')
-ax.set_title('Hybrid Search: Alpha Sensitivity')
-ax.legend()
-ax.grid(alpha=0.3)
-ax.annotate('Pure vector', xy=(0, avg_scores[0]), xytext=(0.1, avg_scores[0]-0.02),
-            arrowprops=dict(arrowstyle='->', color='blue'))
-ax.annotate('Pure BM25', xy=(1, avg_scores[-1]), xytext=(0.85, avg_scores[-1]+0.02),
-            arrowprops=dict(arrowstyle='->', color='red'))
-
-# 3. Method comparison heatmap
-ax = axes[1, 0]
-pivot = df.pivot_table(values='score', index='method', columns='query', aggfunc='mean')
-sns.heatmap(pivot, annot=True, fmt='.3f', cmap='YlOrRd', ax=ax, cbar_kws={'label': 'Score'})
-ax.set_title('Average Scores: Method vs Query')
-ax.set_xlabel('Query')
-ax.set_ylabel('Method')
-
-# 4. Rank consistency
-ax = axes[1, 1]
-methods = df['method'].unique()
-rank_stds = []
-for method in methods:
-    method_df = df[df['method'] == method]
-    rank_std = method_df.groupby('query')['rank'].std().mean()
-    rank_stds.append(rank_std)
-
-bars = ax.barh(methods, rank_stds, color='skyblue', alpha=0.7)
-ax.set_xlabel('Rank Std Dev (lower = more consistent)')
-ax.set_title('Ranking Consistency Across Queries')
-ax.grid(axis='x', alpha=0.3)
-
-# Annotate bars
-for bar, std in zip(bars, rank_stds):
-    width = bar.get_width()
-    ax.text(width, bar.get_y() + bar.get_height()/2, 
-            f'{std:.3f}', ha='left', va='center', fontsize=10)
-
-plt.tight_layout()
-plt.show()
-print("\n\n📊 Gráfico salvo: hybrid_search_comparison.png")
-
-# Summary
-print("\n📈 RECOMENDAÇÕES:")
-print("- Use BM25 para queries com keywords exatas")
-print("- Use vector search para queries conceituais")
-print("- Use RRF quando precisar de diversidade")
-print("- Use hybrid com α=0.5 para caso geral")
-print("- Ajuste α baseado no seu domínio (teste A/B)")
-
-print("\n✅ Hybrid Search implementado!")
+    print("\n✅ Hybrid Search implementado!")

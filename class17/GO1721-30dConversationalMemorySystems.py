@@ -181,131 +181,133 @@ class ConversationalMemory:
 
 # === DEMO ===
 
-print("🧠 Demo: Conversational Memory\n")
-print("="*70)
 
-# Test different strategies
-for strategy in ['buffer', 'summary', 'entity']:
-    print(f"\n📌 Testing {strategy.upper()} strategy:")
-    print("-"*70)
+if __name__ == "__main__":
+    print("🧠 Demo: Conversational Memory\n")
+    print("="*70)
 
-    memory = ConversationalMemory(
-        max_messages=6,
-        max_tokens=500,
-        strategy=strategy
-    )
+    # Test different strategies
+    for strategy in ['buffer', 'summary', 'entity']:
+        print(f"\n📌 Testing {strategy.upper()} strategy:")
+        print("-"*70)
 
-    # Simulate conversation
-    conversation = [
-        ("user", "Hi, my name is Alice and I work on Machine Learning"),
-        ("assistant", "Hello Alice! Nice to meet you. Machine Learning is fascinating!"),
-        ("user", "I'm working on a project about Neural Networks"),
-        ("assistant", "Neural Networks are powerful! What specific type?"),
-        ("user", "I'm focusing on Transformers for NLP"),
-        ("assistant", "Great choice! Transformers revolutionized NLP."),
-        ("user", "Can you explain attention mechanisms?"),
-        ("assistant", "Attention allows models to focus on relevant parts of input."),
-        ("user", "How does this relate to my Neural Networks project?"),  # References earlier context
-    ]
+        memory = ConversationalMemory(
+            max_messages=6,
+            max_tokens=500,
+            strategy=strategy
+        )
 
-    for role, content in conversation:
-        memory.add_message(role, content)
+        # Simulate conversation
+        conversation = [
+            ("user", "Hi, my name is Alice and I work on Machine Learning"),
+            ("assistant", "Hello Alice! Nice to meet you. Machine Learning is fascinating!"),
+            ("user", "I'm working on a project about Neural Networks"),
+            ("assistant", "Neural Networks are powerful! What specific type?"),
+            ("user", "I'm focusing on Transformers for NLP"),
+            ("assistant", "Great choice! Transformers revolutionized NLP."),
+            ("user", "Can you explain attention mechanisms?"),
+            ("assistant", "Attention allows models to focus on relevant parts of input."),
+            ("user", "How does this relate to my Neural Networks project?"),  # References earlier context
+        ]
 
-    # Get context for last query
-    last_query = conversation[-1][1]
-    context = memory.get_context(last_query)
+        for role, content in conversation:
+            memory.add_message(role, content)
 
-    print(f"\nContext retrieved for: '{last_query}'")
-    print(f"Messages in context: {len(context)}")
+        # Get context for last query
+        last_query = conversation[-1][1]
+        context = memory.get_context(last_query)
 
-    for i, msg in enumerate(context, 1):
-        preview = msg['content'][:60] + '...' if len(msg['content']) > 60 else msg['content']
-        print(f"  {i}. [{msg['role']}] {preview}")
+        print(f"\nContext retrieved for: '{last_query}'")
+        print(f"Messages in context: {len(context)}")
 
-    # Statistics
-    stats = memory.get_statistics()
-    print(f"\n📊 Statistics:")
-    for key, value in stats.items():
-        print(f"   {key}: {value}")
+        for i, msg in enumerate(context, 1):
+            preview = msg['content'][:60] + '...' if len(msg['content']) > 60 else msg['content']
+            print(f"  {i}. [{msg['role']}] {preview}")
 
-# Visualize memory strategies
-import numpy as np
+        # Statistics
+        stats = memory.get_statistics()
+        print(f"\n📊 Statistics:")
+        for key, value in stats.items():
+            print(f"   {key}: {value}")
 
-import matplotlib
-import matplotlib.pyplot as plt
+    # Visualize memory strategies
+    import numpy as np
 
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+    import matplotlib
+    import matplotlib.pyplot as plt
 
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+    # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+    import matplotlib
+    matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
-# 1. Token usage over conversation length
-ax = axes[0, 0]
-conv_lengths = range(5, 51, 5)
-buffer_tokens = [min(l * 50, 2000) for l in conv_lengths]  # Grows linearly
-summary_tokens = [min(200 + (l-10) * 30, 2000) for l in conv_lengths]  # Slower growth
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-ax.plot(conv_lengths, buffer_tokens, marker='o', label='Buffer', linewidth=2)
-ax.plot(conv_lengths, summary_tokens, marker='s', label='Summary', linewidth=2)
-ax.axhline(y=2000, color='red', linestyle='--', alpha=0.5, label='Token limit')
-ax.set_xlabel('Conversation Length (messages)')
-ax.set_ylabel('Total Tokens')
-ax.set_title('Token Usage by Strategy')
-ax.legend()
-ax.grid(alpha=0.3)
+    # 1. Token usage over conversation length
+    ax = axes[0, 0]
+    conv_lengths = range(5, 51, 5)
+    buffer_tokens = [min(l * 50, 2000) for l in conv_lengths]  # Grows linearly
+    summary_tokens = [min(200 + (l-10) * 30, 2000) for l in conv_lengths]  # Slower growth
 
-# 2. Memory retention
-ax = axes[0, 1]
-strategies = ['Buffer', 'Summary', 'Entity', 'Vector']
-retention_rates = [0.4, 0.7, 0.85, 0.9]  # % of info retained
-colors = ['skyblue', 'lightgreen', 'yellow', 'lightcoral']
-bars = ax.bar(strategies, retention_rates, color=colors, alpha=0.7)
-ax.set_ylabel('Information Retention Rate')
-ax.set_title('Memory Strategy: Information Retention')
-ax.set_ylim(0, 1)
-ax.grid(axis='y', alpha=0.3)
+    ax.plot(conv_lengths, buffer_tokens, marker='o', label='Buffer', linewidth=2)
+    ax.plot(conv_lengths, summary_tokens, marker='s', label='Summary', linewidth=2)
+    ax.axhline(y=2000, color='red', linestyle='--', alpha=0.5, label='Token limit')
+    ax.set_xlabel('Conversation Length (messages)')
+    ax.set_ylabel('Total Tokens')
+    ax.set_title('Token Usage by Strategy')
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-for bar, rate in zip(bars, retention_rates):
-    height = bar.get_height()
-    ax.text(bar.get_x() + bar.get_width()/2., height,
-            f'{rate*100:.0f}%', ha='center', va='bottom')
+    # 2. Memory retention
+    ax = axes[0, 1]
+    strategies = ['Buffer', 'Summary', 'Entity', 'Vector']
+    retention_rates = [0.4, 0.7, 0.85, 0.9]  # % of info retained
+    colors = ['skyblue', 'lightgreen', 'yellow', 'lightcoral']
+    bars = ax.bar(strategies, retention_rates, color=colors, alpha=0.7)
+    ax.set_ylabel('Information Retention Rate')
+    ax.set_title('Memory Strategy: Information Retention')
+    ax.set_ylim(0, 1)
+    ax.grid(axis='y', alpha=0.3)
 
-# 3. Latency by strategy
-ax = axes[1, 0]
-strategies = ['Buffer', 'Summary', 'Entity', 'Vector']
-latencies = [0.01, 0.05, 0.1, 0.2]  # seconds
-ax.barh(strategies, latencies, color='purple', alpha=0.7)
-ax.set_xlabel('Latency (seconds)')
-ax.set_title('Context Retrieval Latency')
-ax.grid(axis='x', alpha=0.3)
+    for bar, rate in zip(bars, retention_rates):
+        height = bar.get_height()
+        ax.text(bar.get_x() + bar.get_width()/2., height,
+                f'{rate*100:.0f}%', ha='center', va='bottom')
 
-# 4. Context relevance over time
-ax = axes[1, 1]
-time_points = range(1, 21)
-buffer_relevance = [max(1 - t*0.05, 0.3) for t in time_points]  # Decays
-summary_relevance = [max(0.8 - t*0.02, 0.5) for t in time_points]  # Slower decay
-entity_relevance = [0.85] * 20  # Constant (always relevant)
+    # 3. Latency by strategy
+    ax = axes[1, 0]
+    strategies = ['Buffer', 'Summary', 'Entity', 'Vector']
+    latencies = [0.01, 0.05, 0.1, 0.2]  # seconds
+    ax.barh(strategies, latencies, color='purple', alpha=0.7)
+    ax.set_xlabel('Latency (seconds)')
+    ax.set_title('Context Retrieval Latency')
+    ax.grid(axis='x', alpha=0.3)
 
-ax.plot(time_points, buffer_relevance, marker='o', label='Buffer', linewidth=2)
-ax.plot(time_points, summary_relevance, marker='s', label='Summary', linewidth=2)
-ax.plot(time_points, entity_relevance, marker='^', label='Entity', linewidth=2)
-ax.set_xlabel('Messages Since Mention')
-ax.set_ylabel('Relevance Score')
-ax.set_title('Context Relevance Over Time')
-ax.legend()
-ax.grid(alpha=0.3)
+    # 4. Context relevance over time
+    ax = axes[1, 1]
+    time_points = range(1, 21)
+    buffer_relevance = [max(1 - t*0.05, 0.3) for t in time_points]  # Decays
+    summary_relevance = [max(0.8 - t*0.02, 0.5) for t in time_points]  # Slower decay
+    entity_relevance = [0.85] * 20  # Constant (always relevant)
 
-plt.tight_layout()
-plt.show()
-print("\n\n📊 Gráfico salvo: conversational_memory_comparison.png")
+    ax.plot(time_points, buffer_relevance, marker='o', label='Buffer', linewidth=2)
+    ax.plot(time_points, summary_relevance, marker='s', label='Summary', linewidth=2)
+    ax.plot(time_points, entity_relevance, marker='^', label='Entity', linewidth=2)
+    ax.set_xlabel('Messages Since Mention')
+    ax.set_ylabel('Relevance Score')
+    ax.set_title('Context Relevance Over Time')
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-print("\n✅ Conversational Memory System implementado!")
-print("\n💡 RECOMMENDATIONS:")
-print("   - Use BUFFER for short conversations (<10 messages)")
-print("   - Use SUMMARY for long conversations (>20 messages)")
-print("   - Use ENTITY for multi-topic conversations")
-print("   - Use VECTOR for semantic search in history")
+    plt.tight_layout()
+    plt.savefig('go1721_memory_systems.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1721_memory_systems.png")
+    plt.show()
+    print("\n\n📊 Gráfico salvo: conversational_memory_comparison.png")
+
+    print("\n✅ Conversational Memory System implementado!")
+    print("\n💡 RECOMMENDATIONS:")
+    print("   - Use BUFFER for short conversations (<10 messages)")
+    print("   - Use SUMMARY for long conversations (>20 messages)")
+    print("   - Use ENTITY for multi-topic conversations")
+    print("   - Use VECTOR for semantic search in history")

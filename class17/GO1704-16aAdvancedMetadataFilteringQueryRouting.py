@@ -10,10 +10,8 @@ import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+import matplotlib
+matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
 class SmartQueryRouter:
     """
@@ -203,97 +201,101 @@ def extract_priority(query: str) -> Dict:
         return {'priority': 'high'}
     return {}
 
-router.add_metadata_extractor(extract_priority)
 
-# Teste de queries
-test_queries = [
-    ("Como configurar o servidor?", {'user_department': 'it'}),
-    ("Política de férias do RH de 2024", {'user_department': 'hr'}),
-    ("Relatórios de vendas dos últimos 30 dias", {'user_department': 'sales'}),
-    ("Manual de Python código exemplo", None),
-    ("Contrato urgente do cliente X", {'user_department': 'legal'}),
-    ("Email sobre reunião em janeiro", None),
-]
+if __name__ == "__main__":
+    router.add_metadata_extractor(extract_priority)
 
-results = []
-for query, user_ctx in test_queries:
-    print(f"\n📝 Query: '{query}'")
-    if user_ctx:
-        print(f"   User: {user_ctx}")
+    # Teste de queries
+    test_queries = [
+        ("Como configurar o servidor?", {'user_department': 'it'}),
+        ("Política de férias do RH de 2024", {'user_department': 'hr'}),
+        ("Relatórios de vendas dos últimos 30 dias", {'user_department': 'sales'}),
+        ("Manual de Python código exemplo", None),
+        ("Contrato urgente do cliente X", {'user_department': 'legal'}),
+        ("Email sobre reunião em janeiro", None),
+    ]
 
-    result = router.route_query(query, user_ctx)
-    results.append(result)
+    results = []
+    for query, user_ctx in test_queries:
+        print(f"\n📝 Query: '{query}'")
+        if user_ctx:
+            print(f"   User: {user_ctx}")
 
-    print(f"   ➡️  Route: {result['route']}")
-    print(f"   📊 Index: {result['index']}")
-    if result['filters']:
-        print(f"   🔍 Filters: {result['filters']}")
+        result = router.route_query(query, user_ctx)
+        results.append(result)
 
-# === VISUALIZAÇÃO ===
+        print(f"   ➡️  Route: {result['route']}")
+        print(f"   📊 Index: {result['index']}")
+        if result['filters']:
+            print(f"   🔍 Filters: {result['filters']}")
 
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+    # === VISUALIZAÇÃO ===
 
-# 1. Route distribution
-ax = axes[0, 0]
-routes = list(router.routing_stats.keys())
-counts = list(router.routing_stats.values())
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-ax.pie(counts, labels=routes, autopct='%1.1f%%', startangle=90)
-ax.set_title('Query Routing Distribution')
+    # 1. Route distribution
+    ax = axes[0, 0]
+    routes = list(router.routing_stats.keys())
+    counts = list(router.routing_stats.values())
 
-# 2. Filters applied
-ax = axes[0, 1]
-filter_types = defaultdict(int)
-for result in results:
-    for filter_key in result['filters'].keys():
-        filter_types[filter_key] += 1
+    ax.pie(counts, labels=routes, autopct='%1.1f%%', startangle=90)
+    ax.set_title('Query Routing Distribution')
 
-if filter_types:
-    ax.barh(list(filter_types.keys()), list(filter_types.values()),
-            color='skyblue', alpha=0.7)
-    ax.set_xlabel('Count')
-    ax.set_title('Metadata Filters Applied')
-    ax.grid(axis='x', alpha=0.3)
+    # 2. Filters applied
+    ax = axes[0, 1]
+    filter_types = defaultdict(int)
+    for result in results:
+        for filter_key in result['filters'].keys():
+            filter_types[filter_key] += 1
 
-# 3. Index usage
-ax = axes[1, 0]
-index_usage = defaultdict(int)
-for result in results:
-    index_usage[result['index']] += 1
+    if filter_types:
+        ax.barh(list(filter_types.keys()), list(filter_types.values()),
+                color='skyblue', alpha=0.7)
+        ax.set_xlabel('Count')
+        ax.set_title('Metadata Filters Applied')
+        ax.grid(axis='x', alpha=0.3)
 
-ax.bar(range(len(index_usage)), list(index_usage.values()),
-       color='lightgreen', alpha=0.7)
-ax.set_xticks(range(len(index_usage)))
-ax.set_xticklabels(list(index_usage.keys()), rotation=45, ha='right')
-ax.set_ylabel('Queries')
-ax.set_title('Index Usage')
-ax.grid(axis='y', alpha=0.3)
+    # 3. Index usage
+    ax = axes[1, 0]
+    index_usage = defaultdict(int)
+    for result in results:
+        index_usage[result['index']] += 1
 
-# 4. Filter complexity (number of filters per query)
-ax = axes[1, 1]
-filter_counts = [len(r['filters']) for r in results]
-ax.hist(filter_counts, bins=range(0, max(filter_counts)+2), 
-        color='coral', alpha=0.7, edgecolor='black')
-ax.set_xlabel('Number of Filters')
-ax.set_ylabel('Frequency')
-ax.set_title('Filter Complexity Distribution')
-ax.grid(axis='y', alpha=0.3)
+    ax.bar(range(len(index_usage)), list(index_usage.values()),
+           color='lightgreen', alpha=0.7)
+    ax.set_xticks(range(len(index_usage)))
+    ax.set_xticklabels(list(index_usage.keys()), rotation=45, ha='right')
+    ax.set_ylabel('Queries')
+    ax.set_title('Index Usage')
+    ax.grid(axis='y', alpha=0.3)
 
-plt.tight_layout()
-plt.show()
-print("\n📊 Gráfico salvo: query_routing_analysis.png")
+    # 4. Filter complexity (number of filters per query)
+    ax = axes[1, 1]
+    filter_counts = [len(r['filters']) for r in results]
+    ax.hist(filter_counts, bins=range(0, max(filter_counts)+2), 
+            color='coral', alpha=0.7, edgecolor='black')
+    ax.set_xlabel('Number of Filters')
+    ax.set_ylabel('Frequency')
+    ax.set_title('Filter Complexity Distribution')
+    ax.grid(axis='y', alpha=0.3)
 
-# Summary
-print("\n" + "="*70)
-print("📈 ROUTING STATISTICS")
-print("="*70)
-print(f"\nTotal queries: {len(results)}")
-print(f"\nRoutes hit:")
-for route, count in router.routing_stats.items():
-    print(f"  - {route}: {count} ({count/len(results)*100:.1f}%)")
+    plt.tight_layout()
+    plt.savefig('go1704_query_routing.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1704_query_routing.png")
+    plt.show()
+    print("\n📊 Gráfico salvo: query_routing_analysis.png")
 
-print(f"\nMost common filters:")
-for filter_type, count in sorted(filter_types.items(), key=lambda x: x[1], reverse=True):
-    print(f"  - {filter_type}: {count}")
+    # Summary
+    print("\n" + "="*70)
+    print("📈 ROUTING STATISTICS")
+    print("="*70)
+    print(f"\nTotal queries: {len(results)}")
+    print(f"\nRoutes hit:")
+    for route, count in router.routing_stats.items():
+        print(f"  - {route}: {count} ({count/len(results)*100:.1f}%)")
 
-print("\n✅ Smart Query Router implementado!")
+    print(f"\nMost common filters:")
+    for filter_type, count in sorted(filter_types.items(), key=lambda x: x[1], reverse=True):
+        print(f"  - {filter_type}: {count}")
+
+    print("\n✅ Smart Query Router implementado!")

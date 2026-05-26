@@ -1,4 +1,35 @@
-# GO1823-Codigo
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+GO1823-Codigo
+Aula 18 - Reinforcement Learning
+Curso: Inteligência Artificial - FAPA
+
+DOUBLE DQN + DUELING ARCHITECTURE NO CARTPOLE
+==============================================
+Melhorias sobre o DQN original (DeepMind 2015):
+
+1. DOUBLE DQN (van Hasselt et al., 2016):
+   Problema do DQN vanilla: Q-values são sistematicamente superestimados
+   (o agente pensa que as ações são melhores do que realmente são).
+
+   Solução: Separar SELEÇÃO de ação e AVALIAÇÃO de valor:
+     DQN vanilla:    target = r + γ * max_a' Q_target(s', a')
+     Double DQN:     target = r + γ * Q_target(s', argmax_a' Q_model(s', a'))
+     ↑ Q_model seleciona a melhor ação, Q_target avalia o valor dessa ação.
+
+2. DUELING DQN (Wang et al., 2016):
+   Separa Q-value em duas componentes:
+     Q(s,a) = V(s) + A(s,a) - mean(A)
+   Onde:
+     V(s) = "quanto vale estar no estado s?" (value stream)
+     A(s,a) = "quanto é melhor tomar ação a vs. média?" (advantage stream)
+
+   Vantagem: O agente aprende o valor dos estados mesmo sem explorar todas as ações!
+
+Instalação: pip install gymnasium tensorflow keras numpy matplotlib
+"""
+
 import numpy as np
 import gymnasium as gym
 import tensorflow as tf
@@ -6,16 +37,7 @@ from tensorflow import keras
 from keras import layers
 from collections import deque
 import random
-
-import matplotlib
 import matplotlib.pyplot as plt
-
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 # ═══════════════════════════════════════════════════════════════════
 # 1. DUELING DQN ARCHITECTURE
@@ -23,25 +45,37 @@ except NameError:
 
 def build_dueling_dqn(state_size, action_size, learning_rate=0.001):
     """
-    Dueling DQN separa Value Stream e Advantage Stream
-    Q(s,a) = V(s) + (A(s,a) - mean(A(s,a')))
+    Rede Dueling DQN com dois streams paralelos após o extrator de features.
+
+    Arquitetura:
+      Entrada → [Feature Extractor] → ┬→ [Value Stream]     → V(s)      ┐
+                                      └→ [Advantage Stream] → A(s,a)   ┤ → Q(s,a)
+                                                                         ┘
+
+    Q(s,a) = V(s) + (A(s,a) - mean_a'[A(s,a')])
+
+    Por que subtrair a média do advantage?
+      Para garantir que a decomposição V + A seja ÚNICA (identificável).
+      Sem isso, poderíamos ter V=V+c e A=A-c para qualquer constante c.
     """
     inputs = layers.Input(shape=(state_size,))
 
-    # Shared feature extractor
+    # Feature extractor compartilhado: ambos streams usam as mesmas features
     x = layers.Dense(128, activation='relu')(inputs)
     x = layers.Dense(128, activation='relu')(x)
 
-    # Value stream
+    # VALUE STREAM: quanto vale estar no estado s (independente da ação)
+    # → aprende "estados perigosos" vs "estados seguros"
     value_stream = layers.Dense(64, activation='relu')(x)
     value = layers.Dense(1, activation='linear', name='value')(value_stream)
 
-    # Advantage stream
+    # ADVANTAGE STREAM: quanto é melhor cada ação relativa à média
+    # → aprende "ir para esquerda" vs "ir para direita" em cada estado
     advantage_stream = layers.Dense(64, activation='relu')(x)
     advantage = layers.Dense(action_size, activation='linear', name='advantage')(advantage_stream)
 
-    # Aggregate: Q(s,a) = V(s) + (A(s,a) - mean(A))
-    # Subtração da média garante identificabilidade única
+    # AGREGAÇÃO: Q(s,a) = V(s) + (A(s,a) - mean(A))
+    # Subtração da média força identificabilidade única da decomposição
     q_values = value + (advantage - tf.reduce_mean(advantage, axis=1, keepdims=True))
 
     model = keras.Model(inputs=inputs, outputs=q_values)
@@ -103,38 +137,48 @@ class DoubleDuelingDQNAgent:
         return np.argmax(q_values[0])
 
     def replay(self):
-        """Treinar com mini-batch usando Double DQN"""
+        """
+        Treina com mini-batch usando Double DQN.
+
+        Comparação DQN vs Double DQN:
+          DQN vanilla:   target = r + γ * max_a' Q_target(s', a')
+                         → mesma rede seleciona E avalia → viés otimista!
+
+          Double DQN:    melhor_a = argmax_a' Q_model(s', a')   (Q-network seleciona)
+                         target = r + γ * Q_target(s', melhor_a) (target avalia)
+                         → desacopla seleção e avaliação → menos viés!
+        """
         if len(self.memory) < self.batch_size:
             return
 
-        # Sample mini-batch
         batch = random.sample(self.memory, self.batch_size)
 
-        states = np.vstack([x[0] for x in batch])
-        actions = np.array([x[1] for x in batch])
-        rewards = np.array([x[2] for x in batch])
-        next_states = np.vstack([x[3] for x in batch])
-        dones = np.array([x[4] for x in batch])
+        states = np.vstack([x[0] for x in batch])       # (B, state_size)
+        actions = np.array([x[1] for x in batch])       # (B,)
+        rewards = np.array([x[2] for x in batch])       # (B,)
+        next_states = np.vstack([x[3] for x in batch])  # (B, state_size)
+        dones = np.array([x[4] for x in batch])         # (B,) - bool
 
-        # Double DQN: usar model para SELECIONAR ação, target_model para AVALIAR
+        # Predições Q atuais (base para atualizar apenas a ação tomada)
         targets = self.model.predict(states, verbose=0)
 
-        # Ações selecionadas pelo Q-network
-        next_q_values_model = self.model.predict(next_states, verbose=0)
-        best_actions = np.argmax(next_q_values_model, axis=1)
+        # DOUBLE DQN passo 1: Q-network seleciona a MELHOR ação no próximo estado
+        next_q_model = self.model.predict(next_states, verbose=0)
+        best_actions = np.argmax(next_q_model, axis=1)
 
-        # Q-values avaliados pelo target network
-        next_q_values_target = self.target_model.predict(next_states, verbose=0)
+        # DOUBLE DQN passo 2: Target network AVALIA o valor da ação selecionada
+        # (não usa max → evita overestimation do DQN vanilla)
+        next_q_target = self.target_model.predict(next_states, verbose=0)
 
-        # Calcular targets com Double DQN
         for i in range(self.batch_size):
             if dones[i]:
+                # Episódio terminou: sem recompensa futura
                 targets[i][actions[i]] = rewards[i]
             else:
-                # Double DQN: Q_target(s', argmax_a Q(s',a))
-                targets[i][actions[i]] = rewards[i] + self.gamma * next_q_values_target[i][best_actions[i]]
+                # Double DQN: avalia a ação selecionada pelo Q-network com o target
+                targets[i][actions[i]] = (rewards[i] +
+                                          self.gamma * next_q_target[i][best_actions[i]])
 
-        # Treinar
         self.model.fit(states, targets, epochs=1, verbose=0, batch_size=self.batch_size)
 
     def decay_epsilon(self):

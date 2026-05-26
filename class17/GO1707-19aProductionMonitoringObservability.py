@@ -10,10 +10,8 @@ import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+import matplotlib
+matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
 class RAGMonitor:
     """
@@ -286,91 +284,95 @@ rag_error_rate {stats['error_rate']}
 
 # === DEMO ===
 
-print("🚦 Production Monitoring Demo\n")
-print("="*70)
 
-monitor = RAGMonitor()
+if __name__ == "__main__":
+    print("🚦 Production Monitoring Demo\n")
+    print("="*70)
 
-# Simulate queries over time
-print("Simulating production traffic...\n")
+    monitor = RAGMonitor()
 
-base_time = datetime.now() - timedelta(hours=5)
-for i in range(100):
-    # Simulate query execution
-    query = f"Query {i+1}"
-    latency = np.random.exponential(1.5) + 0.5  # Mean 2s
-    retrieval_score = np.random.beta(8, 2)  # Mostly high scores
-    token_count = int(np.random.normal(500, 150))
-    cost = token_count / 1_000_000 * 2.5  # $2.5 per 1M tokens
+    # Simulate queries over time
+    print("Simulating production traffic...\n")
 
-    # Occasional errors (5%)
-    error = "Timeout" if np.random.random() < 0.05 else None
+    base_time = datetime.now() - timedelta(hours=5)
+    for i in range(100):
+        # Simulate query execution
+        query = f"Query {i+1}"
+        latency = np.random.exponential(1.5) + 0.5  # Mean 2s
+        retrieval_score = np.random.beta(8, 2)  # Mostly high scores
+        token_count = int(np.random.normal(500, 150))
+        cost = token_count / 1_000_000 * 2.5  # $2.5 per 1M tokens
 
-    # Occasional spikes
-    if i % 20 == 0:
-        latency *= 3
+        # Occasional errors (5%)
+        error = "Timeout" if np.random.random() < 0.05 else None
 
-    monitor.log_query(query, latency, retrieval_score, token_count, cost, error)
+        # Occasional spikes
+        if i % 20 == 0:
+            latency *= 3
 
-    if (i + 1) % 20 == 0:
-        print(f"  Logged {i+1} queries...")
+        monitor.log_query(query, latency, retrieval_score, token_count, cost, error)
 
-# Get statistics
-stats = monitor.get_statistics()
+        if (i + 1) % 20 == 0:
+            print(f"  Logged {i+1} queries...")
 
-print("\n📊 STATISTICS:")
-print(f"   Total queries: {stats['total_queries']}")
-print(f"   Latency P50: {stats['latency_p50']:.2f}s")
-print(f"   Latency P95: {stats['latency_p95']:.2f}s")
-print(f"   Latency P99: {stats['latency_p99']:.2f}s")
-print(f"   Avg retrieval score: {stats['avg_retrieval_score']:.3f}")
-print(f"   Total tokens: {stats['total_tokens']:,}")
-print(f"   Total cost: ${stats['total_cost']:.4f}")
-print(f"   Error rate: {stats['error_rate']*100:.1f}%")
-print(f"   Queries/hour: {stats['queries_per_hour']:.1f}")
+    # Get statistics
+    stats = monitor.get_statistics()
 
-# Check alerts
-alerts = monitor.get_alerts()
+    print("\n📊 STATISTICS:")
+    print(f"   Total queries: {stats['total_queries']}")
+    print(f"   Latency P50: {stats['latency_p50']:.2f}s")
+    print(f"   Latency P95: {stats['latency_p95']:.2f}s")
+    print(f"   Latency P99: {stats['latency_p99']:.2f}s")
+    print(f"   Avg retrieval score: {stats['avg_retrieval_score']:.3f}")
+    print(f"   Total tokens: {stats['total_tokens']:,}")
+    print(f"   Total cost: ${stats['total_cost']:.4f}")
+    print(f"   Error rate: {stats['error_rate']*100:.1f}%")
+    print(f"   Queries/hour: {stats['queries_per_hour']:.1f}")
 
-if alerts:
-    print(f"\n🚨 ALERTS ({len(alerts)}):")
-    for alert in alerts:
-        severity_emoji = '🔴' if alert['severity'] == 'critical' else '🟡'
-        print(f"   {severity_emoji} [{alert['severity'].upper()}] {alert['message']}")
-else:
-    print("\n✅ No alerts - all systems nominal")
+    # Check alerts
+    alerts = monitor.get_alerts()
 
-# Export Prometheus metrics
-print("\n📈 Prometheus Metrics:")
-print(monitor.export_prometheus_metrics()[:300] + "\n...")
+    if alerts:
+        print(f"\n🚨 ALERTS ({len(alerts)}):")
+        for alert in alerts:
+            severity_emoji = '🔴' if alert['severity'] == 'critical' else '🟡'
+            print(f"   {severity_emoji} [{alert['severity'].upper()}] {alert['message']}")
+    else:
+        print("\n✅ No alerts - all systems nominal")
 
-# Visualize dashboard
-print("\n📊 Generating monitoring dashboard...")
-fig = monitor.visualize_dashboard()
-plt.show()
-print("✅ Dashboard saved: rag_monitoring_dashboard.png")
+    # Export Prometheus metrics
+    print("\n📈 Prometheus Metrics:")
+    print(monitor.export_prometheus_metrics()[:300] + "\n...")
 
-print("\n✅ Production monitoring system implemented!")
-print("\n💡 INTEGRATION:")
-print("""
-# Prometheus scrape config
-scrape_configs:
-  - job_name: 'rag_system'
-    static_configs:
-      - targets: ['localhost:8000']
-    metrics_path: '/metrics'
-    scrape_interval: 30s
+    # Visualize dashboard
+    print("\n📊 Generating monitoring dashboard...")
+    fig = monitor.visualize_dashboard()
+    plt.savefig('go1707_monitoring.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1707_monitoring.png")
+    plt.show()
+    print("✅ Dashboard saved: rag_monitoring_dashboard.png")
 
-# Grafana alerts
-- alert: HighLatency
-  expr: rag_latency_seconds{quantile="0.95"} > 5
-  for: 5m
-  annotations:
-    summary: "RAG P95 latency is high"
+    print("\n✅ Production monitoring system implemented!")
+    print("\n💡 INTEGRATION:")
+    print("""
+    # Prometheus scrape config
+    scrape_configs:
+      - job_name: 'rag_system'
+        static_configs:
+          - targets: ['localhost:8000']
+        metrics_path: '/metrics'
+        scrape_interval: 30s
 
-- alert: HighErrorRate
-  expr: rag_error_rate > 0.05
-  for: 5m
-  annotations:
-    summary: "RAG error rate > 5%"
-""")
+    # Grafana alerts
+    - alert: HighLatency
+      expr: rag_latency_seconds{quantile="0.95"} > 5
+      for: 5m
+      annotations:
+        summary: "RAG P95 latency is high"
+
+    - alert: HighErrorRate
+      expr: rag_error_rate > 0.05
+      for: 5m
+      annotations:
+        summary: "RAG error rate > 5%"
+    """)

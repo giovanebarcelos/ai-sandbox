@@ -8,10 +8,8 @@ import matplotlib.pyplot as plt
 
 # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
 # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+import matplotlib
+matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
 class CostOptimizedRAG:
     """
@@ -170,186 +168,190 @@ class CostOptimizedRAG:
 
 # === COST COMPARISON ===
 
-print("💰 Cost Optimization Analysis\n")
-print("="*70)
 
-optimizer = CostOptimizedRAG()
+if __name__ == "__main__":
+    print("💰 Cost Optimization Analysis\n")
+    print("="*70)
 
-# Test queries
-test_cases = [
-    {
-        'query': 'What is ML?',
-        'complexity': 'simple',
-        'context_tokens': 500,
-        'response_tokens': 50
-    },
-    {
-        'query': 'Explain and compare supervised vs unsupervised learning approaches',
-        'complexity': 'complex',
-        'context_tokens': 2000,
-        'response_tokens': 300
-    },
-    {
-        'query': 'How does backpropagation work?',
-        'complexity': 'medium',
-        'context_tokens': 1000,
-        'response_tokens': 150
-    }
-]
+    optimizer = CostOptimizedRAG()
 
-results = []
+    # Test queries
+    test_cases = [
+        {
+            'query': 'What is ML?',
+            'complexity': 'simple',
+            'context_tokens': 500,
+            'response_tokens': 50
+        },
+        {
+            'query': 'Explain and compare supervised vs unsupervised learning approaches',
+            'complexity': 'complex',
+            'context_tokens': 2000,
+            'response_tokens': 300
+        },
+        {
+            'query': 'How does backpropagation work?',
+            'complexity': 'medium',
+            'context_tokens': 1000,
+            'response_tokens': 150
+        }
+    ]
 
-for tc in test_cases:
-    print(f"\n📌 Query: '{tc['query']}'")
-    print(f"   Complexity: {tc['complexity']}")
-    print("-"*70)
+    results = []
 
-    # Adaptive k
-    k = optimizer.adaptive_k_selection(tc['query'])
-    print(f"✅ Adaptive k: {k} documents")
+    for tc in test_cases:
+        print(f"\n📌 Query: '{tc['query']}'")
+        print(f"   Complexity: {tc['complexity']}")
+        print("-"*70)
 
-    # Model routing
-    model = optimizer.model_routing(tc['query'])
+        # Adaptive k
+        k = optimizer.adaptive_k_selection(tc['query'])
+        print(f"✅ Adaptive k: {k} documents")
 
-    # Cost estimation
-    cost = optimizer.estimate_cost(
-        tc['query'],
-        tc['context_tokens'],
-        tc['response_tokens'],
-        model
-    )
+        # Model routing
+        model = optimizer.model_routing(tc['query'])
 
-    print(f"\n💵 Estimated Cost:")
-    print(f"   Embedding: ${cost['embedding']:.6f}")
-    print(f"   Input: ${cost['input']:.6f}")
-    print(f"   Output: ${cost['output']:.6f}")
-    print(f"   Total: ${cost['total']:.6f}")
+        # Cost estimation
+        cost = optimizer.estimate_cost(
+            tc['query'],
+            tc['context_tokens'],
+            tc['response_tokens'],
+            model
+        )
 
-    results.append({
-        **tc,
-        'k': k,
-        'model': model,
-        **cost
-    })
+        print(f"\n💵 Estimated Cost:")
+        print(f"   Embedding: ${cost['embedding']:.6f}")
+        print(f"   Input: ${cost['input']:.6f}")
+        print(f"   Output: ${cost['output']:.6f}")
+        print(f"   Total: ${cost['total']:.6f}")
 
-# Visualize cost comparison
-fig, axes = plt.subplots(2, 2, figsize=(14, 10))
+        results.append({
+            **tc,
+            'k': k,
+            'model': model,
+            **cost
+        })
 
-# 1. Cost breakdown
-ax = axes[0, 0]
-categories = [r['complexity'] for r in results]
-embedding_costs = [r['embedding'] * 1000 for r in results]  # Convert to milli-dollars
-input_costs = [r['input'] * 1000 for r in results]
-output_costs = [r['output'] * 1000 for r in results]
+    # Visualize cost comparison
+    fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
-x = np.arange(len(categories))
-width = 0.25
+    # 1. Cost breakdown
+    ax = axes[0, 0]
+    categories = [r['complexity'] for r in results]
+    embedding_costs = [r['embedding'] * 1000 for r in results]  # Convert to milli-dollars
+    input_costs = [r['input'] * 1000 for r in results]
+    output_costs = [r['output'] * 1000 for r in results]
 
-ax.bar(x - width, embedding_costs, width, label='Embedding', alpha=0.8)
-ax.bar(x, input_costs, width, label='Input', alpha=0.8)
-ax.bar(x + width, output_costs, width, label='Output', alpha=0.8)
+    x = np.arange(len(categories))
+    width = 0.25
 
-ax.set_ylabel('Cost (milli-dollars)')
-ax.set_title('Cost Breakdown by Query Type')
-ax.set_xticks(x)
-ax.set_xticklabels(categories)
-ax.legend()
-ax.grid(axis='y', alpha=0.3)
+    ax.bar(x - width, embedding_costs, width, label='Embedding', alpha=0.8)
+    ax.bar(x, input_costs, width, label='Input', alpha=0.8)
+    ax.bar(x + width, output_costs, width, label='Output', alpha=0.8)
 
-# 2. Optimization strategies impact
-ax = axes[0, 1]
-strategies = ['Baseline', 'Adaptive k', 'Model\nRouting', 'Prompt\nCompression', 'All\nOptimizations']
-cost_reduction = [0, 15, 30, 20, 50]  # % reduction
-colors = ['lightcoral', 'yellow', 'lightgreen', 'lightblue', 'green']
+    ax.set_ylabel('Cost (milli-dollars)')
+    ax.set_title('Cost Breakdown by Query Type')
+    ax.set_xticks(x)
+    ax.set_xticklabels(categories)
+    ax.legend()
+    ax.grid(axis='y', alpha=0.3)
 
-bars = ax.barh(strategies, cost_reduction, color=colors, alpha=0.7)
-ax.set_xlabel('Cost Reduction (%)')
-ax.set_title('Impact of Optimization Strategies')
-ax.grid(axis='x', alpha=0.3)
+    # 2. Optimization strategies impact
+    ax = axes[0, 1]
+    strategies = ['Baseline', 'Adaptive k', 'Model\nRouting', 'Prompt\nCompression', 'All\nOptimizations']
+    cost_reduction = [0, 15, 30, 20, 50]  # % reduction
+    colors = ['lightcoral', 'yellow', 'lightgreen', 'lightblue', 'green']
 
-for bar, reduction in zip(bars, cost_reduction):
-    width = bar.get_width()
-    ax.text(width + 1, bar.get_y() + bar.get_height()/2,
-            f'{reduction}%', ha='left', va='center', fontweight='bold')
+    bars = ax.barh(strategies, cost_reduction, color=colors, alpha=0.7)
+    ax.set_xlabel('Cost Reduction (%)')
+    ax.set_title('Impact of Optimization Strategies')
+    ax.grid(axis='x', alpha=0.3)
 
-# 3. Monthly cost projection
-ax = axes[1, 0]
-queries_per_day = range(100, 10001, 500)
+    for bar, reduction in zip(bars, cost_reduction):
+        width = bar.get_width()
+        ax.text(width + 1, bar.get_y() + bar.get_height()/2,
+                f'{reduction}%', ha='left', va='center', fontweight='bold')
 
-# Baseline: GPT-4 always, k=5
-baseline_costs = [q * 0.015 * 30 for q in queries_per_day]  # $0.015 per query
+    # 3. Monthly cost projection
+    ax = axes[1, 0]
+    queries_per_day = range(100, 10001, 500)
 
-# Optimized: adaptive k, model routing, caching (50% reduction)
-optimized_costs = [q * 0.015 * 0.5 * 30 for q in queries_per_day]
+    # Baseline: GPT-4 always, k=5
+    baseline_costs = [q * 0.015 * 30 for q in queries_per_day]  # $0.015 per query
 
-# Local (Ollama): only infrastructure costs
-local_costs = [200] * len(queries_per_day)  # Flat $200/month (hardware + electricity)
+    # Optimized: adaptive k, model routing, caching (50% reduction)
+    optimized_costs = [q * 0.015 * 0.5 * 30 for q in queries_per_day]
 
-ax.plot(queries_per_day, baseline_costs, label='Baseline (Cloud)', linewidth=2, color='red')
-ax.plot(queries_per_day, optimized_costs, label='Optimized (Cloud)', linewidth=2, color='orange')
-ax.plot(queries_per_day, local_costs, label='Local (Ollama)', linewidth=2, color='green')
+    # Local (Ollama): only infrastructure costs
+    local_costs = [200] * len(queries_per_day)  # Flat $200/month (hardware + electricity)
 
-ax.set_xlabel('Queries per Day')
-ax.set_ylabel('Monthly Cost ($)')
-ax.set_title('Monthly Cost Projection')
-ax.legend()
-ax.grid(alpha=0.3)
+    ax.plot(queries_per_day, baseline_costs, label='Baseline (Cloud)', linewidth=2, color='red')
+    ax.plot(queries_per_day, optimized_costs, label='Optimized (Cloud)', linewidth=2, color='orange')
+    ax.plot(queries_per_day, local_costs, label='Local (Ollama)', linewidth=2, color='green')
 
-# Highlight break-even point
-break_even_queries = 200 / (0.015 * 30)  # ~444 queries/day
-ax.axvline(break_even_queries, color='green', linestyle='--', alpha=0.5)
-ax.text(break_even_queries + 500, max(baseline_costs) * 0.8,
-        f'Break-even:\n{break_even_queries:.0f} q/day', color='green')
+    ax.set_xlabel('Queries per Day')
+    ax.set_ylabel('Monthly Cost ($)')
+    ax.set_title('Monthly Cost Projection')
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-# 4. ROI timeline
-ax = axes[1, 1]
-months = range(1, 25)
+    # Highlight break-even point
+    break_even_queries = 200 / (0.015 * 30)  # ~444 queries/day
+    ax.axvline(break_even_queries, color='green', linestyle='--', alpha=0.5)
+    ax.text(break_even_queries + 500, max(baseline_costs) * 0.8,
+            f'Break-even:\n{break_even_queries:.0f} q/day', color='green')
 
-# Cloud costs (optimized)
-cloud_cost_monthly = 500  # Assume 1000 queries/day
-cloud_costs_cumulative = [cloud_cost_monthly * m for m in months]
+    # 4. ROI timeline
+    ax = axes[1, 1]
+    months = range(1, 25)
 
-# Local costs (hardware + monthly)
-hardware_cost = 2000  # One-time
-local_cost_monthly = 50  # Electricity + maintenance
-local_costs_cumulative = [hardware_cost + local_cost_monthly * m for m in months]
+    # Cloud costs (optimized)
+    cloud_cost_monthly = 500  # Assume 1000 queries/day
+    cloud_costs_cumulative = [cloud_cost_monthly * m for m in months]
 
-ax.plot(months, cloud_costs_cumulative, label='Cloud (Optimized)', linewidth=2, color='orange')
-ax.plot(months, local_costs_cumulative, label='Local (Ollama)', linewidth=2, color='green')
+    # Local costs (hardware + monthly)
+    hardware_cost = 2000  # One-time
+    local_cost_monthly = 50  # Electricity + maintenance
+    local_costs_cumulative = [hardware_cost + local_cost_monthly * m for m in months]
 
-# Find break-even
-for i, m in enumerate(months):
-    if local_costs_cumulative[i] < cloud_costs_cumulative[i]:
-        break_even_month = m
-        break
+    ax.plot(months, cloud_costs_cumulative, label='Cloud (Optimized)', linewidth=2, color='orange')
+    ax.plot(months, local_costs_cumulative, label='Local (Ollama)', linewidth=2, color='green')
 
-ax.axvline(break_even_month, color='black', linestyle='--', alpha=0.5)
-ax.text(break_even_month + 1, max(cloud_costs_cumulative) * 0.5,
-        f'Break-even:\n{break_even_month} months', fontweight='bold')
+    # Find break-even
+    for i, m in enumerate(months):
+        if local_costs_cumulative[i] < cloud_costs_cumulative[i]:
+            break_even_month = m
+            break
 
-ax.set_xlabel('Months')
-ax.set_ylabel('Cumulative Cost ($)')
-ax.set_title('ROI: Cloud vs Local')
-ax.legend()
-ax.grid(alpha=0.3)
+    ax.axvline(break_even_month, color='black', linestyle='--', alpha=0.5)
+    ax.text(break_even_month + 1, max(cloud_costs_cumulative) * 0.5,
+            f'Break-even:\n{break_even_month} months', fontweight='bold')
 
-plt.tight_layout()
-plt.show()
-print("\n\n📊 Gráfico salvo: cost_optimization_analysis.png")
+    ax.set_xlabel('Months')
+    ax.set_ylabel('Cumulative Cost ($)')
+    ax.set_title('ROI: Cloud vs Local')
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-# Summary recommendations
-print("\n📋 COST OPTIMIZATION RECOMMENDATIONS:")
-print("\n1. SHORT-TERM (Immediate):")
-print("   ✅ Implement adaptive k (15% savings)")
-print("   ✅ Add query complexity routing (30% savings)")
-print("   ✅ Enable response caching (20% hit rate = 20% savings)")
-print("\n2. MEDIUM-TERM (1-3 months):")
-print("   ✅ Implement two-stage retrieval")
-print("   ✅ Compress prompts for long contexts")
-print("   ✅ Batch non-urgent queries")
-print("\n3. LONG-TERM (6+ months, high volume):")
-print("   ✅ Deploy local models (Ollama)")
-print("   ✅ Break-even: ~444 queries/day")
-print("   ✅ ROI: 3-4 months for 1000+ queries/day")
+    plt.tight_layout()
+    plt.savefig('go1710_cost_optimization.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1710_cost_optimization.png")
+    plt.show()
+    print("\n\n📊 Gráfico salvo: cost_optimization_analysis.png")
 
-print("\n✅ Cost optimization strategy implementado!")
+    # Summary recommendations
+    print("\n📋 COST OPTIMIZATION RECOMMENDATIONS:")
+    print("\n1. SHORT-TERM (Immediate):")
+    print("   ✅ Implement adaptive k (15% savings)")
+    print("   ✅ Add query complexity routing (30% savings)")
+    print("   ✅ Enable response caching (20% hit rate = 20% savings)")
+    print("\n2. MEDIUM-TERM (1-3 months):")
+    print("   ✅ Implement two-stage retrieval")
+    print("   ✅ Compress prompts for long contexts")
+    print("   ✅ Batch non-urgent queries")
+    print("\n3. LONG-TERM (6+ months, high volume):")
+    print("   ✅ Deploy local models (Ollama)")
+    print("   ✅ Break-even: ~444 queries/day")
+    print("   ✅ ROI: 3-4 months for 1000+ queries/day")
+
+    print("\n✅ Cost optimization strategy implementado!")

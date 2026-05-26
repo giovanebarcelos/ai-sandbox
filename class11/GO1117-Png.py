@@ -7,8 +7,8 @@
 # Essas 3 features substituem o "25" original, enriquecendo a representação.
 #
 # Para implementar em Python, veja GO1118 (código executável equivalente).
-Idade = 25 anos
-    ↓ Fuzzificação
-[Jovem: 0.8, Adulto: 0.2, Idoso: 0.0]
-    ↓ ML
-Usa essas 3 features ao invés de 1
+# Idade = 25 anos
+# ↓ Fuzzificação
+# [Jovem: 0.8, Adulto: 0.2, Idoso: 0.0]
+# ↓ ML
+# Usa essas 3 features ao invés de 1

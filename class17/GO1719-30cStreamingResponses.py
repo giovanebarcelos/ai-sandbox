@@ -116,157 +116,159 @@ Answer: """
 
 # === DEMO: Sync Streaming ===
 
-print("🌊 Demo: Streaming RAG\n")
-print("="*70)
 
-rag = StreamingRAG()
+if __name__ == "__main__":
+    print("🌊 Demo: Streaming RAG\n")
+    print("="*70)
 
-query = "What is machine learning?"
-print(f"Query: {query}\n")
-print("Response: ", end='', flush=True)
+    rag = StreamingRAG()
 
-full_response = ""
-start_time = time.time()
-first_token_time = None
+    query = "What is machine learning?"
+    print(f"Query: {query}\n")
+    print("Response: ", end='', flush=True)
 
-for chunk in rag.stream_query(query):
-    if chunk['type'] == 'status':
-        print(f"\n[{chunk['message']}]")
+    full_response = ""
+    start_time = time.time()
+    first_token_time = None
 
-    elif chunk['type'] == 'context':
-        print(f"[{chunk['message']}]")
-        print("\nAnswer: ", end='', flush=True)
+    for chunk in rag.stream_query(query):
+        if chunk['type'] == 'status':
+            print(f"\n[{chunk['message']}]")
 
-    elif chunk['type'] == 'token':
-        if first_token_time is None:
-            first_token_time = time.time()
+        elif chunk['type'] == 'context':
+            print(f"[{chunk['message']}]")
+            print("\nAnswer: ", end='', flush=True)
 
-        print(chunk['token'], end='', flush=True)
-        full_response += chunk['token']
+        elif chunk['type'] == 'token':
+            if first_token_time is None:
+                first_token_time = time.time()
 
-    elif chunk['type'] == 'done':
-        total_time = time.time() - start_time
-        ttft = first_token_time - start_time if first_token_time else 0  # Time To First Token
+            print(chunk['token'], end='', flush=True)
+            full_response += chunk['token']
 
-        print(f"\n\n✅ Done!")
-        print(f"   Time to first token: {ttft:.2f}s")
-        print(f"   Total time: {total_time:.2f}s")
-        print(f"   Tokens: {chunk['metadata']['total_tokens']}")
-        print(f"   Tokens/second: {chunk['metadata']['total_tokens']/total_time:.1f}")
+        elif chunk['type'] == 'done':
+            total_time = time.time() - start_time
+            ttft = first_token_time - start_time if first_token_time else 0  # Time To First Token
 
-# === Demo: Streamlit Integration ===
+            print(f"\n\n✅ Done!")
+            print(f"   Time to first token: {ttft:.2f}s")
+            print(f"   Total time: {total_time:.2f}s")
+            print(f"   Tokens: {chunk['metadata']['total_tokens']}")
+            print(f"   Tokens/second: {chunk['metadata']['total_tokens']/total_time:.1f}")
 
-streamlit_code = '''
-import streamlit as st
+    # === Demo: Streamlit Integration ===
 
-# Streamlit com streaming
-st.title("RAG Chatbot (Streaming)")
+    streamlit_code = '''
+    import streamlit as st
 
-if prompt := st.chat_input("Sua pergunta"):
-    # User message
-    with st.chat_message("user"):
-        st.write(prompt)
+    # Streamlit com streaming
+    st.title("RAG Chatbot (Streaming)")
 
-    # Assistant message with streaming
-    with st.chat_message("assistant"):
-        response_placeholder = st.empty()
-        full_response = ""
+    if prompt := st.chat_input("Sua pergunta"):
+        # User message
+        with st.chat_message("user"):
+            st.write(prompt)
 
-        for chunk in rag.stream_query(prompt):
-            if chunk['type'] == 'token':
-                full_response += chunk['token']
-                response_placeholder.markdown(full_response + "▌")
+        # Assistant message with streaming
+        with st.chat_message("assistant"):
+            response_placeholder = st.empty()
+            full_response = ""
 
-        response_placeholder.markdown(full_response)
-'''
+            for chunk in rag.stream_query(prompt):
+                if chunk['type'] == 'token':
+                    full_response += chunk['token']
+                    response_placeholder.markdown(full_response + "▌")
 
-print("\n\n📄 Streamlit Integration Code:")
-print(streamlit_code)
+            response_placeholder.markdown(full_response)
+    '''
 
-# Visualize streaming performance
-import numpy as np
+    print("\n\n📄 Streamlit Integration Code:")
+    print(streamlit_code)
 
-import matplotlib
-import matplotlib.pyplot as plt
+    # Visualize streaming performance
+    import numpy as np
 
-# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
-# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
-try:
-    get_ipython().run_line_magic('matplotlib', 'inline')
-except NameError:
-    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+    import matplotlib
+    import matplotlib.pyplot as plt
 
-fig, axes = plt.subplots(2, 2, figsize=(12, 10))
+    # Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+    # alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+    import matplotlib
+    matplotlib.use('Agg')  # Backend sem interface gráfica (compatível com servidor/script)
 
-# 1. Token generation timeline
-ax = axes[0, 0]
-n_tokens = 30
-times = np.cumsum([0.05] * n_tokens)  # Cumulative time
-ax.plot(range(n_tokens), times, marker='o', linewidth=2, markersize=4)
-ax.set_xlabel('Token Index')
-ax.set_ylabel('Cumulative Time (s)')
-ax.set_title('Token Generation Timeline')
-ax.grid(alpha=0.3)
+    fig, axes = plt.subplots(2, 2, figsize=(12, 10))
 
-# Highlight TTFT
-ax.axhline(y=times[0], color='red', linestyle='--', alpha=0.5)
-ax.text(n_tokens/2, times[0] + 0.1, f'TTFT: {times[0]:.2f}s', color='red')
+    # 1. Token generation timeline
+    ax = axes[0, 0]
+    n_tokens = 30
+    times = np.cumsum([0.05] * n_tokens)  # Cumulative time
+    ax.plot(range(n_tokens), times, marker='o', linewidth=2, markersize=4)
+    ax.set_xlabel('Token Index')
+    ax.set_ylabel('Cumulative Time (s)')
+    ax.set_title('Token Generation Timeline')
+    ax.grid(alpha=0.3)
 
-# 2. Streaming vs Non-streaming UX
-ax = axes[0, 1]
-scenarios = ['Non-streaming\n(wait for all)', 'Streaming\n(token-by-token)']
-perceived_latency = [3.0, 0.5]  # seconds
-colors = ['lightcoral', 'lightgreen']
-bars = ax.barh(scenarios, perceived_latency, color=colors, alpha=0.7)
-ax.set_xlabel('Perceived Latency (s)')
-ax.set_title('User Experience: Latency Perception')
-ax.grid(axis='x', alpha=0.3)
+    # Highlight TTFT
+    ax.axhline(y=times[0], color='red', linestyle='--', alpha=0.5)
+    ax.text(n_tokens/2, times[0] + 0.1, f'TTFT: {times[0]:.2f}s', color='red')
 
-for bar, lat in zip(bars, perceived_latency):
-    width = bar.get_width()
-    ax.text(width + 0.1, bar.get_y() + bar.get_height()/2,
-            f'{lat:.1f}s', ha='left', va='center')
+    # 2. Streaming vs Non-streaming UX
+    ax = axes[0, 1]
+    scenarios = ['Non-streaming\n(wait for all)', 'Streaming\n(token-by-token)']
+    perceived_latency = [3.0, 0.5]  # seconds
+    colors = ['lightcoral', 'lightgreen']
+    bars = ax.barh(scenarios, perceived_latency, color=colors, alpha=0.7)
+    ax.set_xlabel('Perceived Latency (s)')
+    ax.set_title('User Experience: Latency Perception')
+    ax.grid(axis='x', alpha=0.3)
 
-# 3. Throughput comparison
-ax = axes[1, 0]
-batch_sizes = [1, 4, 8, 16]
-streaming_throughput = [20, 75, 140, 250]  # tokens/sec
-non_streaming_throughput = [15, 50, 90, 150]
+    for bar, lat in zip(bars, perceived_latency):
+        width = bar.get_width()
+        ax.text(width + 0.1, bar.get_y() + bar.get_height()/2,
+                f'{lat:.1f}s', ha='left', va='center')
 
-ax.plot(batch_sizes, streaming_throughput, marker='o', label='Streaming', linewidth=2)
-ax.plot(batch_sizes, non_streaming_throughput, marker='s', label='Non-streaming', linewidth=2)
-ax.set_xlabel('Batch Size')
-ax.set_ylabel('Throughput (tokens/sec)')
-ax.set_title('Throughput: Streaming vs Non-streaming')
-ax.legend()
-ax.grid(alpha=0.3)
+    # 3. Throughput comparison
+    ax = axes[1, 0]
+    batch_sizes = [1, 4, 8, 16]
+    streaming_throughput = [20, 75, 140, 250]  # tokens/sec
+    non_streaming_throughput = [15, 50, 90, 150]
 
-# 4. Memory usage over time
-ax = axes[1, 1]
-time_points = np.linspace(0, 3, 50)
-# Streaming: constant memory
-streaming_mem = np.ones_like(time_points) * 500  # MB
-# Non-streaming: accumulates then releases
-non_streaming_mem = np.where(time_points < 2.5, time_points * 400, 100)
+    ax.plot(batch_sizes, streaming_throughput, marker='o', label='Streaming', linewidth=2)
+    ax.plot(batch_sizes, non_streaming_throughput, marker='s', label='Non-streaming', linewidth=2)
+    ax.set_xlabel('Batch Size')
+    ax.set_ylabel('Throughput (tokens/sec)')
+    ax.set_title('Throughput: Streaming vs Non-streaming')
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-ax.plot(time_points, streaming_mem, label='Streaming', linewidth=2, color='green')
-ax.plot(time_points, non_streaming_mem, label='Non-streaming', linewidth=2, color='red')
-ax.fill_between(time_points, 0, streaming_mem, alpha=0.2, color='green')
-ax.fill_between(time_points, 0, non_streaming_mem, alpha=0.2, color='red')
-ax.set_xlabel('Time (s)')
-ax.set_ylabel('Memory Usage (MB)')
-ax.set_title('Memory Usage Pattern')
-ax.legend()
-ax.grid(alpha=0.3)
+    # 4. Memory usage over time
+    ax = axes[1, 1]
+    time_points = np.linspace(0, 3, 50)
+    # Streaming: constant memory
+    streaming_mem = np.ones_like(time_points) * 500  # MB
+    # Non-streaming: accumulates then releases
+    non_streaming_mem = np.where(time_points < 2.5, time_points * 400, 100)
 
-plt.tight_layout()
-plt.show()
-print("\n📊 Gráfico salvo: streaming_rag_performance.png")
+    ax.plot(time_points, streaming_mem, label='Streaming', linewidth=2, color='green')
+    ax.plot(time_points, non_streaming_mem, label='Non-streaming', linewidth=2, color='red')
+    ax.fill_between(time_points, 0, streaming_mem, alpha=0.2, color='green')
+    ax.fill_between(time_points, 0, non_streaming_mem, alpha=0.2, color='red')
+    ax.set_xlabel('Time (s)')
+    ax.set_ylabel('Memory Usage (MB)')
+    ax.set_title('Memory Usage Pattern')
+    ax.legend()
+    ax.grid(alpha=0.3)
 
-print("\n✅ Streaming RAG implementado!")
-print("\n💡 BENEFITS:")
-print("   - Better UX (immediate feedback)")
-print("   - Lower perceived latency")
-print("   - Can cancel generation early")
-print("   - Constant memory usage")
-print("   - Better for long responses")
+    plt.tight_layout()
+    plt.savefig('go1719_streaming.png', dpi=120, bbox_inches='tight')
+    print(f"Grafico salvo: go1719_streaming.png")
+    plt.show()
+    print("\n📊 Gráfico salvo: streaming_rag_performance.png")
+
+    print("\n✅ Streaming RAG implementado!")
+    print("\n💡 BENEFITS:")
+    print("   - Better UX (immediate feedback)")
+    print("   - Lower perceived latency")
+    print("   - Can cancel generation early")
+    print("   - Constant memory usage")
+    print("   - Better for long responses")
