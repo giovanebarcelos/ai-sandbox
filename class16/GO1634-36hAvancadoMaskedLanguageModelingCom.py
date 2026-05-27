@@ -60,7 +60,7 @@ class BertMaskedLM:
         bars = plt.barh(range(len(tokens)), scores, color=colors, alpha=0.8, edgecolor='black')
 
         plt.yticks(range(len(tokens)), tokens, fontsize=11)
-        plt.xlabel('Probability Score', fontsize=12)
+        plt.xlabel('Pontuação de Probabilidade', fontsize=12)
         plt.title(f'BERT Masked Word Predictions\nText: "{text}"', fontsize=14, fontweight='bold')
         plt.xlim(0, max(scores) * 1.1)
         plt.gca().invert_yaxis()
@@ -197,9 +197,9 @@ class BertMaskedLM:
             offset = width * (idx - len(all_predictions)/2 + 0.5)
             ax.bar(x + offset, scores, width, label=context_labels[idx], alpha=0.8)
 
-        ax.set_ylabel('Probability Score')
-        ax.set_xlabel('Top-5 Predictions')
-        ax.set_title(f'Context Sensitivity Test - Original Word: "{word}"')
+        ax.set_ylabel('Pontuação de Probabilidade')
+        ax.set_xlabel('Top-5 Predições')
+        ax.set_title(f'Teste de Sensibilidade ao Contexto - Palavra Original: "{word}"')
         ax.set_xticks(x)
         ax.legend()
         ax.grid(axis='y', alpha=0.3)

@@ -17,7 +17,7 @@ class LongContextManager:
     """
     Estratégias para lidar com contextos longos
 
-    Methods:
+    Métodos:
     1. Chunking: dividir em partes
     2. Sliding window: janela deslizante
     3. Sparse attention: atenção esparsa
@@ -50,7 +50,7 @@ class LongContextManager:
         """
         Sliding window sobre tokens
 
-        Useful for: classification, embedding generation
+        Útil para: classificação, geração de embeddings
         """
         windows = []
 
@@ -58,7 +58,7 @@ class LongContextManager:
             window = tokens[i:i + window_size]
 
             if len(window) < window_size and windows:
-                # Last window, skip if too small
+                # Última janela, ignorar se muito pequena
                 break
 
             windows.append(window)
@@ -67,11 +67,11 @@ class LongContextManager:
 
     def hierarchical_summarize(self, text: str, levels: int = 2) -> Dict:
         """
-        Hierarchical summarization for long documents
+        Sumarização hierárquica para documentos longos
 
-        Level 0: Original text
-        Level 1: Summarize in chunks
-        Level 2: Summarize summaries
+        Nível 0: Texto original
+        Nível 1: Sumarizar em chunks
+        Nível 2: Sumarizar os resumos
         """
         results = {'level_0': text}
 
@@ -81,19 +81,19 @@ class LongContextManager:
             # Chunk current text
             chunks = self.chunk_text(current_text, chunk_size=1000, overlap=100)
 
-            # Simulate summarization (in real: use model)
+            # Simular sumarização (em produção: usar modelo)
             summaries = []
             for chunk in chunks:
-                # Extract first sentence as summary (simplified)
+                # Extrair primeira sentença como resumo (simplificado)
                 sentences = chunk.split('.')
                 summary = sentences[0][:200] if sentences else chunk[:200]
                 summaries.append(summary)
 
-            # Combine summaries
+            # Combinar resumos
             current_text = ' '.join(summaries)
             results[f'level_{level}'] = current_text
 
-            # Early stop if text is short enough
+            # Parar cedo se o texto for suficientemente curto
             if len(current_text.split()) < 500:
                 break
 
@@ -101,13 +101,13 @@ class LongContextManager:
 
     def sparse_attention_pattern(self, seq_length: int, pattern: str = 'fixed') -> np.ndarray:
         """
-        Generate sparse attention pattern
+        Gerar padrão de atenção esparsa
 
-        Patterns:
-        - fixed: attend to fixed positions (e.g., every 64th)
-        - local: attend to local window
-        - strided: attend with stride
-        - global: few global tokens attend to all
+        Padrões:
+        - fixed: atenção em posições fixas (ex.: a cada 64ª)
+        - local: atenção na janela local
+        - strided: atenção com passo
+        - global: poucos tokens globais atendem a todos
         """
         attention_matrix = np.zeros((seq_length, seq_length))
 
@@ -140,17 +140,17 @@ class LongContextManager:
 
     def compress_context(self, text: str, target_length: int = 1000) -> str:
         """
-        Compress long text to fit context window
+        Comprimir texto longo para caber na janela de contexto
 
-        Methods:
-        - Extract key sentences
-        - Remove redundancy
-        - Prioritize important info
+        Métodos:
+        - Extrair sentenças-chave
+        - Remover redundância
+        - Priorizar informações importantes
         """
         sentences = text.split('.')
 
-        # Score sentences by importance (simplified)
-        # In real system: use TF-IDF, embedding similarity, etc.
+        # Pontuar sentenças por importância (simplificado)
+        # Em um sistema real: use TF-IDF, similaridade de embeddings, etc.
         sentence_scores = []
 
         important_keywords = ['important', 'key', 'critical', 'main', 'summary', 
@@ -158,14 +158,14 @@ class LongContextManager:
 
         for sent in sentences:
             score = sum(1 for kw in important_keywords if kw in sent.lower())
-            # Longer sentences get slight bonus
+            # Sentenças mais longas recebem bônus
             score += len(sent.split()) / 100
             sentence_scores.append((sent, score))
 
-        # Sort by score
+        # Ordenar por pontuação
         sentence_scores.sort(key=lambda x: x[1], reverse=True)
 
-        # Take top sentences until target length
+        # Pegar as melhores sentenças até atingir o comprimento alvo
         compressed = []
         current_length = 0
 
@@ -181,7 +181,7 @@ class LongContextManager:
 
 # === DEMO ===
 
-print("📏 Long Context Handling Strategies\n")
+print("📏 Estratégias para Contextos Longos\n")
 print("="*70)
 
 manager = LongContextManager(max_context_length=4096)
@@ -189,31 +189,31 @@ manager = LongContextManager(max_context_length=4096)
 # Generate long text
 long_text = "Artificial intelligence has revolutionized technology. " * 500  # ~2500 words
 
-print(f"Long text: {len(long_text.split())} words\n")
+print(f"Texto longo: {len(long_text.split())} palavras\n")
 
 # Strategy 1: Chunking
-print("📌 Strategy 1: Chunking with Overlap\n")
+print("📌 Estratégia 1: Chunking com Sobreposição\n")
 
 chunks = manager.chunk_text(long_text, chunk_size=100, overlap=20)
 
-print(f"   Total chunks: {len(chunks)}")
-print(f"   Chunk size: ~100 words")
-print(f"   Overlap: 20 words")
-print(f"   Coverage: {sum(len(c.split()) for c in chunks)} words\n")
+print(f"   Total de chunks: {len(chunks)}")
+print(f"   Tamanho do chunk: ~100 palavras")
+print(f"   Sobreposição: 20 palavras")
+print(f"   Cobertura: {sum(len(c.split()) for c in chunks)} palavras\n")
 
 # Strategy 2: Hierarchical summarization
-print("📌 Strategy 2: Hierarchical Summarization\n")
+print("📌 Estratégia 2: Sumarização Hierárquica\n")
 
 hierarchy = manager.hierarchical_summarize(long_text[:10000], levels=3)
 
 for level, text in hierarchy.items():
     word_count = len(text.split())
-    print(f"   {level}: {word_count} words")
+    print(f"   {level}: {word_count} palavras")
 
 print()
 
-# Strategy 3: Sparse attention
-print("📌 Strategy 3: Sparse Attention Patterns\n")
+# Estratégia 3: Atenção esparsa
+print("📌 Estratégia 3: Padrões de Atenção Esparsa\n")
 
 seq_len = 256
 
@@ -229,14 +229,14 @@ for pattern in patterns:
     sparsity = 1 - (np.sum(attn_matrix) / (seq_len ** 2))
     sparsity_ratios[pattern] = sparsity
 
-    print(f"   {pattern.capitalize()} attention:")
-    print(f"      Sparsity: {sparsity:.1%}")
-    print(f"      Memory reduction: {sparsity:.1%}")
+    print(f"   Atenção {pattern.capitalize()}:")
+    print(f"      Esparsidade: {sparsity:.1%}")
+    print(f"      Redução de memória: {sparsity:.1%}")
 
 print()
 
 # Strategy 4: Compression
-print("📌 Strategy 4: Context Compression\n")
+print("📌 Estratégia 4: Compressão de Contexto\n")
 
 compressed = manager.compress_context(long_text, target_length=200)
 
@@ -244,9 +244,9 @@ original_words = len(long_text.split())
 compressed_words = len(compressed.split())
 compression_ratio = original_words / compressed_words
 
-print(f"   Original: {original_words} words")
-print(f"   Compressed: {compressed_words} words")
-print(f"   Compression: {compression_ratio:.1f}x\n")
+print(f"   Original: {original_words} palavras")
+print(f"   Comprimido: {compressed_words} palavras")
+print(f"   Compressão: {compression_ratio:.1f}x\n")
 
 # Visualize
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
@@ -263,8 +263,8 @@ for idx, (pattern, attn_matrix) in enumerate(attention_matrices.items()):
 
         im = ax.imshow(attn_matrix, cmap='Blues', aspect='auto')
         ax.set_title(f'{pattern.capitalize()} Attention\n(Sparsity: {sparsity_ratios[pattern]:.0%})')
-        ax.set_xlabel('Key Position')
-        ax.set_ylabel('Query Position')
+        ax.set_xlabel('Posição da Chave')
+        ax.set_ylabel('Posição da Consulta')
         plt.colorbar(im, ax=ax)
 
 # 2. Context length evolution
@@ -274,9 +274,9 @@ models = ['GPT-2\n(2019)', 'GPT-3\n(2020)', 'GPT-4-32K\n(2023)', 'Claude 3\n(202
 context_lengths = [1024, 4096, 32768, 200000, 1000000]
 
 bars = ax.bar(models, context_lengths, color=['red', 'orange', 'yellow', 'lightgreen', 'green'], alpha=0.7)
-ax.set_ylabel('Context Length (tokens)')
+ax.set_ylabel('Comprimento do Contexto (tokens)')
 ax.set_yscale('log')
-ax.set_title('LLM Context Length Evolution')
+ax.set_title('Evolução do Comprimento de Contexto dos LLMs')
 ax.grid(axis='y', alpha=0.3)
 
 for bar, length in zip(bars, context_lengths):
@@ -296,14 +296,14 @@ plt.show()
 print("📊 Gráfico salvo: long_context_handling.png")
 
 print("\n✅ Long context strategies implementado!")
-print("\n💡 BEST PRACTICES:")
-print("   - Chunking: Use overlap to preserve context")
-print("   - Hierarchical: Good for documents > 100K tokens")
-print("   - Sparse attention: 90% memory reduction")
-print("   - Compression: Extract key information")
-print("   - Consider retrieval (RAG) for very long contexts")
-print("\n💡 WHEN TO USE EACH:")
-print("   Chunking: Classification, search")
-print("   Hierarchical: Summarization, question answering")
-print("   Sparse attention: Training long-context models")
-print("   Compression: Fixed context window constraints")
+print("\n💡 BOAS PRÁTICAS:")
+print("   - Chunking: Use sobreposição para preservar contexto")
+print("   - Hierárquico: Bom para documentos > 100K tokens")
+print("   - Atenção esparsa: 90% de redução de memória")
+print("   - Compressão: Extrai informações importantes")
+print("   - Considere recuperação (RAG) para contextos muito longos")
+print("\n💡 QUANDO USAR CADA UM:")
+print("   Chunking: Classificação, busca")
+print("   Hierárquico: Sumarização, resposta a perguntas")
+print("   Atenção esparsa: Treinamento de modelos de contexto longo")
+print("   Compressão: Restrições de janela de contexto fixo")

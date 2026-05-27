@@ -16,10 +16,10 @@ except NameError:
 class BiasDetector:
     """
     Detecta vieses em LLMs através de:
-    - Gender bias
-    - Racial bias
-    - Professional stereotypes
-    - Sentiment bias
+    - Viés de gênero
+    - Viés racial
+    - Estereótipos profissionais
+    - Viés de sentimento
     """
 
     def __init__(self):
@@ -133,9 +133,9 @@ class BiasDetector:
         """
         Aplica técnicas de mitigação
 
-        1. Rewrite to gender-neutral
-        2. Add fairness instructions
-        3. Request multiple perspectives
+        1. Reescrever para neutro de gênero
+        2. Adicionar instruções de imparcialidade
+        3. Solicitar múltiplas perspectivas
         """
         mitigated = prompt
 
@@ -161,7 +161,7 @@ class BiasDetector:
 
 # Mock model for testing
 def mock_model_complete(prompt):
-    """Simulates biased model"""
+    """Simula modelo com viés"""
     import random
 
     # Stereotypical bias
@@ -174,11 +174,11 @@ def mock_model_complete(prompt):
 
 detector = BiasDetector()
 
-print("⚖️ Bias Detection Demo\n")
+print("⚖️ Demo de Detecção de Viés\n")
 print("="*70)
 
 # Test gender bias
-print("\n📌 Gender Bias in Completions:\n")
+print("\n📌 Viés de Gênero nas Completions:\n")
 results = detector.test_gender_bias_completion(mock_model_complete)
 
 for r in results:
@@ -191,12 +191,12 @@ for r in results:
 
     status = "⚠️ BIASED" if r['bias_score'] > 0.2 else "✅ FAIR"
     print(f"{status} \"{r['prompt']}\"")
-    print(f"   Male: {male_pct:.0f}% | Female: {female_pct:.0f}%")
-    print(f"   Bias score: {r['bias_score']:.3f}")
+    print(f"   Masculino: {male_pct:.0f}% | Feminino: {female_pct:.0f}%")
+    print(f"   Pontuação de viés: {r['bias_score']:.3f}")
     print()
 
 # Test sentiment bias
-print("\n📌 Sentiment Bias Across Groups:\n")
+print("\n📌 Viés de Sentimento Entre Grupos:\n")
 
 texts_by_group = {
     'men': [
@@ -215,12 +215,12 @@ sentiment_results = detector.test_sentiment_bias(texts_by_group)
 
 for group, scores in sentiment_results['by_group'].items():
     print(f"{group.capitalize()}:")
-    print(f"   Positive: {scores['positive']*100:.0f}%")
-    print(f"   Negative: {scores['negative']*100:.0f}%")
-    print(f"   Neutral: {scores['neutral']*100:.0f}%")
+    print(f"   Positivo: {scores['positive']*100:.0f}%")
+    print(f"   Negativo: {scores['negative']*100:.0f}%")
+    print(f"   Neutro: {scores['neutral']*100:.0f}%")
     print()
 
-print(f"Overall sentiment bias score: {sentiment_results['bias_score']:.3f}")
+print(f"Pontuação geral de viés de sentimento: {sentiment_results['bias_score']:.3f}")
 
 # Visualize
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
@@ -233,10 +233,10 @@ female_ratios = [0.15, 0.30, 0.80, 0.85, 0.20, 0.65]
 
 data = np.array([male_ratios, female_ratios])
 sns.heatmap(data, annot=True, fmt='.2f', cmap='RdYlGn_r', ax=ax,
-            xticklabels=professions, yticklabels=['Male', 'Female'],
-            cbar_kws={'label': 'Pronoun Ratio'}, vmin=0, vmax=1)
-ax.set_title('Gender Bias in Profession Completions')
-ax.set_xlabel('Profession')
+            xticklabels=professions, yticklabels=['Masculino', 'Feminino'],
+            cbar_kws={'label': 'Proporção de Pronomes'}, vmin=0, vmax=1)
+ax.set_title('Viés de Gênero nas Completions por Profissão')
+ax.set_xlabel('Profissão')
 
 # 2. Bias score comparison
 ax = axes[0, 1]
@@ -245,10 +245,10 @@ bias_scores = [0.42, 0.28, 0.25, 0.35, 0.30]
 colors = ['red' if s > 0.3 else 'yellow' if s > 0.2 else 'green' for s in bias_scores]
 
 bars = ax.barh(models, bias_scores, color=colors, alpha=0.7)
-ax.axvline(0.3, color='red', linestyle='--', alpha=0.5, label='High bias threshold')
-ax.axvline(0.2, color='orange', linestyle='--', alpha=0.5, label='Moderate bias')
-ax.set_xlabel('Bias Score')
-ax.set_title('Model Bias Comparison')
+ax.axvline(0.3, color='red', linestyle='--', alpha=0.5, label='Limiar de viés alto')
+ax.axvline(0.2, color='orange', linestyle='--', alpha=0.5, label='Viés moderado')
+ax.set_xlabel('Pontuação de Viés')
+ax.set_title('Comparação de Viés entre Modelos')
 ax.legend()
 ax.grid(axis='x', alpha=0.3)
 
@@ -261,11 +261,11 @@ negative_sentiment = [0.15, 0.20, 0.25, 0.30, 0.12]
 x = np.arange(len(groups))
 width = 0.35
 
-ax.bar(x - width/2, positive_sentiment, width, label='Positive', color='lightgreen', alpha=0.8)
-ax.bar(x + width/2, negative_sentiment, width, label='Negative', color='lightcoral', alpha=0.8)
+ax.bar(x - width/2, positive_sentiment, width, label='Positivo', color='lightgreen', alpha=0.8)
+ax.bar(x + width/2, negative_sentiment, width, label='Negativo', color='lightcoral', alpha=0.8)
 
-ax.set_ylabel('Sentiment Ratio')
-ax.set_title('Sentiment Bias Across Demographics')
+ax.set_ylabel('Proporção de Sentimento')
+ax.set_title('Viés de Sentimento Entre Grupos Demográficos')
 ax.set_xticks(x)
 ax.set_xticklabels(groups, rotation=45)
 ax.legend()
@@ -278,8 +278,8 @@ techniques = ['Baseline', 'Debiased\nTraining', 'Prompt\nEngineering', 'Adversar
 bias_reduction = [0, 35, 25, 40, 65]
 
 bars = ax.bar(techniques, bias_reduction, color='skyblue', alpha=0.7)
-ax.set_ylabel('Bias Reduction (%)')
-ax.set_title('Bias Mitigation Techniques')
+ax.set_ylabel('Redução de Viés (%)')
+ax.set_title('Técnicas de Mitigação de Viés')
 ax.grid(axis='y', alpha=0.3)
 
 for bar, reduction in zip(bars, bias_reduction):
@@ -292,10 +292,10 @@ plt.show()
 print("\n📊 Gráfico salvo: bias_detection.png")
 
 print("\n✅ Bias detection implementado!")
-print("\n💡 MITIGATION STRATEGIES:")
-print("   1. Diverse training data")
-print("   2. Debiasing techniques during training")
-print("   3. Prompt engineering (fairness instructions)")
-print("   4. Post-processing filters")
-print("   5. Regular bias audits")
-print("   6. Human-in-the-loop review")
+print("\n💡 ESTRATÉGIAS DE MITIGAÇÃO:")
+print("   1. Dados de treinamento diversificados")
+print("   2. Técnicas de desviés durante o treinamento")
+print("   3. Engenharia de prompt (instruções de imparcialidade)")
+print("   4. Filtros de pós-processamento")
+print("   5. Auditorias regulares de viés")
+print("   6. Revisão com humano no loop")

@@ -173,9 +173,9 @@ class AttentionVisualizer:
                    ax=axes[0],
                    square=True,
                    linewidths=0.5)
-        axes[0].set_title('Average Attention (All Layers & Heads)', fontsize=14)
-        axes[0].set_xlabel('Key')
-        axes[0].set_ylabel('Query')
+        axes[0].set_title('Atenção Média (Todas as Camadas e Heads)', fontsize=14)
+        axes[0].set_xlabel('Chave')
+        axes[0].set_ylabel('Consulta')
         axes[0].tick_params(axis='both', labelsize=9, rotation=45)
 
         # Grafo de fluxo (top connections)
@@ -206,7 +206,7 @@ class AttentionVisualizer:
         axes[1].set_ylim(-1, len(tokens))
         axes[1].set_aspect('equal')
         axes[1].axis('off')
-        axes[1].set_title(f'Attention Flow (threshold={threshold})', fontsize=14)
+        axes[1].set_title(f'Fluxo de Atenção (limiar={threshold})', fontsize=14)
 
         plt.suptitle(f'Aggregated Attention Analysis\nText: "{text}"',
                     fontsize=16, fontweight='bold')

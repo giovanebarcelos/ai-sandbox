@@ -79,6 +79,6 @@ if __name__ == "__main__":
     print("\n📐 CHINCHILLA OPTIMAL ALLOCATION:")
     budget = 1e24  # 1e24 FLOPs
     params, tokens = chinchilla_optimal(budget)
-    print(f"Compute Budget: {budget:.2e} FLOPs")
-    print(f"  → Optimal params: {params/1e9:.1f}B")
-    print(f"  → Optimal tokens: {tokens/1e9:.0f}B")
+    print(f"Orçamento de Compute: {budget:.2e} FLOPs")
+    print(f"  → Parâmetros ótimos: {params/1e9:.1f}B")
+    print(f"  → Tokens ótimos: {tokens/1e9:.0f}B")

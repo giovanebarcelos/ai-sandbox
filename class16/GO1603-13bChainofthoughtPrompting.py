@@ -18,12 +18,12 @@ class ChainOfThoughtDemo:
     Chain-of-Thought (CoT) Prompting
 
     Técnica para melhorar raciocínio de LLMs:
-    - Descomposição do problema
+    - Decomposição do problema
     - Passos intermediários explícitos
     - Verificação de cada etapa
 
-    Types:
-    - Zero-shot CoT: "Let's think step by step"
+    Tipos:
+    - Zero-shot CoT: "Vamos pensar passo a passo"
     - Few-shot CoT: Exemplos com raciocínio
     - Self-consistency: Múltiplas chains
     """
@@ -33,36 +33,36 @@ class ChainOfThoughtDemo:
 
     def standard_prompting(self, question: str) -> str:
         """
-        Standard prompting (baseline)
+        Prompting padrão (baseline)
 
-        Direct question → Direct answer
+        Pergunta direta → Resposta direta
         """
-        # Simulated response
-        if "age" in question.lower():
-            return "42"  # May be wrong due to no reasoning
-        return "Answer"
+        # Resposta simulada
+        if "age" in question.lower() or "anos" in question.lower():
+            return "42"  # Pode errar por falta de raciocínio
+        return "Resposta"
 
     def zero_shot_cot(self, question: str) -> Dict:
         """
-        Zero-shot CoT: Add "Let's think step by step"
+        Zero-shot CoT: adiciona "Vamos pensar passo a passo"
 
-        Triggers reasoning without examples
+        Dispara o raciocínio sem precisar de exemplos
         """
-        enhanced_prompt = question + "\nLet's think step by step:"
+        enhanced_prompt = question + "\nVamos pensar passo a passo:"
 
-        # Simulated reasoning
-        if "age" in question.lower() and "twice" in question.lower():
+        # Raciocínio simulado
+        if ("anos" in question.lower() or "age" in question.lower()) and ("duas vezes" in question.lower() or "twice" in question.lower()):
             reasoning = """
-Step 1: John is currently 15 years old.
-Step 2: In 5 years, John will be 15 + 5 = 20 years old.
-Step 3: Mary is twice as old as John, so Mary is currently 15 × 2 = 30 years old.
-Step 4: In 5 years, Mary will be 30 + 5 = 35 years old.
-Answer: Mary will be 35 years old.
+Passo 1: João tem atualmente 15 anos.
+Passo 2: Daqui a 5 anos, João terá 15 + 5 = 20 anos.
+Passo 3: Maria tem o dobro da idade de João, então Maria tem atualmente 15 × 2 = 30 anos.
+Passo 4: Daqui a 5 anos, Maria terá 30 + 5 = 35 anos.
+Resposta: Maria terá 35 anos.
 """
             answer = "35"
         else:
-            reasoning = "Step 1: Analyze the question...\n"
-            answer = "Answer"
+            reasoning = "Passo 1: Analisar a pergunta...\n"
+            answer = "Resposta"
 
         return {
             'prompt': enhanced_prompt,
@@ -72,12 +72,12 @@ Answer: Mary will be 35 years old.
 
     def few_shot_cot(self, question: str, examples: List[Dict]) -> Dict:
         """
-        Few-shot CoT: Provide examples with reasoning
+        Few-shot CoT: fornece exemplos com raciocínio
 
-        Shows model how to reason
+        Mostra ao modelo como raciocinar
         """
-        # Build prompt with examples
-        prompt = "Solve the following problems step by step:\n\n"
+        # Monta o prompt com exemplos
+        prompt = "Resolva os problemas a seguir passo a passo:\n\n"
 
         for ex in examples:
             prompt += f"Q: {ex['question']}\n"
@@ -97,9 +97,9 @@ Answer: Mary will be 35 years old.
 
     def self_consistency(self, question: str, num_samples: int = 5) -> Dict:
         """
-        Self-consistency: Generate multiple reasoning paths
+        Self-consistency: gera múltiplos caminhos de raciocínio
 
-        Take majority vote on final answers
+        Aplica voto majoritário nas respostas finais
         """
         answers = []
         reasonings = []
@@ -123,15 +123,15 @@ Answer: Mary will be 35 years old.
         }
 
     def compare_methods(self, question: str) -> Dict:
-        """Compare all CoT methods"""
+        """Compara todos os métodos CoT"""
         results = {}
 
-        # Standard
+        # Padrão
         results['standard'] = {
-            'method': 'Standard Prompting',
+            'method': 'Prompting Padrão',
             'answer': self.standard_prompting(question),
             'reasoning_steps': 0,
-            'accuracy': 0.45  # Simulated
+            'accuracy': 0.45  # Simulado
         }
 
         # Zero-shot CoT
@@ -140,14 +140,14 @@ Answer: Mary will be 35 years old.
             'method': 'Zero-shot CoT',
             'answer': zero_shot_result['answer'],
             'reasoning_steps': len(zero_shot_result['reasoning'].split('\n')),
-            'accuracy': 0.72  # Simulated
+            'accuracy': 0.72  # Simulado
         }
 
         # Few-shot CoT
         examples = [
             {
-                'question': 'If x=10 and y=20, what is x+y?',
-                'reasoning': 'Step 1: x = 10\nStep 2: y = 20\nStep 3: x + y = 10 + 20 = 30',
+                'question': 'Se x=10 e y=20, quanto é x+y?',
+                'reasoning': 'Passo 1: x = 10\nPasso 2: y = 20\nPasso 3: x + y = 10 + 20 = 30',
                 'answer': '30'
             }
         ]
@@ -156,7 +156,7 @@ Answer: Mary will be 35 years old.
             'method': 'Few-shot CoT',
             'answer': few_shot_result['answer'],
             'reasoning_steps': len(few_shot_result['reasoning'].split('\n')),
-            'accuracy': 0.85  # Simulated
+            'accuracy': 0.85  # Simulado
         }
 
         # Self-consistency
@@ -164,8 +164,8 @@ Answer: Mary will be 35 years old.
         results['self_consistency'] = {
             'method': 'Self-Consistency CoT',
             'answer': self_cons_result['final_answer'],
-            'reasoning_steps': 5,  # Multiple samples
-            'accuracy': 0.91  # Simulated
+            'reasoning_steps': 5,  # Múltiplas amostras
+            'accuracy': 0.91  # Simulado
         }
 
         return results
@@ -240,8 +240,8 @@ accuracies = [0.45, 0.72, 0.85, 0.91]
 colors_acc = ['red', 'yellow', 'lightgreen', 'green']
 
 bars = ax.bar(methods, accuracies, color=colors_acc, alpha=0.7)
-ax.set_ylabel('Accuracy')
-ax.set_title('Reasoning Task Accuracy by Method')
+ax.set_ylabel('Acurácia')
+ax.set_title('Acurácia em Tarefas de Raciocínio por Método')
 ax.set_ylim(0, 1)
 ax.grid(axis='y', alpha=0.3)
 
@@ -253,18 +253,18 @@ for bar, acc in zip(bars, accuracies):
 # 2. Task type performance
 ax = axes[0, 1]
 
-task_types = ['Arithmetic', 'Logic', 'Commonsense', 'Symbolic']
+task_types = ['Aritmética', 'Lógica', 'Senso Comum', 'Simbólico']
 standard_scores = [0.35, 0.40, 0.55, 0.30]
 cot_scores = [0.85, 0.78, 0.82, 0.70]
 
 x = np.arange(len(task_types))
 width = 0.35
 
-ax.bar(x - width/2, standard_scores, width, label='Standard', alpha=0.8, color='lightcoral')
+ax.bar(x - width/2, standard_scores, width, label='Padrão', alpha=0.8, color='lightcoral')
 ax.bar(x + width/2, cot_scores, width, label='CoT', alpha=0.8, color='lightgreen')
 
-ax.set_ylabel('Accuracy')
-ax.set_title('CoT Performance by Task Type')
+ax.set_ylabel('Acurácia')
+ax.set_title('Desempenho do CoT por Tipo de Tarefa')
 ax.set_xticks(x)
 ax.set_xticklabels(task_types)
 ax.legend()
@@ -279,14 +279,14 @@ cot_benefit = [0.05, 0.15, 0.30, 0.45]  # Accuracy improvement
 
 ax.plot(model_sizes, cot_benefit, 'o-', linewidth=2, markersize=10, color='purple')
 ax.fill_between(model_sizes, 0, cot_benefit, alpha=0.3, color='purple')
-ax.set_xlabel('Model Size (B parameters)')
-ax.set_ylabel('CoT Accuracy Improvement')
-ax.set_title('CoT Benefit Increases with Model Size')
+ax.set_xlabel('Tamanho do Modelo (B parâmetros)')
+ax.set_ylabel('Melhoria de Acurácia com CoT')
+ax.set_title('Benefício do CoT Aumenta com o Tamanho do Modelo')
 ax.set_xscale('log')
 ax.grid(alpha=0.3)
 
-# Annotate emergence
-ax.annotate('Emergence of\nReasoning', xy=(100, 0.30), xytext=(10, 0.35),
+# Anota emerêtncia
+ax.annotate('Emergência do\nRaciocínio', xy=(100, 0.30), xytext=(10, 0.35),
             arrowprops=dict(arrowstyle='->', color='red', lw=2),
             fontsize=10, fontweight='bold')
 
@@ -300,14 +300,14 @@ compute_cost = [1, 3, 5, 10, 20, 40]  # Relative cost
 ax2 = ax.twinx()
 
 line1 = ax.plot(num_samples_list, accuracy_improvement, 'o-', color='green', 
-                linewidth=2, markersize=8, label='Accuracy')
+                linewidth=2, markersize=8, label='Acurácia')
 line2 = ax2.plot(num_samples_list, compute_cost, 's-', color='red', 
-                 linewidth=2, markersize=8, label='Cost')
+                 linewidth=2, markersize=8, label='Custo')
 
-ax.set_xlabel('Number of Samples (Self-Consistency)')
-ax.set_ylabel('Accuracy', color='green')
-ax2.set_ylabel('Compute Cost (relative)', color='red')
-ax.set_title('Self-Consistency: Accuracy vs Cost')
+ax.set_xlabel('Número de Amostras (Self-Consistency)')
+ax.set_ylabel('Acurácia', color='green')
+ax2.set_ylabel('Custo Computacional (relativo)', color='red')
+ax.set_title('Self-Consistency: Acurácia vs Custo')
 ax.tick_params(axis='y', labelcolor='green')
 ax2.tick_params(axis='y', labelcolor='red')
 ax.grid(alpha=0.3)
@@ -318,7 +318,7 @@ ax.legend(lines, labels, loc='center right')
 
 # Mark sweet spot
 ax.plot(5, 0.85, 'y*', markersize=20)
-ax.annotate('Sweet Spot', xy=(5, 0.85), xytext=(15, 0.80),
+ax.annotate('Ponto Ótimo', xy=(5, 0.85), xytext=(15, 0.80),
             arrowprops=dict(arrowstyle='->', color='black', lw=2),
             fontsize=9, fontweight='bold')
 
@@ -327,13 +327,13 @@ plt.show()
 print("\n\n📊 Gráfico salvo: chain_of_thought.png")
 
 print("\n\n✅ Chain-of-Thought prompting implementado!")
-print("\n💡 WHEN TO USE:")
-print("   - Arithmetic/math problems")
-print("   - Multi-step reasoning")
-print("   - Logic puzzles")
-print("   - Commonsense reasoning")
-print("\n💡 BEST PRACTICES:")
-print("   - Zero-shot CoT: Add 'Let's think step by step'")
-print("   - Few-shot CoT: Provide 2-3 examples with reasoning")
-print("   - Self-consistency: Use 5-10 samples for important tasks")
-print("   - Works best with models ≥100B parameters")
+print("\n💡 QUANDO USAR:")
+print("   - Problemas de aritmética/matemática")
+print("   - Raciocínio em múltiplos passos")
+print("   - Quebra-cabeças de lógica")
+print("   - Raciocínio de senso comum")
+print("\n💡 MELHORES PRÁTICAS:")
+print("   - Zero-shot CoT: adicione 'Vamos pensar passo a passo'")
+print("   - Few-shot CoT: forneça 2-3 exemplos com raciocínio")
+print("   - Self-consistency: use 5-10 amostras para tarefas importantes")
+print("   - Funciona melhor com modelos ≥100B parâmetros")

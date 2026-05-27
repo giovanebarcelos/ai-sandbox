@@ -10,70 +10,70 @@ class MultimodalVisionLanguageModel:
     """
     Vision-Language Model combinando CLIP + GPT-2
 
-    Architecture:
-    1. CLIP encoder: image → embedding
-    2. Projection layer: CLIP → GPT-2 space
-    3. GPT-2 decoder: embedding → text caption
+    Arquitetura:
+    1. CLIP encoder: imagem → embedding
+    2. Camada de projeção: CLIP → espaço GPT-2
+    3. GPT-2 decoder: embedding → legenda de texto
 
-    Applications:
-    - Image captioning
-    - Visual question answering
-    - Image-to-text search
+    Aplicações:
+    - Geração de legendas
+    - Perguntas e respostas visuais
+    - Busca imagem-para-texto
     """
 
     def __init__(self):
-        # CLIP for vision encoding
+        # CLIP para codificação de imagem
         self.clip_model = CLIPModel.from_pretrained("openai/clip-vit-base-patch32")
         self.clip_processor = CLIPProcessor.from_pretrained("openai/clip-vit-base-patch32")
 
-        # GPT-2 for text generation
+        # GPT-2 para geração de texto
         self.gpt2_model = GPT2LMHeadModel.from_pretrained("gpt2")
         self.gpt2_tokenizer = GPT2Tokenizer.from_pretrained("gpt2")
         self.gpt2_tokenizer.pad_token = self.gpt2_tokenizer.eos_token
 
-        # Projection layer (CLIP 512 → GPT-2 768)
+        # Camada de projeção (CLIP 512 → GPT-2 768)
         self.projection = nn.Linear(512, 768)
 
         self.clip_model.eval()
         self.gpt2_model.eval()
 
     def encode_image(self, image: Image.Image) -> torch.Tensor:
-        """Encode image to CLIP embedding"""
+        """Codificar imagem para embedding CLIP"""
         inputs = self.clip_processor(images=image, return_tensors="pt")
 
         with torch.no_grad():
             image_features = self.clip_model.get_image_features(**inputs)
 
-        # Project to GPT-2 space
+        # Projetar para o espaço do GPT-2
         projected = self.projection(image_features)
 
         return projected
 
     def generate_caption(self, image: Image.Image, max_length: int = 50) -> str:
         """
-        Generate caption for image
+        Gerar legenda para imagem
 
-        Process:
-        1. Encode image with CLIP
-        2. Project to GPT-2 space
-        3. Use as prefix for GPT-2 generation
+        Processo:
+        1. Codificar imagem com CLIP
+        2. Projetar para espaço GPT-2
+        3. Usar como prefixo para geração GPT-2
         """
-        # Get image embedding
+        # Obter embedding da imagem
         image_embedding = self.encode_image(image)  # (1, 768)
 
-        # Create prompt
-        prompt = "A photo of"
+        # Criar prompt
+        prompt = "Uma foto de"
         input_ids = self.gpt2_tokenizer.encode(prompt, return_tensors="pt")
 
-        # Get text embeddings
+        # Obter embeddings de texto
         with torch.no_grad():
             text_embeds = self.gpt2_model.transformer.wte(input_ids)  # (1, len, 768)
 
-        # Concatenate image embedding as first token
+        # Concatenar embedding da imagem como primeiro token
         combined_embeds = torch.cat([image_embedding.unsqueeze(1), text_embeds], dim=1)
 
-        # Generate (simplified - in real system, use custom generation loop)
-        # For demo, just use standard generation
+        # Gerar (simplificado - num sistema real, usar loop de geração customizado)
+        # Para demo, usar geração padrão
         outputs = self.gpt2_model.generate(
             input_ids,
             max_length=max_length,
@@ -89,9 +89,9 @@ class MultimodalVisionLanguageModel:
 
     def visual_question_answering(self, image: Image.Image, question: str) -> str:
         """
-        Answer questions about image
+        Responder perguntas sobre imagem
 
-        Format: {image_embedding} Question: {question} Answer:
+        Formato: {image_embedding} Question: {question} Answer:
         """
         # Encode image
         image_embedding = self.encode_image(image)
@@ -110,15 +110,15 @@ class MultimodalVisionLanguageModel:
         )
 
         answer = self.gpt2_tokenizer.decode(outputs[0], skip_special_tokens=True)
-        answer = answer[len(prompt):].strip().split('.')[0]  # Extract answer
+        answer = answer[len(prompt):].strip().split('.')[0]  # Extrai resposta
 
         return answer
 
     def image_text_similarity(self, image: Image.Image, texts: List[str]) -> List[Tuple[str, float]]:
         """
-        Calculate similarity between image and texts
+        Calcular similaridade entre imagem e textos
 
-        Uses CLIP's contrastive learning
+        Usa o aprendizado contrastivo do CLIP
         """
         inputs = self.clip_processor(
             text=texts, 
@@ -140,18 +140,18 @@ class MultimodalVisionLanguageModel:
         return results
 
 def create_demo_image():
-    """Create synthetic image for demo"""
-    # Create a simple image with shapes
+    """Criar imagem sintética para demonstração"""
+    # Criar imagem simples com formas
     img = Image.new('RGB', (224, 224), color='white')
 
-    # Draw some content (simplified)
-    # In real demo, use actual images
+    # Adicionar conteúdo (simplificado)
+    # Em uma demo real, usar imagens reais
     pixels = np.array(img)
 
-    # Add some colored regions
-    pixels[50:100, 50:150] = [255, 0, 0]  # Red rectangle
-    pixels[120:180, 80:180] = [0, 0, 255]  # Blue rectangle
-    pixels[30:60, 160:200] = [0, 255, 0]  # Green rectangle
+    # Adicionar regiões coloridas
+    pixels[50:100, 50:150] = [255, 0, 0]  # Retângulo vermelho
+    pixels[120:180, 80:180] = [0, 0, 255]  # Retângulo azul
+    pixels[30:60, 160:200] = [0, 255, 0]  # Retângulo verde
 
     img = Image.fromarray(pixels.astype('uint8'), 'RGB')
 
@@ -159,11 +159,11 @@ def create_demo_image():
 
 # === DEMO ===
 
-print("🎨 Multimodal Vision-Language Model\n")
+print("🎨 Modelo Vision-Language Multimodal\n")
 print("="*70)
 
 # Initialize model
-print("📌 Loading models...\n")
+print("📌 Carregando modelos...\n")
 model = MultimodalVisionLanguageModel()
 
 print("✅ CLIP: openai/clip-vit-base-patch32")
@@ -175,49 +175,49 @@ image = create_demo_image()
 
 # Save demo image
 image.save('demo_image.png')
-print("📸 Demo image created: demo_image.png\n")
+print("📸 Imagem de demonstração criada: demo_image.png\n")
 
 # Test 1: Image-Text Similarity
-print("📌 Test 1: Image-Text Similarity\n")
+print("📌 Teste 1: Similaridade Imagem-Texto\n")
 
 candidate_texts = [
-    "colorful geometric shapes",
-    "red and blue rectangles",
-    "a natural landscape",
-    "a photo of a cat",
-    "abstract art with colors"
+    "formas geométricas coloridas",
+    "retângulos vermelho e azul",
+    "uma paisagem natural",
+    "foto de um gato",
+    "arte abstrata com cores"
 ]
 
 similarities = model.image_text_similarity(image, candidate_texts)
 
-print("Image-text similarity scores:")
+print("Pontuações de similaridade imagem-texto:")
 for text, score in similarities:
     bar = "█" * int(score * 50)
     print(f"   {score:.3f} {bar} {text}")
 
 print()
 
-# Test 2: Image Captioning (simulated)
-print("📌 Test 2: Image Captioning (simulated)\n")
+# Teste 2: Legendagem de Imagem (simulado)
+print("📌 Teste 2: Legendagem de Imagem (simulado)\n")
 
-# Note: Real captioning requires fine-tuned model
-# This is simplified for demonstration
-caption = "A photo of colorful geometric shapes including red and blue rectangles"
-print(f"Generated caption: \"{caption}\"\n")
+# Nota: legendagem real requer modelo fine-tunado
+# Aqui simplificado para demonstração
+caption = "Uma foto de formas geométricas coloridas incluindo retângulos vermelho e azul"
+print(f"Legenda gerada: \"{caption}\"\n")
 
-# Test 3: Visual Question Answering (simulated)
-print("📌 Test 3: Visual Question Answering (simulated)\n")
+# Teste 3: Perguntas e Respostas Visuais (simulado)
+print("📌 Teste 3: Perguntas e Respostas Visuais (simulado)\n")
 
 questions = [
-    "What colors are in the image?",
-    "What shapes do you see?",
-    "Is this a photograph or digital art?"
+    "Que cores aparecem na imagem?",
+    "Que formas você enxerga?",
+    "Isso é uma fotografia ou arte digital?"
 ]
 
 answers = [
-    "Red, blue, and green",
-    "Rectangles",
-    "Digital art"
+    "Vermelho, azul e verde",
+    "Retângulos",
+    "Arte digital"
 ]
 
 for q, a in zip(questions, answers):
@@ -245,11 +245,11 @@ except NameError:
     pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
 
 components = [
-    ('Image\nInput', 0.1, 0.7, 'lightblue'),
+    ('Imagem\nEntrada', 0.1, 0.7, 'lightblue'),
     ('CLIP\nEncoder', 0.1, 0.5, 'lightgreen'),
-    ('Projection\nLayer', 0.1, 0.3, 'yellow'),
+    ('Camada de\nProjeção', 0.1, 0.3, 'yellow'),
     ('GPT-2\nDecoder', 0.1, 0.1, 'lightcoral'),
-    ('Text\nOutput', 0.1, -0.1, 'lightblue'),
+    ('Texto\nSaída', 0.1, -0.1, 'lightblue'),
 ]
 
 y_pos = 0.8
@@ -270,7 +270,7 @@ for i, (label, x, _, color) in enumerate(components):
 
 ax.set_xlim(0, 1)
 ax.set_ylim(-0.2, 1)
-ax.set_title('Multimodal Architecture', fontsize=14, fontweight='bold')
+ax.set_title('Arquitetura Multimodal', fontsize=14, fontweight='bold')
 
 # 2. CLIP embedding space
 ax = axes[0, 1]
@@ -281,9 +281,9 @@ image_embeds = np.random.randn(50, 2) + np.array([2, 2])
 text_embeds = np.random.randn(50, 2) + np.array([2.3, 1.8])
 
 ax.scatter(image_embeds[:, 0], image_embeds[:, 1], 
-          alpha=0.6, s=100, c='blue', label='Image Embeddings', marker='o')
+          alpha=0.6, s=100, c='blue', label='Embeddings de Imagem', marker='o')
 ax.scatter(text_embeds[:, 0], text_embeds[:, 1], 
-          alpha=0.6, s=100, c='red', label='Text Embeddings', marker='^')
+          alpha=0.6, s=100, c='red', label='Embeddings de Texto', marker='^')
 
 # Draw connections
 for i in range(5):
@@ -291,9 +291,9 @@ for i in range(5):
            [image_embeds[i, 1], text_embeds[i, 1]], 
            'g--', alpha=0.3, linewidth=1)
 
-ax.set_xlabel('Dimension 1')
-ax.set_ylabel('Dimension 2')
-ax.set_title('CLIP: Shared Vision-Language Space')
+ax.set_xlabel('Dimensão 1')
+ax.set_ylabel('Dimensão 2')
+ax.set_title('CLIP: Espaço Compartilhado Visão-Linguagem')
 ax.legend()
 ax.grid(alpha=0.3)
 
@@ -306,8 +306,8 @@ params = [151, 123, 0.4, 124, 398]  # Million parameters
 colors_models = ['lightblue', 'lightblue', 'yellow', 'lightcoral', 'gray']
 
 bars = ax.barh(models, params, color=colors_models, alpha=0.7)
-ax.set_xlabel('Parameters (M)')
-ax.set_title('Model Component Sizes')
+ax.set_xlabel('Parâmetros (M)')
+ax.set_title('Tamanho dos Componentes do Modelo')
 ax.grid(axis='x', alpha=0.3)
 
 for bar, param in zip(bars, params):
@@ -318,18 +318,18 @@ for bar, param in zip(bars, params):
 # 4. Performance comparison
 ax = axes[1, 1]
 
-tasks = ['Image\nCaptioning', 'VQA', 'Image\nClassification', 'Image-Text\nRetrieval', 'Zero-shot\nClassification']
+tasks = ['Legendagem\nde Imagem', 'VQA', 'Classificação\nde Imagem', 'Recuperação\nImagem-Texto', 'Classificação\nZero-shot']
 unimodal_scores = [0.65, 0.45, 0.82, 0.55, 0.40]
 multimodal_scores = [0.85, 0.75, 0.90, 0.88, 0.78]
 
 x = np.arange(len(tasks))
 width = 0.35
 
-ax.bar(x - width/2, unimodal_scores, width, label='Unimodal (Text-only)', alpha=0.8, color='lightcoral')
-ax.bar(x + width/2, multimodal_scores, width, label='Multimodal (Vision+Language)', alpha=0.8, color='lightgreen')
+ax.bar(x - width/2, unimodal_scores, width, label='Unimodal (somente texto)', alpha=0.8, color='lightcoral')
+ax.bar(x + width/2, multimodal_scores, width, label='Multimodal (Visão+Linguagem)', alpha=0.8, color='lightgreen')
 
-ax.set_ylabel('Accuracy')
-ax.set_title('Multimodal vs Unimodal Performance')
+ax.set_ylabel('Acurácia')
+ax.set_title('Desempenho: Multimodal vs Unimodal')
 ax.set_xticks(x)
 ax.set_xticklabels(tasks, fontsize=9)
 ax.legend()
@@ -341,14 +341,14 @@ plt.show()
 print("📊 Gráfico salvo: multimodal_vision_language.png")
 
 print("\n✅ Multimodal system implementado!")
-print("\n💡 KEY CONCEPTS:")
-print("   - CLIP: Contrastive vision-language pre-training")
-print("   - Shared embedding space for images and text")
-print("   - Zero-shot classification via text prompts")
-print("   - Fine-tuning for downstream tasks")
-print("\n💡 APPLICATIONS:")
-print("   - Image captioning")
-print("   - Visual question answering")
-print("   - Image-text retrieval")
-print("   - Content moderation")
-print("   - Accessibility (alt text generation)")
+print("\n💡 CONCEITOS-CHAVE:")
+print("   - CLIP: Pré-treinamento contrastivo visão-linguagem")
+print("   - Espaço de embedding compartilhado para imagens e texto")
+print("   - Classificação zero-shot via prompts de texto")
+print("   - Fine-tuning para tarefas específicas")
+print("\n💡 APLICAÇÕES:")
+print("   - Geração de legendas")
+print("   - Perguntas e respostas visuais")
+print("   - Recuperação imagem-texto")
+print("   - Moderação de conteúdo")
+print("   - Acessibilidade (geração de texto alternativo)")

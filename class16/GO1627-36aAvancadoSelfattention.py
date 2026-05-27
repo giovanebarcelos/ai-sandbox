@@ -73,9 +73,9 @@ attention = SelfAttention(embed_dim, num_heads=4)
 # Forward pass
 output, attention_weights = attention(x, return_attention=True)
 
-print(f"Input shape: {x.shape}")
-print(f"Output shape: {output.shape}")
-print(f"Attention weights shape: {attention_weights.shape}")
+print(f"Forma da entrada: {x.shape}")
+print(f"Forma da saída: {output.shape}")
+print(f"Forma dos pesos de atenção: {attention_weights.shape}")
 
 # Visualizar attention weights para primeira cabeça
 plt.figure(figsize=(10, 8))
@@ -87,7 +87,7 @@ sns.heatmap(att_head_0,
             cmap='YlOrRd',
             annot=True,
             fmt='.2f',
-            cbar_kws={'label': 'Attention Weight'})
+            cbar_kws={'label': 'Peso de Atenção'})
 
 plt.title('Self-Attention Weights - Head 0\n"Para cada palavra (linha), onde ela presta atenção (coluna)"')
 plt.xlabel('Keys (Palavras de Origem)')
@@ -123,8 +123,8 @@ for i, num_heads in enumerate([1, 4, 8]):
                 ax=axes[i],
                 cbar=True)
     axes[i].set_title(f'{num_heads} Head(s)')
-    axes[i].set_xlabel('Keys')
-    axes[i].set_ylabel('Queries')
+    axes[i].set_xlabel('Keys (Palavras de Origem)')
+    axes[i].set_ylabel('Queries (Palavras que Atendem)')
 
 plt.suptitle('Comparação: Efeito do Número de Attention Heads', fontsize=14, y=1.02)
 plt.tight_layout()

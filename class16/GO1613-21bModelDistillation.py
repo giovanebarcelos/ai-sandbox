@@ -66,9 +66,9 @@ class KnowledgeDistiller:
 
     def distillation_loss(self, student_logits, teacher_logits, labels):
         """
-        Combined loss:
+        Loss combinada:
         - Hard loss: CrossEntropy com labels
-        - Soft loss: KL divergence com teacher probabilities
+        - Soft loss: KL divergence com probabilidades do teacher
         """
         # Hard loss (student vs ground truth)
         hard_loss = nn.CrossEntropyLoss()(student_logits, labels)
@@ -89,7 +89,7 @@ class KnowledgeDistiller:
         return total_loss, hard_loss.item(), soft_loss.item()
 
     def train_step(self, batch, optimizer):
-        """Single training step"""
+        """Passo único de treinamento"""
         input_ids = batch['input_ids']
         attention_mask = batch['attention_mask']
         labels = batch['labels']
@@ -118,7 +118,7 @@ class KnowledgeDistiller:
         }
 
     def evaluate(self, dataloader):
-        """Evaluate student model"""
+        """Avaliar modelo student"""
         self.student.eval()
 
         total_correct = 0
@@ -181,13 +181,13 @@ def compare_models(teacher, student):
 
 # === DEMO ===
 
-print("🧬 Knowledge Distillation Demo\n")
+print("🧬 Demo de Destilação de Conhecimento\n")
 print("="*70)
 
 # Initialize models
-print("\n📌 Loading models...\n")
+print("\n📌 Carregando modelos...\n")
 
-# Teacher: BERT-base (simplified for demo)
+# Teacher: BERT-base (simplificado para demo)
 teacher_config = BertConfig(
     vocab_size=30522,
     hidden_size=768,
@@ -196,29 +196,29 @@ teacher_config = BertConfig(
 )
 teacher = DistilledBERT(hidden_size=768, num_layers=6)
 
-# Student: Smaller BERT
+# Student: BERT menor
 student = DistilledBERT(hidden_size=256, num_layers=4)
 
 print("Teacher (BERT-base):")
 teacher_params = sum(p.numel() for p in teacher.parameters())
-print(f"   Parameters: {teacher_params:,}")
+print(f"   Parâmetros: {teacher_params:,}")
 print(f"   Layers: 6")
 print(f"   Hidden size: 768")
 print()
 
-print("Student (Distilled):")
+print("Student (Destilado):")
 student_params = sum(p.numel() for p in student.parameters())
-print(f"   Parameters: {student_params:,}")
+print(f"   Parâmetros: {student_params:,}")
 print(f"   Layers: 4")
 print(f"   Hidden size: 256")
-print(f"   Compression: {teacher_params/student_params:.1f}x smaller")
+print(f"   Compressão: {teacher_params/student_params:.1f}x menor")
 print()
 
 # Initialize distiller
 distiller = KnowledgeDistiller(teacher, student, temperature=3.0, alpha=0.7)
 
 # Simulate training
-print("\n📌 Distillation Training (simulated):\n")
+print("\n📌 Treinamento por Destilação (simulado):\n")
 
 epochs = 10
 training_losses = []
@@ -243,25 +243,25 @@ for epoch in range(1, epochs + 1):
 
     if epoch % 2 == 0:
         print(f"Epoch {epoch}/{epochs}")
-        print(f"   Total loss: {metrics['total_loss']:.4f}")
-        print(f"   Hard loss: {metrics['hard_loss']:.4f}")
-        print(f"   Soft loss: {metrics['soft_loss']:.4f}")
+        print(f"   Loss total: {metrics['total_loss']:.4f}")
+        print(f"   Loss hard: {metrics['hard_loss']:.4f}")
+        print(f"   Loss soft: {metrics['soft_loss']:.4f}")
 
 # Compare models
-print("\n📌 Model Comparison:\n")
+print("\n📌 Comparação de Modelos:\n")
 
 comparison = compare_models(teacher, student)
 
-print(f"Parameters:")
+print(f"Parâmetros:")
 print(f"   Teacher: {comparison['teacher_params']:,}")
 print(f"   Student: {comparison['student_params']:,}")
-print(f"   Compression: {comparison['compression_ratio']:.1f}x")
+print(f"   Compressão: {comparison['compression_ratio']:.1f}x")
 print()
 
-print(f"Inference Speed:")
+print(f"Velocidade de Inferência:")
 print(f"   Teacher: {comparison['teacher_time']*1000:.2f} ms")
 print(f"   Student: {comparison['student_time']*1000:.2f} ms")
-print(f"   Speedup: {comparison['speedup']:.1f}x faster")
+print(f"   Aceleração: {comparison['speedup']:.1f}x mais rápido")
 print()
 
 # Accuracy simulation
@@ -269,23 +269,23 @@ teacher_acc = 0.92
 student_acc = 0.89  # Slight drop but still good
 student_scratch_acc = 0.78  # Training from scratch without distillation
 
-print(f"Accuracy:")
+print(f"Acurácia:")
 print(f"   Teacher: {teacher_acc:.1%}")
-print(f"   Student (distilled): {student_acc:.1%}")
-print(f"   Student (from scratch): {student_scratch_acc:.1%}")
-print(f"   Performance retention: {student_acc/teacher_acc:.1%}")
+print(f"   Student (destilado): {student_acc:.1%}")
+print(f"   Student (do zero): {student_scratch_acc:.1%}")
+print(f"   Retenção de desempenho: {student_acc/teacher_acc:.1%}")
 
 # Visualize
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 
 # 1. Training losses
 ax = axes[0, 0]
-ax.plot(range(1, epochs+1), training_losses, 'o-', label='Total Loss', linewidth=2)
-ax.plot(range(1, epochs+1), hard_losses, 's-', label='Hard Loss (CE)', linewidth=2, alpha=0.7)
-ax.plot(range(1, epochs+1), soft_losses, '^-', label='Soft Loss (KD)', linewidth=2, alpha=0.7)
-ax.set_xlabel('Epoch')
+ax.plot(range(1, epochs+1), training_losses, 'o-', label='Loss Total', linewidth=2)
+ax.plot(range(1, epochs+1), hard_losses, 's-', label='Loss Hard (CE)', linewidth=2, alpha=0.7)
+ax.plot(range(1, epochs+1), soft_losses, '^-', label='Loss Soft (KD)', linewidth=2, alpha=0.7)
+ax.set_xlabel('Época')
 ax.set_ylabel('Loss')
-ax.set_title('Distillation Training Losses')
+ax.set_title('Perdas no Treinamento por Destilação')
 ax.legend()
 ax.grid(alpha=0.3)
 
@@ -296,27 +296,27 @@ accuracies = [0.92, 0.90, 0.89, 0.86, 0.82]
 
 ax.plot(model_sizes, accuracies, 'o-', linewidth=2, markersize=8, color='purple')
 ax.fill_between(model_sizes, 0.75, accuracies, alpha=0.3, color='purple')
-ax.set_xlabel('Model Size (M parameters)')
-ax.set_ylabel('Accuracy')
-ax.set_title('Model Size vs Accuracy Tradeoff')
+ax.set_xlabel('Tamanho do Modelo (M parâmetros)')
+ax.set_ylabel('Acurácia')
+ax.set_title('Tamanho do Modelo vs Acurácia')
 ax.grid(alpha=0.3)
 ax.invert_xaxis()
 
 # Annotate sweet spot
 ax.plot(25, 0.89, 'r*', markersize=20)
-ax.annotate('Sweet Spot\n(4.4x smaller, -3% acc)', xy=(25, 0.89), xytext=(50, 0.84),
+ax.annotate('Ponto Ideal\n(4,4x menor, -3% acc)', xy=(25, 0.89), xytext=(50, 0.84),
             arrowprops=dict(arrowstyle='->', color='red', lw=2),
             fontsize=9, fontweight='bold')
 
 # 3. Speed comparison
 ax = axes[1, 0]
-models = ['Teacher\n(BERT-base)', 'Student\n(Distilled)', 'TinyBERT', 'MobileBERT']
+models = ['Teacher\n(BERT-base)', 'Student\n(Destilado)', 'TinyBERT', 'MobileBERT']
 latencies = [45, 15, 12, 18]  # ms
 colors = ['red', 'lightgreen', 'lightgreen', 'yellow']
 
 bars = ax.barh(models, latencies, color=colors, alpha=0.7)
-ax.set_xlabel('Latency (ms)')
-ax.set_title('Inference Speed Comparison')
+ax.set_xlabel('Latência (ms)')
+ax.set_title('Comparação de Velocidade de Inferência')
 ax.grid(axis='x', alpha=0.3)
 
 for bar, lat in zip(bars, latencies):
@@ -330,11 +330,11 @@ temperatures = [1, 2, 3, 4, 5, 7, 10]
 student_accs = [0.85, 0.87, 0.89, 0.89, 0.88, 0.86, 0.83]
 
 ax.plot(temperatures, student_accs, 'o-', linewidth=2, markersize=8, color='blue')
-ax.axhline(0.92, color='green', linestyle='--', alpha=0.5, label='Teacher accuracy')
-ax.axvline(3, color='red', linestyle='--', alpha=0.5, label='Optimal T')
+ax.axhline(0.92, color='green', linestyle='--', alpha=0.5, label='Acurácia do Teacher')
+ax.axvline(3, color='red', linestyle='--', alpha=0.5, label='T ótimo')
 ax.set_xlabel('Temperature')
-ax.set_ylabel('Student Accuracy')
-ax.set_title('Effect of Temperature on Distillation')
+ax.set_ylabel('Acurácia do Student')
+ax.set_title('Efeito da Temperatura na Destilação')
 ax.legend()
 ax.grid(alpha=0.3)
 ax.set_ylim(0.8, 0.95)
@@ -344,10 +344,10 @@ plt.show()
 print("\n📊 Gráfico salvo: knowledge_distillation.png")
 
 print("\n✅ Knowledge distillation implementado!")
-print("\n💡 BEST PRACTICES:")
-print("   1. Use temperature T=3-5 for most tasks")
-print("   2. Balance α: 0.7 for soft loss, 0.3 for hard loss")
-print("   3. Train student longer than teacher")
-print("   4. Use same tokenizer for teacher & student")
-print("   5. Consider intermediate layer distillation")
-print("   6. Validate on target hardware (mobile/edge)")
+print("\n💡 BOAS PRÁTICAS:")
+print("   1. Use temperatura T=3-5 para a maioria das tarefas")
+print("   2. Equilibre α: 0.7 para soft loss, 0.3 para hard loss")
+print("   3. Treine o student por mais tempo que o teacher")
+print("   4. Use o mesmo tokenizer para teacher e student")
+print("   5. Considere destilação de camadas intermediárias")
+print("   6. Valide no hardware alvo (mobile/edge)")

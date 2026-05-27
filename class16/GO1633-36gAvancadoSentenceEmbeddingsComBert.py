@@ -167,7 +167,7 @@ class BertSentenceEmbeddings:
         top_indices = np.argsort(similarities)[::-1][:top_k]
 
         print(f"\n🔍 Query: \"{query}\"\n")
-        print(f"Top-{top_k} most similar sentences:")
+        print(f"Top-{top_k} sentenças mais similares:")
         for rank, idx in enumerate(top_indices, 1):
             print(f"\n{rank}. Similarity: {similarities[idx]:.4f}")
             print(f"   \"{candidates[idx]}\"")

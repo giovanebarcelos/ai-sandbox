@@ -22,7 +22,7 @@ if __name__ == "__main__":
         text = tokenizer.decode(outputs[0], skip_special_tokens=True)
         return text
 
-    prompt = "Once upon a time in a magical forest,"
+    prompt = "Era uma vez numa floresta mágica,"
     story = generate_text(prompt, max_length=200, temperature=0.8)
     print(story)
 
@@ -34,7 +34,7 @@ if __name__ == "__main__":
             if user_input.lower() == 'sair':
                 break
 
-            conversation += f"User: {user_input}\nBot: "
+            conversation += f"Usuário: {user_input}\nBot: "
             response = generate_text(conversation, max_length=150)
             bot_response = response[len(conversation):].split('\n')[0]
             conversation += bot_response + "\n"

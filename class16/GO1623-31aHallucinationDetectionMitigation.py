@@ -17,7 +17,7 @@ class HallucinationDetector:
     """
     Sistema para detectar e mitigar alucinações em LLMs
 
-    Strategies:
+    Estratégias:
     1. Confidence scoring
     2. Consistency checking (multiple samples)
     3. Factual verification (knowledge base)
@@ -108,12 +108,12 @@ class HallucinationDetector:
             if entity in text_lower:
                 # Check each fact
                 for key, value in facts.items():
-                    # Simplified: check if value mentioned correctly
+                    # Simplificado: verificar se o valor é mencionado corretamente
                     if str(value).lower() in text_lower:
                         verified_facts.append(f"{entity}: {key}={value}")
                     else:
-                        # Potential contradiction
-                        # In real system, use NLI or fact-checking model
+                        # Possível contradição
+                        # Em um sistema real, use NLI ou modelo de verificação de fatos
                         contradictions.append(f"{entity}: {key} not verified")
 
         factuality_score = len(verified_facts) / max(1, len(verified_facts) + len(contradictions))
@@ -130,30 +130,30 @@ class HallucinationDetector:
         """
         Aplica estratégias de mitigação
 
-        1. Add confidence indicators
-        2. Add citations/sources
-        3. Add uncertainty phrases
-        4. Filter low-confidence parts
+        1. Adicionar indicadores de confiança
+        2. Adicionar citações/fontes
+        3. Adicionar frases de incerteza
+        4. Filtrar partes de baixa confiança
         """
         confidence = metadata.get('avg_confidence', 0.5)
 
-        # Strategy 1: Add confidence indicator
+        # Estratégia 1: Adicionar indicador de confiança
         if confidence < 0.5:
-            prefix = "⚠️ Low confidence: "
+            prefix = "⚠️ Baixa confiança: "
         elif confidence < 0.7:
-            prefix = "ℹ️ Moderate confidence: "
+            prefix = "ℹ️ Confiança moderada: "
         else:
-            prefix = "✓ High confidence: "
+            prefix = "✓ Alta confiança: "
 
         mitigated = prefix + response
 
-        # Strategy 2: Add uncertainty for low confidence
+        # Estratégia 2: Adicionar incerteza para baixa confiança
         if confidence < 0.6:
-            mitigated += "\n\n(Note: This response has low confidence and may contain inaccuracies. Please verify important facts.)"
+            mitigated += "\n\n(Nota: Esta resposta tem baixa confiança e pode conter imprecisões. Verifique fatos importantes.)"
 
-        # Strategy 3: Request citations
+        # Estratégia 3: Solicitar citações
         if 'sources' not in metadata or not metadata['sources']:
-            mitigated += "\n\n[No sources cited - verify independently]"
+            mitigated += "\n\n[Nenhuma fonte citada - verifique de forma independente]"
 
         return {
             'original': response,
@@ -166,11 +166,11 @@ class HallucinationDetector:
 
 detector = HallucinationDetector(threshold=0.7)
 
-print("🛡️ Hallucination Detection Demo\n")
+print("🛡️ Demo de Detecção de Alucinações\n")
 print("="*70)
 
 # Test 1: Low confidence detection
-print("\n📌 Test 1: Confidence-based Detection\n")
+print("\n📌 Teste 1: Detecção Baseada em Confiança\n")
 
 test_cases = [
     {
@@ -191,12 +191,12 @@ for tc in test_cases:
     result = detector.detect_low_confidence(tc['text'], tc['probs'])
     status = "🚨 HALLUCINATION" if result['likely_hallucination'] else "✅ OK"
     print(f"{status} {result['text']}")
-    print(f"   Avg confidence: {result['avg_confidence']:.3f}")
-    print(f"   Low-conf ratio: {result['low_conf_ratio']:.3f}")
+    print(f"   Confiança média: {result['avg_confidence']:.3f}")
+    print(f"   Proporção de baixa confiança: {result['low_conf_ratio']:.3f}")
     print()
 
 # Test 2: Consistency checking
-print("\n📌 Test 2: Consistency Checking\n")
+print("\n📌 Teste 2: Verificação de Consistência\n")
 
 questions_and_answers = [
     {
@@ -211,14 +211,14 @@ questions_and_answers = [
 
 for qa in questions_and_answers:
     result = detector.check_consistency(qa['question'], qa['answers'])
-    status = "✅ CONSISTENT" if result['is_consistent'] else "🚨 INCONSISTENT"
+    status = "✅ CONSISTENTE" if result['is_consistent'] else "🚨 INCONSISTENTE"
     print(f"{status} {result['question']}")
-    print(f"   Unique answers: {result['unique_answers']}/{result['num_samples']}")
-    print(f"   Similarity: {result['avg_similarity']:.3f}")
+    print(f"   Respostas únicas: {result['unique_answers']}/{result['num_samples']}")
+    print(f"   Similaridade: {result['avg_similarity']:.3f}")
     print()
 
 # Test 3: Fact verification
-print("\n📌 Test 3: Fact Verification\n")
+print("\n📌 Teste 3: Verificação de Fatos\n")
 
 statements = [
     'The Eiffel Tower is 330 meters tall and located in Paris',
@@ -228,10 +228,10 @@ statements = [
 
 for stmt in statements:
     result = detector.verify_facts(stmt)
-    status = "✅ VERIFIED" if not result['has_contradictions'] else "⚠️ UNVERIFIED"
+    status = "✅ VERIFICADO" if not result['has_contradictions'] else "⚠️ NÃO VERIFICADO"
     print(f"{status} {stmt}")
-    print(f"   Verified: {len(result['verified_facts'])} facts")
-    print(f"   Unverified: {len(result['contradictions'])} facts")
+    print(f"   Verificados: {len(result['verified_facts'])} fatos")
+    print(f"   Não verificados: {len(result['contradictions'])} fatos")
     print()
 
 # Visualize
@@ -240,13 +240,13 @@ fig, axes = plt.subplots(2, 2, figsize=(14, 10))
 # 1. Confidence distribution
 ax = axes[0, 0]
 confidences = [0.87, 0.59, 0.27]  # From test cases
-labels = ['Correct\nFact', 'Wrong\nFact', 'Hallucination']
+labels = ['Fato\nCorreto', 'Fato\nErrado', 'Alucinação']
 colors = ['lightgreen', 'yellow', 'lightcoral']
 
 bars = ax.bar(labels, confidences, color=colors, alpha=0.7)
-ax.axhline(y=0.7, color='red', linestyle='--', label='Threshold')
-ax.set_ylabel('Average Confidence')
-ax.set_title('Confidence Levels by Response Type')
+ax.axhline(y=0.7, color='red', linestyle='--', label='Limiar')
+ax.set_ylabel('Confiança Média')
+ax.set_title('Níveis de Confiança por Tipo de Resposta')
 ax.set_ylim(0, 1)
 ax.legend()
 ax.grid(axis='y', alpha=0.3)
@@ -262,27 +262,27 @@ consistency_scores = [0.95, 0.75, 0.50, 0.25, 0.10]
 hallucination_rates = [0.05, 0.15, 0.35, 0.60, 0.85]
 
 ax.plot(consistency_scores, hallucination_rates, marker='o', linewidth=2, 
-        markersize=8, color='red', label='Hallucination Rate')
+        markersize=8, color='red', label='Taxa de Alucinação')
 ax.fill_between(consistency_scores, 0, hallucination_rates, alpha=0.3, color='red')
-ax.set_xlabel('Consistency Score')
-ax.set_ylabel('Hallucination Rate')
-ax.set_title('Consistency vs Hallucination')
+ax.set_xlabel('Pontuação de Consistência')
+ax.set_ylabel('Taxa de Alucinação')
+ax.set_title('Consistência vs Alucinação')
 ax.legend()
 ax.grid(alpha=0.3)
 
 # Annotate inflection point
-ax.annotate('Critical\nThreshold', xy=(0.50, 0.35), xytext=(0.65, 0.50),
+ax.annotate('Limiar\nCrítico', xy=(0.50, 0.35), xytext=(0.65, 0.50),
             arrowprops=dict(arrowstyle='->', color='black', lw=2),
             fontsize=10, fontweight='bold')
 
 # 3. Mitigation strategies effectiveness
 ax = axes[1, 0]
-strategies = ['No\nMitigation', 'Confidence\nIndicator', 'Multiple\nSamples', 'Fact\nChecking', 'All\nCombined']
+strategies = ['Sem\nMitigação', 'Indicador de\nConfiança', 'Múltiplas\nAmostras', 'Verificação\nde Fatos', 'Todas\nCombinadas']
 effectiveness = [0, 25, 45, 60, 80]  # % reduction in harmful hallucinations
 
 bars = ax.barh(strategies, effectiveness, color='skyblue', alpha=0.7)
-ax.set_xlabel('Hallucination Reduction (%)')
-ax.set_title('Mitigation Strategy Effectiveness')
+ax.set_xlabel('Redução de Alucinação (%)')
+ax.set_title('Eficácia das Estratégias de Mitigação')
 ax.grid(axis='x', alpha=0.3)
 
 for bar, eff in zip(bars, effectiveness):
@@ -292,18 +292,18 @@ for bar, eff in zip(bars, effectiveness):
 
 # 4. Detection method comparison
 ax = axes[1, 1]
-methods = ['Confidence', 'Consistency', 'Fact\nCheck', 'Combined']
+methods = ['Confiança', 'Consistência', 'Verificação\nde Fatos', 'Combinado']
 precision = [0.65, 0.72, 0.85, 0.88]
 recall = [0.80, 0.75, 0.60, 0.85]
 
 x = np.arange(len(methods))
 width = 0.35
 
-ax.bar(x - width/2, precision, width, label='Precision', alpha=0.8, color='lightgreen')
+ax.bar(x - width/2, precision, width, label='Precisão', alpha=0.8, color='lightgreen')
 ax.bar(x + width/2, recall, width, label='Recall', alpha=0.8, color='lightblue')
 
-ax.set_ylabel('Score')
-ax.set_title('Detection Method Performance')
+ax.set_ylabel('Pontuação')
+ax.set_title('Desempenho dos Métodos de Detecção')
 ax.set_xticks(x)
 ax.set_xticklabels(methods)
 ax.legend()
@@ -315,10 +315,10 @@ plt.show()
 print("\n📊 Gráfico salvo: hallucination_detection.png")
 
 print("\n✅ Sistema de detecção implementado!")
-print("\n💡 BEST PRACTICES:")
-print("   1. Use multiple sampling for important queries")
-print("   2. Require citations/sources for factual claims")
-print("   3. Monitor confidence scores")
-print("   4. Implement fact-checking against KB")
-print("   5. Add uncertainty indicators for low confidence")
-print("   6. Use retrieval (RAG) to ground responses")
+print("\n💡 BOAS PRÁTICAS:")
+print("   1. Use múltiplas amostras para consultas importantes")
+print("   2. Exija citações/fontes para afirmações factuais")
+print("   3. Monitore pontuações de confiança")
+print("   4. Implemente verificação de fatos contra KB")
+print("   5. Adicione indicadores de incerteza para baixa confiança")
+print("   6. Use recuperação (RAG) para embasar respostas")

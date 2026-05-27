@@ -177,8 +177,8 @@ for epoch in range(epochs):
     history['val_acc'].append(val_acc.item())
     history['val_loss'].append(val_loss)
 
-    print(f'Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.4f}')
-    print(f'Val Loss: {val_loss:.4f} | Val Acc: {val_acc:.4f}')
+    print(f'Loss de Treino: {train_loss:.4f} | Acurácia de Treino: {train_acc:.4f}')
+    print(f'Loss de Val: {val_loss:.4f} | Acurácia de Val: {val_acc:.4f}')
 
 # Avaliação final
 print("\n📊 Avaliação Final...")
@@ -205,19 +205,19 @@ print(classification_report(true_labels, predictions, target_names=label_names))
 # Plot training history
 fig, axes = plt.subplots(1, 2, figsize=(14, 5))
 
-axes[0].plot(history['train_loss'], label='Train Loss', marker='o')
-axes[0].plot(history['val_loss'], label='Val Loss', marker='s')
-axes[0].set_xlabel('Epoch')
+axes[0].plot(history['train_loss'], label='Loss de Treino', marker='o')
+axes[0].plot(history['val_loss'], label='Loss de Validação', marker='s')
+axes[0].set_xlabel('Época')
 axes[0].set_ylabel('Loss')
-axes[0].set_title('Training and Validation Loss')
+axes[0].set_title('Loss de Treino e Validação')
 axes[0].legend()
 axes[0].grid(True, alpha=0.3)
 
-axes[1].plot(history['train_acc'], label='Train Accuracy', marker='o')
-axes[1].plot(history['val_acc'], label='Val Accuracy', marker='s')
-axes[1].set_xlabel('Epoch')
-axes[1].set_ylabel('Accuracy')
-axes[1].set_title('Training and Validation Accuracy')
+axes[1].plot(history['train_acc'], label='Acurácia de Treino', marker='o')
+axes[1].plot(history['val_acc'], label='Acurácia de Val', marker='s')
+axes[1].set_xlabel('Época')
+axes[1].set_ylabel('Acurácia')
+axes[1].set_title('Acurácia de Treino e Validação')
 axes[1].legend()
 axes[1].grid(True, alpha=0.3)
 
@@ -256,8 +256,8 @@ test_texts = [
 print("\n🧪 Testando com exemplos novos:\n")
 for text in test_texts:
     pred_label, probs = predict(text, model, tokenizer, device)
-    print(f"Text: {text[:60]}...")
-    print(f"Predicted: {pred_label}")
+    print(f"Texto: {text[:60]}...")
+    print(f"Predito: {pred_label}")
     print(f"Probabilities: {dict(zip(label_names, probs))}\n")
 
 print("✅ Fine-tuning completo!")

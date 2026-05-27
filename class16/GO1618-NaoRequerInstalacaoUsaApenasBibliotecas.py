@@ -4,7 +4,7 @@ if __name__ == "__main__":
     tools = [
         {
             "name": "get_weather",
-            "description": "Get weather for a location",
+            "description": "Obter informações meteorológicas para um local",
             "parameters": {
                 "location": "string"
             }

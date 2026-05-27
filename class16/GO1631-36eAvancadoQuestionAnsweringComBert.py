@@ -93,7 +93,7 @@ class BertQA:
         colors_start = ['red' if i == start_idx else 'blue' for i in range(max_len)]
         axes[0].bar(range(max_len), start_logits_vis, color=colors_start, alpha=0.6)
         axes[0].set_title(f'START Logits (max at position {start_idx})', fontsize=14)
-        axes[0].set_ylabel('Logit Value')
+        axes[0].set_ylabel('Valor do Logit')
         axes[0].set_xticks(range(max_len))
         axes[0].set_xticklabels(tokens_vis, rotation=90, fontsize=8)
         axes[0].axhline(y=0, color='black', linestyle='--', alpha=0.3)
@@ -103,8 +103,8 @@ class BertQA:
         colors_end = ['red' if i == end_idx else 'green' for i in range(max_len)]
         axes[1].bar(range(max_len), end_logits_vis, color=colors_end, alpha=0.6)
         axes[1].set_title(f'END Logits (max at position {end_idx})', fontsize=14)
-        axes[1].set_ylabel('Logit Value')
-        axes[1].set_xlabel('Token Position')
+        axes[1].set_ylabel('Valor do Logit')
+        axes[1].set_xlabel('Posição do Token')
         axes[1].set_xticks(range(max_len))
         axes[1].set_xticklabels(tokens_vis, rotation=90, fontsize=8)
         axes[1].axhline(y=0, color='black', linestyle='--', alpha=0.3)
@@ -127,8 +127,8 @@ class BertQA:
             result = self.answer_question(question, context, visualize=False)
             results.append(result)
 
-            print(f"Answer: {result['answer']}")
-            print(f"Confidence: {result['confidence']:.4f}")
+            print(f"Resposta: {result['answer']}")
+            print(f"Confiança: {result['confidence']:.4f}")
 
         # Visualizar confiança
         self._plot_confidence(results, [q for q, _ in qa_pairs])

@@ -88,8 +88,8 @@ class LoRAFineTuning:
         colors = ['#e74c3c', '#3498db']
 
         bars = axes[0].bar(methods, params, color=colors, alpha=0.7, edgecolor='black', linewidth=2)
-        axes[0].set_ylabel('Trainable Parameters', fontsize=12)
-        axes[0].set_title('Trainable Parameters Comparison', fontsize=14)
+        axes[0].set_ylabel('Parâmetros Treindáveis', fontsize=12)
+        axes[0].set_title('Comparação de Parâmetros Treindáveis', fontsize=14)
         axes[0].grid(axis='y', alpha=0.3)
 
         for bar, param in zip(bars, params):
@@ -105,7 +105,7 @@ class LoRAFineTuning:
 
         axes[1].pie(sizes, explode=explode, labels=labels, colors=colors,
                    autopct='%1.1f%%', shadow=True, startangle=90)
-        axes[1].set_title('Proportion of Trainable Parameters', fontsize=14)
+        axes[1].set_title('Proporção de Parâmetros Treindáveis', fontsize=14)
 
         plt.suptitle(f'LoRA vs Full Fine-tuning - Parameter Efficiency\n' +
                     f'Reduction: {(1-lora/full)*100:.1f}%', 
@@ -215,7 +215,7 @@ class LoRAFineTuning:
                         marker='o', label=name, linewidth=2)
         axes[0].set_xlabel('Epoch', fontsize=12)
         axes[0].set_ylabel('Loss', fontsize=12)
-        axes[0].set_title('Training Loss Comparison', fontsize=14)
+        axes[0].set_title('Comparação de Loss de Treino', fontsize=14)
         axes[0].legend(fontsize=11)
         axes[0].grid(True, alpha=0.3)
 
@@ -225,8 +225,8 @@ class LoRAFineTuning:
         colors = ['#e74c3c', '#3498db']
 
         bars = axes[1].bar(methods, times, color=colors, alpha=0.7, edgecolor='black', linewidth=2)
-        axes[1].set_ylabel('Training Time (seconds)', fontsize=12)
-        axes[1].set_title('Total Training Time', fontsize=14)
+        axes[1].set_ylabel('Tempo de Treino (segundos)', fontsize=12)
+        axes[1].set_title('Tempo Total de Treino', fontsize=14)
         axes[1].grid(axis='y', alpha=0.3)
 
         for bar, time_val in zip(bars, times):

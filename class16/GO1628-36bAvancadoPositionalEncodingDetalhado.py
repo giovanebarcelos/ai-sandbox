@@ -35,15 +35,15 @@ class PositionalEncoding:
         # Heatmap
         sns.heatmap(pe.T, cmap='RdBu_r', center=0, ax=axes[0, 0], 
                     cbar_kws={'label': 'Encoding Value'})
-        axes[0, 0].set_xlabel('Position')
-        axes[0, 0].set_ylabel('Embedding Dimension')
-        axes[0, 0].set_title('Positional Encoding Heatmap\n(Horizontal: Posição, Vertical: Dimensão)')
+        axes[0, 0].set_xlabel('Posição')
+        axes[0, 0].set_ylabel('Dimensão de Embedding')
+        axes[0, 0].set_title('Heatmap de Positional Encoding\n(Horizontal: Posição, Vertical: Dimensão)')
 
         # Primeiras 6 dimensões ao longo das posições
         for dim in range(0, 12, 2):
             axes[0, 1].plot(pe[:, dim], label=f'Dim {dim}', alpha=0.7)
-        axes[0, 1].set_xlabel('Position')
-        axes[0, 1].set_ylabel('Encoding Value')
+        axes[0, 1].set_xlabel('Posição')
+        axes[0, 1].set_ylabel('Valor de Codificação')
         axes[0, 1].set_title('Primeiras Dimensões ao Longo das Posições')
         axes[0, 1].legend(loc='upper right', fontsize=8)
         axes[0, 1].grid(True, alpha=0.3)
@@ -55,8 +55,8 @@ class PositionalEncoding:
         for pos, color in zip(positions, colors):
             axes[1, 0].plot(pe[pos, :64], label=f'Pos {pos}', 
                            color=color, alpha=0.7)
-        axes[1, 0].set_xlabel('Embedding Dimension')
-        axes[1, 0].set_ylabel('Encoding Value')
+        axes[1, 0].set_xlabel('Dimensão de Embedding')
+        axes[1, 0].set_ylabel('Valor de Codificação')
         axes[1, 0].set_title('Encoding em Diferentes Posições (Primeiros 64 dims)')
         axes[1, 0].legend(fontsize=8)
         axes[1, 0].grid(True, alpha=0.3)
@@ -65,8 +65,8 @@ class PositionalEncoding:
         similarity = np.dot(pe, pe.T)
         sns.heatmap(similarity, cmap='coolwarm', center=0, ax=axes[1, 1],
                     cbar_kws={'label': 'Similarity'})
-        axes[1, 1].set_xlabel('Position')
-        axes[1, 1].set_ylabel('Position')
+        axes[1, 1].set_xlabel('Posição')
+        axes[1, 1].set_ylabel('Posição')
         axes[1, 1].set_title('Similaridade Entre Posições\n(Posições próximas = mais similar)')
 
         plt.tight_layout()
@@ -95,10 +95,10 @@ if __name__ == "__main__":
     # Análise de propriedades
     print("📊 PROPRIEDADES DO POSITIONAL ENCODING:")
     print(f"\nShape: {pe.shape}")
-    print(f"Min value: {pe.min():.4f}")
-    print(f"Max value: {pe.max():.4f}")
-    print(f"Mean: {pe.mean():.4f}")
-    print(f"Std: {pe.std():.4f}")
+    print(f"Valor mínimo: {pe.min():.4f}")
+    print(f"Valor máximo: {pe.max():.4f}")
+    print(f"Média: {pe.mean():.4f}")
+    print(f"Desvio padrão: {pe.std():.4f}")
 
     # Teste: Posições próximas devem ter encodings similares
     pos_10 = pe[10]

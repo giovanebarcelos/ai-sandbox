@@ -98,7 +98,7 @@ class LLMBenchmark:
         }
 
     def compare_models(self, benchmark: str) -> pd.DataFrame:
-        """Compare models on specific benchmark"""
+        """Comparar modelos num benchmark específico"""
         data = []
         for model_name, metrics in self.models.items():
             data.append({
@@ -111,7 +111,7 @@ class LLMBenchmark:
         return df
 
     def calculate_overall_score(self) -> Dict:
-        """Calculate weighted overall score"""
+        """Calcular pontuação geral ponderada"""
         weights = {
             'mmlu': 0.25,
             'humaneval': 0.20,
@@ -130,15 +130,15 @@ class LLMBenchmark:
 
     def recommend_model(self, use_case: str, budget: str) -> List[str]:
         """
-        Recommend model based on use case and budget
+        Recomendar modelo com base no caso de uso e orçamento
 
-        Use cases: 'general', 'code', 'math', 'chat', 'factual'
-        Budget: 'high', 'medium', 'low'
+        Casos de uso: 'general', 'code', 'math', 'chat', 'factual'
+        Orçamento: 'high', 'medium', 'low'
         """
         recommendations = []
 
         if use_case == 'code':
-            # Prioritize HumanEval
+            # Priorizar HumanEval
             sorted_models = sorted(self.models.items(), 
                                  key=lambda x: x[1]['humaneval'], 
                                  reverse=True)
@@ -151,13 +151,13 @@ class LLMBenchmark:
                                  key=lambda x: x[1]['truthfulqa'], 
                                  reverse=True)
         else:
-            # General: use overall score
+            # Geral: usar pontuação geral
             overall_scores = self.calculate_overall_score()
             sorted_models = sorted(self.models.items(), 
                                  key=lambda x: overall_scores[x[0]], 
                                  reverse=True)
 
-        # Filter by budget
+        # Filtrar por orçamento
         if budget == 'low':
             filtered = [(name, metrics) for name, metrics in sorted_models 
                        if metrics['cost_per_1m'] < 1.0]
@@ -171,31 +171,31 @@ class LLMBenchmark:
 
 # === DEMO ===
 
-print("📊 LLM Benchmarking & Model Selection\n")
+print("📊 Benchmarking e Seleção de LLMs\n")
 print("="*70)
 
 benchmark = LLMBenchmark()
 
 # Compare on MMLU (general reasoning)
-print("\n📌 MMLU Benchmark (General Reasoning):\n")
+print("\n📌 Benchmark MMLU (Raciocínio Geral):\n")
 mmlu_results = benchmark.compare_models('mmlu')
 for _, row in mmlu_results.iterrows():
     print(f"   {row['Model']:<25} {row['Score']:.1f}  [{row['Open Source']}]")
 
 # Compare on HumanEval (code)
-print("\n📌 HumanEval Benchmark (Code Generation):\n")
+print("\n📌 Benchmark HumanEval (Geração de Código):\n")
 humaneval_results = benchmark.compare_models('humaneval')
 for _, row in humaneval_results.iterrows():
     print(f"   {row['Model']:<25} {row['Score']:.1f}%  [{row['Open Source']}]")
 
 # Overall scores
-print("\n📌 Overall Scores (Weighted Average):\n")
+print("\n📌 Pontuações Gerais (Média Ponderada):\n")
 overall_scores = benchmark.calculate_overall_score()
 for model, score in sorted(overall_scores.items(), key=lambda x: x[1], reverse=True):
     print(f"   {model:<25} {score:.1f}")
 
 # Recommendations
-print("\n📌 Recommendations:\n")
+print("\n📌 Recomendações:\n")
 
 use_cases = [
     ('general', 'low'),
@@ -205,7 +205,7 @@ use_cases = [
 
 for use_case, budget in use_cases:
     recs = benchmark.recommend_model(use_case, budget)
-    print(f"   {use_case.capitalize()} task, {budget} budget:")
+    print(f"   {use_case.capitalize()} tarefa, orçamento {budget}:")
     for i, model in enumerate(recs, 1):
         print(f"      {i}. {model}")
     print()
@@ -236,7 +236,7 @@ for model in models_to_plot:
 ax.set_xticks(angles[:-1])
 ax.set_xticklabels(['MMLU', 'HumanEval', 'GSM8K', 'MT-Bench', 'TruthfulQA'])
 ax.set_ylim(0, 100)
-ax.set_title('Model Capabilities (Radar)', y=1.08)
+ax.set_title('Capacidades dos Modelos (Radar)', y=1.08)
 ax.legend(loc='upper right', bbox_to_anchor=(1.3, 1.1), fontsize=8)
 ax.grid(True)
 
@@ -253,11 +253,11 @@ for model_name, metrics in benchmark.models.items():
     ax.annotate(model_name, (cost, overall), xytext=(5, 5), 
                textcoords='offset points', fontsize=8)
 
-ax.set_xlabel('Cost per 1M tokens ($)')
-ax.set_ylabel('Overall Score')
-ax.set_title('Cost vs Performance')
+ax.set_xlabel('Custo por 1M tokens ($)')
+ax.set_ylabel('Pontuação Geral')
+ax.set_title('Custo vs Desempenho')
 ax.grid(alpha=0.3)
-ax.legend(['Open Source', 'Proprietary'], loc='lower right')
+ax.legend(['Código Aberto', 'Proprietário'], loc='lower right')
 
 # 3. Benchmark comparison
 ax = axes[1, 0]
@@ -276,8 +276,8 @@ for i, model in enumerate(models_comp):
     ax.bar(x + i*width, values, width, label=model, alpha=0.8)
 
 ax.set_xlabel('Benchmark')
-ax.set_ylabel('Score')
-ax.set_title('Performance Across Benchmarks')
+ax.set_ylabel('Pontuação')
+ax.set_title('Desempenho por Benchmarks')
 ax.set_xticks(x + width)
 ax.set_xticklabels(benchmarks_comp, rotation=45, ha='right')
 ax.legend(fontsize=8)
@@ -292,8 +292,8 @@ colors_lat = ['green' if benchmark.models[m]['open_source'] else 'red'
              for m in models_lat]
 
 bars = ax.barh(models_lat, latencies, color=colors_lat, alpha=0.7)
-ax.set_xlabel('Latency (ms)')
-ax.set_title('Inference Latency Comparison')
+ax.set_xlabel('Latência (ms)')
+ax.set_title('Comparação de Latência de Inferência')
 ax.grid(axis='x', alpha=0.3)
 
 for bar, lat in zip(bars, latencies):
@@ -306,15 +306,15 @@ plt.show()
 print("\n📊 Gráfico salvo: llm_benchmarking.png")
 
 print("\n✅ LLM benchmarking implementado!")
-print("\n💡 BENCHMARK GUIDE:")
-print("   MMLU: General knowledge & reasoning (57 subjects)")
-print("   HumanEval: Code generation (164 programming problems)")
-print("   GSM8K: Math word problems (grade school)")
-print("   MT-Bench: Multi-turn conversation quality")
-print("   TruthfulQA: Factual accuracy & avoiding misinformation")
-print("\n💡 MODEL SELECTION TIPS:")
-print("   - Claude Sonnet: Best overall, excellent for complex tasks")
-print("   - GPT-4o: Strong general purpose, fast")
-print("   - Llama 3.1 70B: Best open-source, self-host option")
-print("   - Phi-3-mini: Surprising quality for size, low cost")
-print("   - Consider task-specific strengths!")
+print("\n💡 GUIA DE BENCHMARKS:")
+print("   MMLU: Conhecimento geral e raciocínio (57 matérias)")
+print("   HumanEval: Geração de código (164 problemas)")
+print("   GSM8K: Problemas matemáticos (nível escolar)")
+print("   MT-Bench: Qualidade de conversa multipla")
+print("   TruthfulQA: Precisão factual e evitar desinformação")
+print("\n💡 DICAS DE SELEÇÃO DE MODELO:")
+print("   - Claude Sonnet: Melhor geral, excelente para tarefas complexas")
+print("   - GPT-4o: Uso geral robusto, rápido")
+print("   - Llama 3.1 70B: Melhor código aberto, opção self-host")
+print("   - Phi-3-mini: Qualidade surpreendente para o tamanho, baixo custo")
+print("   - Considere pontos fortes específicos por tarefa!")

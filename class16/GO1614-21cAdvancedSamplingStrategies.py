@@ -158,7 +158,7 @@ class TextGenerator:
 
 generator = TextGenerator()
 
-print("🔥 Advanced Sampling Strategies\n")
+print("🔥 Estratégias Avançadas de Sampling\n")
 print("="*70)
 
 prompt = "The future of artificial intelligence"
@@ -167,7 +167,7 @@ print(f"\nPrompt: \"{prompt}\"\n")
 print("="*70)
 
 # Compare all strategies
-print("\n📌 Strategy Comparison:\n")
+print("\n📌 Comparação de Estratégias:\n")
 
 results = generator.compare_strategies(prompt)
 
@@ -176,7 +176,7 @@ for strategy, text in results.items():
     print(f"   {text}")
 
 # Test temperature range
-print("\n\n📌 Temperature Effect:\n")
+print("\n\n📌 Efeito da Temperatura:\n")
 
 temps = [0.1, 0.5, 1.0, 1.5, 2.0]
 
@@ -185,7 +185,7 @@ for temp in temps:
     print(f"T={temp}: {text}")
 
 # Test top-k range
-print("\n\n📌 Top-k Effect:\n")
+print("\n\n📌 Efeito do Top-k:\n")
 
 ks = [1, 10, 50, 100]
 
@@ -202,18 +202,18 @@ temperatures = [0.1, 0.3, 0.5, 0.7, 1.0, 1.5, 2.0]
 diversity_scores = [0.2, 0.4, 0.6, 0.75, 0.85, 0.92, 0.95]  # Simulated
 coherence_scores = [0.95, 0.92, 0.88, 0.82, 0.75, 0.60, 0.45]  # Inverse
 
-ax.plot(temperatures, diversity_scores, 'o-', label='Diversity', linewidth=2, markersize=8, color='blue')
-ax.plot(temperatures, coherence_scores, 's-', label='Coherence', linewidth=2, markersize=8, color='green')
+ax.plot(temperatures, diversity_scores, 'o-', label='Diversidade', linewidth=2, markersize=8, color='blue')
+ax.plot(temperatures, coherence_scores, 's-', label='Coerência', linewidth=2, markersize=8, color='green')
 ax.axvline(1.0, color='red', linestyle='--', alpha=0.5, label='Default T=1.0')
 ax.set_xlabel('Temperature')
-ax.set_ylabel('Score')
-ax.set_title('Temperature: Diversity vs Coherence')
+ax.set_ylabel('Pontuação')
+ax.set_title('Temperatura: Diversidade vs Coerência')
 ax.legend()
 ax.grid(alpha=0.3)
 
 # Mark sweet spot
 ax.plot(0.7, 0.75, 'r*', markersize=20)
-ax.annotate('Sweet\nSpot', xy=(0.7, 0.75), xytext=(1.2, 0.85),
+ax.annotate('Ponto\nÓtimo', xy=(0.7, 0.75), xytext=(1.2, 0.85),
             arrowprops=dict(arrowstyle='->', color='red', lw=2),
             fontsize=10, fontweight='bold')
 
@@ -226,11 +226,11 @@ diversity_scores_methods = [0.20, 0.70, 0.80, 0.85, 0.60]
 x = np.arange(len(methods))
 width = 0.35
 
-ax.bar(x - width/2, quality_scores, width, label='Quality', alpha=0.8, color='lightgreen')
-ax.bar(x + width/2, diversity_scores_methods, width, label='Diversity', alpha=0.8, color='skyblue')
+ax.bar(x - width/2, quality_scores, width, label='Qualidade', alpha=0.8, color='lightgreen')
+ax.bar(x + width/2, diversity_scores_methods, width, label='Diversidade', alpha=0.8, color='skyblue')
 
-ax.set_ylabel('Score')
-ax.set_title('Sampling Method Comparison')
+ax.set_ylabel('Pontuação')
+ax.set_title('Comparação de Métodos de Sampling')
 ax.set_xticks(x)
 ax.set_xticklabels(methods)
 ax.legend()
@@ -248,12 +248,12 @@ ax2 = ax.twinx()
 line1 = ax.plot(beam_widths, bleu_scores, 'o-', color='green', linewidth=2, 
                 markersize=8, label='BLEU Score')
 line2 = ax2.plot(beam_widths, latencies, 's-', color='red', linewidth=2, 
-                 markersize=8, label='Latency (ms)')
+                 markersize=8, label='Latência (ms)')
 
 ax.set_xlabel('Beam Width')
 ax.set_ylabel('BLEU Score', color='green')
-ax2.set_ylabel('Latency (ms)', color='red')
-ax.set_title('Beam Search: Quality vs Speed')
+ax2.set_ylabel('Latência (ms)', color='red')
+ax.set_title('Beam Search: Qualidade vs Velocidade')
 ax.tick_params(axis='y', labelcolor='green')
 ax2.tick_params(axis='y', labelcolor='red')
 ax.grid(alpha=0.3)
@@ -264,15 +264,15 @@ ax.legend(lines, labels, loc='center right')
 
 # 4. Use case recommendations
 ax = axes[1, 1]
-use_cases = ['Creative\nWriting', 'Translation', 'Code\nGeneration', 'Chatbot', 'Summarization']
-recommended_methods = ['High Temp\n+ Top-p', 'Beam\nSearch', 'Low Temp\n+ Top-k', 'Top-p\n(0.9)', 'Beam\nSearch']
+use_cases = ['Escrita\nCriativa', 'Tradução', 'Geração de\nCódigo', 'Chatbot', 'Sumarização']
+recommended_methods = ['Temp Alta\n+ Top-p', 'Beam\nSearch', 'Temp Baixa\n+ Top-k', 'Top-p\n(0.9)', 'Beam\nSearch']
 recommended_scores = [0.9, 0.95, 0.88, 0.85, 0.92]
 
 colors_rec = ['purple', 'green', 'blue', 'orange', 'green']
 
 bars = ax.barh(use_cases, recommended_scores, color=colors_rec, alpha=0.7)
-ax.set_xlabel('Suitability Score')
-ax.set_title('Recommended Sampling per Use Case')
+ax.set_xlabel('Pontuação de Adequação')
+ax.set_title('Sampling Recomendado por Caso de Uso')
 ax.set_xlim(0, 1)
 ax.grid(axis='x', alpha=0.3)
 
@@ -287,10 +287,10 @@ plt.show()
 print("\n\n📊 Gráfico salvo: sampling_strategies.png")
 
 print("\n\n✅ Sampling strategies implementado!")
-print("\n💡 RECOMMENDATIONS:")
-print("   Creative writing: T=1.2-1.5, Top-p=0.95")
+print("\n💡 RECOMENDAÇÕES:")
+print("   Escrita criativa: T=1.2-1.5, Top-p=0.95")
 print("   Chatbot: T=0.7-0.9, Top-p=0.9")
-print("   Code generation: T=0.2-0.5, Top-k=10-30")
-print("   Translation: Beam search (num_beams=5)")
-print("   Summarization: Beam search or low temp")
-print("\n💡 BEST PRACTICE: Combine Top-k + Top-p for best results!")
+print("   Geração de código: T=0.2-0.5, Top-k=10-30")
+print("   Tradução: Beam search (num_beams=5)")
+print("   Sumarização: Beam search ou temperatura baixa")
+print("\n💡 BOA PRÁTICA: Combine Top-k + Top-p para melhores resultados!")

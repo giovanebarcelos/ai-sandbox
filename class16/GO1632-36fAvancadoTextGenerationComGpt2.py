@@ -129,8 +129,8 @@ class ControlledTextGenerator:
                 axes[idx].barh(range(len(words)), counts, color='skyblue', alpha=0.8)
                 axes[idx].set_yticks(range(len(words)))
                 axes[idx].set_yticklabels(words, fontsize=9)
-                axes[idx].set_xlabel('Frequency')
-                axes[idx].set_title(f'Temp={temp} | Unique Tokens: {unique_ratio:.2%}', fontsize=11)
+                axes[idx].set_xlabel('Frequência')
+                axes[idx].set_title(f'Temp={temp} | Tokens Únicos: {unique_ratio:.2%}', fontsize=11)
                 axes[idx].invert_yaxis()
                 axes[idx].grid(axis='x', alpha=0.3)
 
@@ -215,7 +215,7 @@ creative_prompts = [
 for prompt in creative_prompts:
     text = generator.generate_sampling(prompt, max_length=80, temperature=1.3, top_p=0.95)
     print(f"\nPrompt: {prompt}")
-    print(f"Generated: {text[len(prompt):]}")
+    print(f"Gerado: {text[len(prompt):]}")
 
 print("\n✅ Análise completa!")
 print("\n📊 RESUMO DE ESTRATÉGIAS:")

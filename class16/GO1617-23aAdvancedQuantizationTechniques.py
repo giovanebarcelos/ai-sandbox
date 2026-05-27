@@ -35,7 +35,7 @@ class QuantizationComparison:
         self.tokenizer.pad_token = self.tokenizer.eos_token
 
     def load_model_fp32(self):
-        """Load full precision model (baseline)"""
+        """Carregar modelo em precisão completa (baseline)"""
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             torch_dtype=torch.float32
@@ -43,7 +43,7 @@ class QuantizationComparison:
         return model
 
     def load_model_fp16(self):
-        """Load half precision model"""
+        """Carregar modelo em meia precisão"""
         model = AutoModelForCausalLM.from_pretrained(
             self.model_name,
             torch_dtype=torch.float16
@@ -51,7 +51,7 @@ class QuantizationComparison:
         return model
 
     def load_model_8bit(self):
-        """Load 8-bit quantized model"""
+        """Carregar modelo quantizado em 8-bit"""
         quantization_config = BitsAndBytesConfig(
             load_in_8bit=True,
             llm_int8_threshold=6.0
@@ -65,7 +65,7 @@ class QuantizationComparison:
         return model
 
     def load_model_4bit(self):
-        """Load 4-bit quantized model (NF4)"""
+        """Carregar modelo quantizado em 4-bit (NF4)"""
         quantization_config = BitsAndBytesConfig(
             load_in_4bit=True,
             bnb_4bit_compute_dtype=torch.float16,
@@ -81,7 +81,7 @@ class QuantizationComparison:
         return model
 
     def measure_model_size(self, model) -> float:
-        """Calculate model size in MB"""
+        """Calcular tamanho do modelo em MB"""
         total_size = 0
         for param in model.parameters():
             total_size += param.nelement() * param.element_size()
@@ -90,7 +90,7 @@ class QuantizationComparison:
         return size_mb
 
     def measure_inference_speed(self, model, num_runs=10) -> float:
-        """Measure average inference latency"""
+        """Medir latência média de inferência"""
         prompt = "The future of artificial intelligence is"
         inputs = self.tokenizer(prompt, return_tensors="pt")
 
@@ -109,9 +109,9 @@ class QuantizationComparison:
 
     def simulate_perplexity(self, quantization_type: str) -> float:
         """
-        Simulate perplexity for different quantizations
+        Simular perplexidade para diferentes quantizações
 
-        Lower is better (real values would require test set)
+        Menor é melhor (valores reais requerem conjunto de teste)
         """
         perplexities = {
             'FP32': 25.0,
@@ -124,14 +124,14 @@ class QuantizationComparison:
         return perplexities.get(quantization_type, 30.0)
 
     def compare_all_methods(self) -> Dict:
-        """Compare all quantization methods"""
+        """Comparar todos os métodos de quantização"""
 
-        print("🔢 Comparing Quantization Methods...\n")
+        print("🔢 Comparando Métodos de Quantização...\n")
 
         results = {}
 
         # FP32 (baseline)
-        print("   Loading FP32...")
+        print("   Carregando FP32...")
         model_fp32 = self.load_model_fp32()
         results['FP32'] = {
             'size_mb': self.measure_model_size(model_fp32),
@@ -141,7 +141,7 @@ class QuantizationComparison:
         }
 
         # FP16
-        print("   Loading FP16...")
+        print("   Carregando FP16...")
         model_fp16 = self.load_model_fp16()
         results['FP16'] = {
             'size_mb': self.measure_model_size(model_fp16),
@@ -177,7 +177,7 @@ class QuantizationComparison:
 
 # === DEMO ===
 
-print("🔢 Advanced Quantization Techniques\n")
+print("🔢 Técnicas Avançadas de Quantização\n")
 print("="*70)
 
 comparator = QuantizationComparison("gpt2")
@@ -185,9 +185,9 @@ comparator = QuantizationComparison("gpt2")
 # Run comparison
 results = comparator.compare_all_methods()
 
-print("\n📊 RESULTS:\n")
+print("\n📊 RESULTADOS:\n")
 
-print(f"{'Method':<15} {'Size (MB)':<12} {'Perplexity':<12} {'Speed (ms)':<12} {'Memory (GB)'}")
+print(f"{'Método':<15} {'Tamanho (MB)':<12} {'Perplexidade':<12} {'Velocidade (ms)':<15} {'Memória (GB)'}")
 print("-" * 70)
 
 for method, metrics in results.items():
@@ -196,13 +196,13 @@ for method, metrics in results.items():
 
 # Calculate compression ratios
 fp32_size = results['FP32']['size_mb']
-print("\n📌 Compression Ratios (vs FP32):\n")
+print("\n📌 Razões de Compressão (vs FP32):\n")
 for method, metrics in results.items():
     ratio = fp32_size / metrics['size_mb']
     quality_loss = ((metrics['perplexity'] - results['FP32']['perplexity']) / 
                    results['FP32']['perplexity'] * 100)
 
-    print(f"{method:<15} {ratio:.1f}x smaller, {quality_loss:+.1f}% perplexity change")
+    print(f"{method:<15} {ratio:.1f}x menor, {quality_loss:+.1f}% de variação na perplexidade")
 
 # Visualize
 fig, axes = plt.subplots(2, 2, figsize=(14, 10))
@@ -215,8 +215,8 @@ sizes = [results[m]['size_mb'] for m in methods]
 colors_size = ['red', 'orange', 'yellow', 'lightgreen', 'green']
 
 bars = ax.bar(methods, sizes, color=colors_size, alpha=0.7)
-ax.set_ylabel('Model Size (MB)')
-ax.set_title('Model Size by Quantization Method')
+ax.set_ylabel('Tamanho do Modelo (MB)')
+ax.set_title('Tamanho do Modelo por Método de Quantização')
 ax.set_xticks(range(len(methods)))
 ax.set_xticklabels(methods, rotation=45, ha='right')
 ax.grid(axis='y', alpha=0.3)
@@ -237,16 +237,16 @@ for i, method in enumerate(methods):
     ax.annotate(method, (sizes_plot[i], perplexities[i]), 
                xytext=(5, 5), textcoords='offset points', fontsize=9)
 
-ax.set_xlabel('Model Size (MB)')
-ax.set_ylabel('Perplexity (lower = better)')
-ax.set_title('Quality vs Size Trade-off')
+ax.set_xlabel('Tamanho do Modelo (MB)')
+ax.set_ylabel('Perplexidade (menor = melhor)')
+ax.set_title('Qualidade vs Tamanho')
 ax.grid(alpha=0.3)
 ax.invert_xaxis()
 
 # Add Pareto frontier
 ax.plot([max(sizes_plot), min(sizes_plot)], 
        [min(perplexities), max(perplexities)], 
-       'r--', alpha=0.3, linewidth=2, label='Pareto Frontier')
+       'r--', alpha=0.3, linewidth=2, label='Fronteira de Pareto')
 ax.legend()
 
 # 3. Inference speed comparison
@@ -254,8 +254,8 @@ ax = axes[1, 0]
 speeds = [results[m]['speed_ms'] for m in methods]
 
 bars = ax.barh(methods, speeds, color=colors_size[::-1], alpha=0.7)
-ax.set_xlabel('Latency (ms)')
-ax.set_title('Inference Speed (lower = faster)')
+ax.set_xlabel('Latência (ms)')
+ax.set_title('Velocidade de Inferência (menor = mais rápido)')
 ax.grid(axis='x', alpha=0.3)
 
 for bar, speed in zip(bars, speeds):
@@ -268,8 +268,8 @@ ax = axes[1, 1]
 memory = [results[m]['memory_gb'] for m in methods]
 
 bars = ax.bar(methods, memory, color=colors_size, alpha=0.7)
-ax.set_ylabel('Memory Usage (GB)')
-ax.set_title('Runtime Memory Consumption')
+ax.set_ylabel('Uso de Memória (GB)')
+ax.set_title('Consumo de Memória em Tempo de Execução')
 ax.set_xticks(range(len(methods)))
 ax.set_xticklabels(methods, rotation=45, ha='right')
 ax.grid(axis='y', alpha=0.3)
@@ -284,15 +284,15 @@ plt.show()
 print("\n📊 Gráfico salvo: quantization_comparison.png")
 
 print("\n✅ Quantization comparison implementado!")
-print("\n💡 RECOMMENDATIONS:")
-print("   - FP16: Default for modern GPUs (free speedup)")
-print("   - INT8: 4x compression, <1% quality loss")
-print("   - INT4 (NF4): 8x compression, ~2-3% quality loss")
-print("   - GPTQ: Best for inference speed")
-print("   - Use 4-bit for large models on consumer hardware")
-print("\n💡 WHEN TO USE EACH:")
-print("   FP32: Baseline, research")
-print("   FP16: Production (GPU), minimal trade-offs")
-print("   INT8: CPU inference, mobile")
-print("   INT4: Consumer GPU (24GB → fit 70B model)")
-print("   GPTQ/GGUF: Optimized for specific hardware")
+print("\n💡 RECOMENDAÇÕES:")
+print("   - FP16: Padrão para GPUs modernas (aceleração grátis)")
+print("   - INT8: Compressão 4x, <1% de perda de qualidade")
+print("   - INT4 (NF4): Compressão 8x, ~2-3% de perda de qualidade")
+print("   - GPTQ: Melhor para velocidade de inferência")
+print("   - Use 4-bit para grandes modelos em hardware consumidor")
+print("\n💡 QUANDO USAR CADA UM:")
+print("   FP32: Baseline, pesquisa")
+print("   FP16: Produção (GPU), comprometimentos mínimos")
+print("   INT8: Inferência em CPU, dispositivos móveis")
+print("   INT4: GPU consumidor (24GB → cabe modelo 70B)")
+print("   GPTQ/GGUF: Otimizado para hardware específico")

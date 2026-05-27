@@ -13,7 +13,7 @@ if __name__ == "__main__":
     np.random.seed(42)
     d_in, d_out = 768, 768
     ranks = [1, 2, 4, 8, 16, 32, 64]
-    print("LoRA - reducao de parametros")
+    print("LoRA - redução de parâmetros")
     for r in ranks:
         params = d_in*r + r*d_out
         pct = params/(d_in*d_out)*100
@@ -25,12 +25,12 @@ if __name__ == "__main__":
     x = np.random.randn(4, d_in)
     out = aplicar_lora(W, A, B, x)
     print(f"output shape: {out.shape}")
-    print(f"Reducao: {(1-(d_in*r+r*d_out)/(d_in*d_out))*100:.1f}%")
+    print(f"Redução: {(1-(d_in*r+r*d_out)/(d_in*d_out))*100:.1f}%")
     fig, ax = plt.subplots(figsize=(7,4))
     pcts = [( d_in*r + r*d_out)/(d_in*d_out)*100 for r in ranks]
     ax.plot(ranks, pcts, "o-", color="darkorange", linewidth=2)
-    ax.set_xlabel("Rank r"); ax.set_ylabel("% parametros")
-    ax.set_title("LoRA: Parametros vs Rank"); ax.grid(True, alpha=0.3)
+    ax.set_xlabel("Rank r"); ax.set_ylabel("% parâmetros")
+    ax.set_title("LoRA: Parâmetros vs Rank"); ax.grid(True, alpha=0.3)
     plt.tight_layout()
     plt.savefig("GO1637_lora_params.png", dpi=100, bbox_inches="tight")
     plt.show()

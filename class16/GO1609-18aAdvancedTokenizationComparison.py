@@ -21,9 +21,9 @@ except NameError:
 
 class TokenizerComparison:
     """
-    Comprehensive tokenizer comparison
+    Comparação abrangente de tokenizadores
 
-    Tokenization algorithms:
+    Algoritmos de tokenização:
     - BPE (Byte-Pair Encoding): GPT-2, RoBERTa
     - WordPiece: BERT
     - Unigram: XLNet
@@ -31,7 +31,7 @@ class TokenizerComparison:
     """
 
     def __init__(self):
-        print("🔤 Loading tokenizers...\n")
+        print("🔤 Carregando tokenizadores...\n")
 
         # Load different tokenizers
         self.tokenizers = {
@@ -40,10 +40,10 @@ class TokenizerComparison:
             'T5 (SentencePiece)': T5Tokenizer.from_pretrained('t5-small'),
         }
 
-        print("✅ Tokenizers loaded successfully!\n")
+        print("✅ Tokenizadores carregados com sucesso!\n")
 
     def tokenize_text(self, text: str):
-        """Tokenize text with all tokenizers"""
+        """Tokenizar texto com todos os tokenizadores"""
         results = {}
 
         for name, tokenizer in self.tokenizers.items():
@@ -59,8 +59,8 @@ class TokenizerComparison:
         return results
 
     def compare_on_text(self, text: str):
-        """Compare tokenization on a specific text"""
-        print(f"📝 Original Text:\n   \"{text}\"\n")
+        """Comparar tokenização em um texto específico"""
+        print(f"📝 Texto Original:\n   \"{text}\"\n")
 
         results = self.tokenize_text(text)
 
@@ -68,13 +68,13 @@ class TokenizerComparison:
             print(f"{name}:")
             print(f"   Tokens ({result['num_tokens']}): {result['tokens'][:10]}")
             if len(result['tokens']) > 10:
-                print(f"   ... (truncated, total: {result['num_tokens']} tokens)")
+                print(f"   ... (truncado, total: {result['num_tokens']} tokens)")
             print()
 
         return results
 
     def analyze_vocabulary_coverage(self, texts: list):
-        """Analyze how different tokenizers handle vocabulary"""
+        """Analisar como diferentes tokenizadores lidam com o vocabulário"""
         vocab_stats = {name: [] for name in self.tokenizers.keys()}
 
         for text in texts:
@@ -86,8 +86,8 @@ class TokenizerComparison:
         return vocab_stats
 
     def special_tokens_analysis(self):
-        """Analyze special tokens across tokenizers"""
-        print("🔍 Special Tokens Analysis:\n")
+        """Analisar tokens especiais entre tokenizadores"""
+        print("🔍 Análise de Tokens Especiais:\n")
 
         for name, tokenizer in self.tokenizers.items():
             print(f"{name}:")
@@ -95,12 +95,12 @@ class TokenizerComparison:
             print(f"   UNK: {tokenizer.unk_token}")
             print(f"   BOS: {getattr(tokenizer, 'bos_token', 'N/A')}")
             print(f"   EOS: {getattr(tokenizer, 'eos_token', 'N/A')}")
-            print(f"   Vocab size: {len(tokenizer):,}")
+            print(f"   Tamanho do vocabulário: {len(tokenizer):,}")
             print()
 
 # === DEMO ===
 
-print("🔤 Advanced Tokenization Comparison\n")
+print("🔤 Comparação Avançada de Tokenizadores\n")
 print("="*70)
 
 comp = TokenizerComparison()
@@ -114,13 +114,13 @@ test_texts = [
     "Machine learning models like GPT-4 are revolutionizing NLP.",
 ]
 
-print("\n📌 Test Case 1: Simple Sentence\n")
+print("\n📌 Caso de Teste 1: Frase Simples\n")
 comp.compare_on_text(test_texts[0])
 
-print("\n📌 Test Case 2: Complex Words (OOV Handling)\n")
+print("\n📌 Caso de Teste 2: Palavras Complexas (OOV)\n")
 comp.compare_on_text(test_texts[2])
 
-print("\n📌 Test Case 3: Contractions & Affixes\n")
+print("\n📌 Caso de Teste 3: Contrações e Afixos\n")
 comp.compare_on_text(test_texts[3])
 
 # Special tokens
@@ -129,15 +129,15 @@ comp.special_tokens_analysis()
 
 # Vocabulary coverage analysis
 print("="*70)
-print("\n📊 Vocabulary Coverage Analysis\n")
+print("\n📊 Análise de Cobertura do Vocabulário\n")
 
 vocab_stats = comp.analyze_vocabulary_coverage(test_texts)
 
 for name, token_counts in vocab_stats.items():
     avg_tokens = np.mean(token_counts)
     print(f"{name}:")
-    print(f"   Average tokens per text: {avg_tokens:.2f}")
-    print(f"   Range: {min(token_counts)}-{max(token_counts)}")
+    print(f"   Média de tokens por texto: {avg_tokens:.2f}")
+    print(f"   Intervalo: {min(token_counts)}-{max(token_counts)}")
     print()
 
 # Visualize
@@ -151,23 +151,23 @@ width = 0.25
 for i, (name, token_counts) in enumerate(vocab_stats.items()):
     ax.bar(x + i*width, token_counts, width, label=name, alpha=0.8)
 
-ax.set_xlabel('Test Text')
-ax.set_ylabel('Number of Tokens')
-ax.set_title('Token Count Comparison')
+ax.set_xlabel('Texto de Teste')
+ax.set_ylabel('Número de Tokens')
+ax.set_title('Comparação de Contagem de Tokens')
 ax.set_xticks(x + width)
-ax.set_xticklabels([f'Text {i+1}' for i in range(len(test_texts))])
+ax.set_xticklabels([f'Texto {i+1}' for i in range(len(test_texts))])
 ax.legend(fontsize=8)
 ax.grid(axis='y', alpha=0.3)
 
-# 2. Average efficiency (fewer tokens = more efficient)
+# 2. Eficiência média (menos tokens = mais eficiente)
 ax = axes[0, 1]
 avg_tokens = [np.mean(counts) for counts in vocab_stats.values()]
 names = list(vocab_stats.keys())
 
 colors = ['#1f77b4', '#ff7f0e', '#2ca02c']
 bars = ax.barh(names, avg_tokens, color=colors, alpha=0.7)
-ax.set_xlabel('Average Tokens per Text')
-ax.set_title('Tokenizer Efficiency (Lower = More Efficient)')
+ax.set_xlabel('Média de Tokens por Texto')
+ax.set_title('Eficiência do Tokenizador (Menor = Mais Eficiente)')
 ax.grid(axis='x', alpha=0.3)
 
 for bar, val in zip(bars, avg_tokens):
@@ -180,8 +180,8 @@ vocab_sizes = [len(tokenizer) for tokenizer in comp.tokenizers.values()]
 names_short = ['GPT-2\n(BPE)', 'BERT\n(WordPiece)', 'T5\n(SentencePiece)']
 
 bars = ax.bar(names_short, vocab_sizes, color=colors, alpha=0.7)
-ax.set_ylabel('Vocabulary Size')
-ax.set_title('Tokenizer Vocabulary Size')
+ax.set_ylabel('Tamanho do Vocabulário')
+ax.set_title('Tamanho do Vocabulário por Tokenizador')
 ax.grid(axis='y', alpha=0.3)
 
 for bar, val in zip(bars, vocab_sizes):
@@ -201,9 +201,9 @@ ax.plot(x_freq, bpe_dist, 'o-', label='GPT-2 (BPE)', linewidth=2)
 ax.plot(x_freq, wordpiece_dist, 's-', label='BERT (WordPiece)', linewidth=2)
 ax.plot(x_freq, sentencepiece_dist, '^-', label='T5 (SentencePiece)', linewidth=2)
 
-ax.set_xlabel('Token Rank')
-ax.set_ylabel('Frequency (log scale)')
-ax.set_title('Token Frequency Distribution')
+ax.set_xlabel('Rank do Token')
+ax.set_ylabel('Frequência (escala log)')
+ax.set_title('Distribuição de Frequência de Tokens')
 ax.set_yscale('log')
 ax.legend()
 ax.grid(alpha=0.3)
@@ -213,13 +213,13 @@ plt.show()
 print("\n📊 Gráfico salvo: tokenizer_comparison.png")
 
 print("\n✅ Tokenizer comparison completo!")
-print("\n💡 KEY INSIGHTS:")
-print("   - BPE (GPT-2): Character-level fallback, good for rare words")
-print("   - WordPiece (BERT): Subword units, balanced efficiency")
-print("   - SentencePiece (T5): Language-agnostic, no pre-tokenization")
-print("   - Trade-off: Vocab size vs. token sequence length")
-print("\n💡 BEST PRACTICES:")
-print("   - Choose tokenizer based on model architecture")
-print("   - Consider vocab size for memory constraints")
-print("   - Test OOV (out-of-vocabulary) handling")
-print("   - Monitor token sequence length (affects inference cost)")
+print("\n💡 PRINCIPAIS INSIGHTS:")
+print("   - BPE (GPT-2): Fallback em nível de caractere, bom para palavras raras")
+print("   - WordPiece (BERT): Unidades de subpalavra, eficiência equilibrada")
+print("   - SentencePiece (T5): Independente de idioma, sem pré-tokenização")
+print("   - Trade-off: Tamanho do vocabulário vs. comprimento da sequência")
+print("\n💡 BOAS PRÁTICAS:")
+print("   - Escolha o tokenizador conforme a arquitetura do modelo")
+print("   - Considere o tamanho do vocabulário para restrições de memória")
+print("   - Teste o tratamento de OOV (fora do vocabulário)")
+print("   - Monitore o comprimento da sequência de tokens (afeta custo de inferência)")
