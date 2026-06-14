@@ -8,6 +8,16 @@ import torch
 from PIL import Image
 import numpy as np
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 # ─── 1. CONFIGURAÇÃO DO MODELO ───
 print("🔄 Carregando Stable Diffusion 2.1...")
 model_id = "stabilityai/stable-diffusion-2-1"
@@ -89,6 +99,17 @@ image3 = generate_image(prompt3, negative3, num_steps=20, guidance=6.0, seed=456
 image3.save("ai_abstract.png")
 print("✅ Imagem 3 salva: ai_abstract.png")
 
+# Visualizar os 3 exemplos
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+for ax, img, titulo in zip(axes, [image1, image2, image3],
+                           ['Cyberpunk City', 'Wizard Portrait', 'AI Abstract']):
+    ax.imshow(img)
+    ax.set_title(titulo, fontsize=12, fontweight='bold')
+    ax.axis('off')
+plt.suptitle('Exemplos de Geração com Stable Diffusion', fontsize=14, fontweight='bold')
+plt.tight_layout()
+plt.show()
+
 # ─── 4. BATCH GENERATION - VARIAÇÕES ───
 print("\n🎲 Gerando variações da mesma cena...")
 
@@ -113,6 +134,14 @@ def create_grid(images, rows=2, cols=2):
 grid = create_grid(variations)
 grid.save("coffee_shop_variations.png")
 print("✅ Grid de variações salvo: coffee_shop_variations.png")
+
+# Visualizar grid de variações
+plt.figure(figsize=(8, 8))
+plt.imshow(grid)
+plt.title(f'Variações: "{base_prompt}"', fontsize=12, fontweight='bold')
+plt.axis('off')
+plt.tight_layout()
+plt.show()
 
 # ─── 5. IMG2IMG - TRANSFORMAÇÃO DE IMAGENS ───
 from diffusers import StableDiffusionImg2ImgPipeline
@@ -141,6 +170,17 @@ transformed = img2img_pipe(
 transformed.save("cyberpunk_watercolor.png")
 print("✅ Transformação salva: cyberpunk_watercolor.png")
 
+# Visualizar: original vs transformado (img2img)
+fig, axes = plt.subplots(1, 2, figsize=(12, 6))
+axes[0].imshow(init_image)
+axes[0].set_title('Original (Cyberpunk City)', fontsize=12, fontweight='bold')
+axes[0].axis('off')
+axes[1].imshow(transformed)
+axes[1].set_title('Transformado (Watercolor)', fontsize=12, fontweight='bold')
+axes[1].axis('off')
+plt.tight_layout()
+plt.show()
+
 # ─── 6. INPAINTING - EDIÇÃO DE REGIÕES ───
 from diffusers import StableDiffusionInpaintPipeline
 
@@ -167,6 +207,21 @@ inpainted = inpaint_pipe(
 
 inpainted.save("inpainted_portal.png")
 print("✅ Inpainting salvo: inpainted_portal.png")
+
+# Visualizar: original, máscara e resultado do inpainting
+fig, axes = plt.subplots(1, 3, figsize=(15, 5))
+axes[0].imshow(init_image)
+axes[0].set_title('Original', fontsize=12, fontweight='bold')
+axes[0].axis('off')
+axes[1].imshow(mask, cmap='gray')
+axes[1].set_title('Máscara (área a repintar)', fontsize=12, fontweight='bold')
+axes[1].axis('off')
+axes[2].imshow(inpainted)
+axes[2].set_title('Resultado (Inpainting)', fontsize=12, fontweight='bold')
+axes[2].axis('off')
+plt.suptitle(inpaint_prompt, fontsize=12)
+plt.tight_layout()
+plt.show()
 
 print("\n" + "="*70)
 print("✅ EXERCÍCIO CONCLUÍDO!")
