@@ -168,7 +168,7 @@ for epoch in range(num_epochs):
 
             plt.suptitle(f'VAE Reconstruction - Epoch {epoch+1}', fontsize=14)
             plt.tight_layout()
-    plt.show()
+            plt.show()  # mostra a grade só nas épocas múltiplas de 5
 
 print("\n✅ Treinamento concluído!")
 

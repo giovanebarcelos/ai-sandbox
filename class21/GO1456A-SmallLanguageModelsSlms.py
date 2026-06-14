@@ -3,6 +3,17 @@ from transformers import AutoModelForCausalLM, AutoTokenizer
 import torch
 import time
 
+import matplotlib
+import matplotlib.pyplot as plt
+import numpy as np
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 print("📱 SMALL LANGUAGE MODELS - Phi-3 Mini")
 print("=" * 70)
 
@@ -116,3 +127,29 @@ for row in hardware_table:
     print(f"{row[0]:<20} {row[1]:<8} {row[2]:<8} {row[3]:<8} {row[4]}")
 
 print("\n💡 Dica: Use quantização INT4 para rodar em hardware mais limitado!")
+
+# ──────────────────────────────────────────
+# GRÁFICO: MEMÓRIA FP16 vs INT4 POR MODELO
+# ──────────────────────────────────────────
+# PONTO-CHAVE: a quantização INT4 reduz a memória em ~4x, permitindo
+# rodar modelos maiores no mesmo hardware.
+modelos = ["Llama 3.2 1B", "Gemma 2B", "Phi-3 Mini", "Llama 3.2 3B",
+           "Mistral 7B", "Llama 2 13B"]
+mem_fp16 = [2, 4, 8, 6, 14, 26]     # GB em FP16
+mem_int4 = [0.5, 1, 2, 1.5, 3.5, 6.5]  # GB em INT4
+
+y = np.arange(len(modelos))
+altura = 0.38
+
+plt.figure(figsize=(11, 6))
+plt.barh(y + altura / 2, mem_fp16, altura, label='FP16', color='#ff7f0e')
+plt.barh(y - altura / 2, mem_int4, altura, label='INT4 (quantizado)', color='#2ca02c')
+plt.yticks(y, modelos)
+plt.xlabel('Memória necessária (GB)')
+plt.title('Small Language Models — Memória: FP16 vs INT4',
+          fontsize=13, fontweight='bold')
+plt.legend()
+plt.grid(True, axis='x', alpha=0.3)
+plt.tight_layout()
+plt.show()
+print("✅ Gráfico de requisitos de memória (FP16 vs INT4) gerado.")

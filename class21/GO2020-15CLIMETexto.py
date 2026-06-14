@@ -7,6 +7,34 @@ from sklearn.pipeline import Pipeline
 from sklearn.model_selection import train_test_split
 import numpy as np
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
+
+def plotar_pesos_lime(exp, titulo):
+    """Gráfico de barras dos pesos LIME: verde empurra p/ POSITIVO,
+    vermelho p/ NEGATIVO (PONTO-CHAVE da explicação local)."""
+    palavras, pesos = zip(*exp.as_list())
+    ordem = np.argsort(np.abs(pesos))            # menor → maior impacto
+    palavras = [palavras[i] for i in ordem]
+    pesos = [pesos[i] for i in ordem]
+    cores = ['#2ca02c' if w > 0 else '#d62728' for w in pesos]
+
+    plt.figure(figsize=(10, 6))
+    plt.barh(palavras, pesos, color=cores)
+    plt.axvline(0, color='black', linewidth=0.8)
+    plt.xlabel('Peso LIME  (← Negativo | Positivo →)')
+    plt.title(titulo, fontsize=12, fontweight='bold')
+    plt.tight_layout()
+    plt.show()
+
 # ═══════════════════════════════════════════════════════════
 # 1. DADOS SINTÉTICOS DE REVIEWS
 # ═══════════════════════════════════════════════════════════
@@ -76,6 +104,9 @@ for word, weight in exp.as_list():
     direction = "→ POSITIVO" if weight > 0 else "→ NEGATIVO"
     print(f"  '{word}': {weight:+.3f} {direction}")
 
+# Gráfico dos pesos das palavras (review positivo)
+plotar_pesos_lime(exp, 'LIME — Review classificado como POSITIVO')
+
 # Salvar visualização HTML
 exp.save_to_file('lime_text_explanation.html')
 print(f"\n✅ Visualização salva em: lime_text_explanation.html")
@@ -104,6 +135,9 @@ for word, weight in exp_neg.as_list():
     direction = "→ POSITIVO" if weight > 0 else "→ NEGATIVO"
     print(f"  '{word}': {weight:+.3f} {direction}")
 
+# Gráfico dos pesos das palavras (review negativo)
+plotar_pesos_lime(exp_neg, 'LIME — Review classificado como NEGATIVO')
+
 # ═══════════════════════════════════════════════════════════
 # 6. ANÁLISE DE SENSIBILIDADE - O QUE MUDA A PREDIÇÃO?
 # ═══════════════════════════════════════════════════════════
@@ -122,8 +156,27 @@ variations = [
 ]
 
 print(f"\nComo a predição muda ao remover palavras?\n")
+probs_var = []
 for var in variations:
     pred = model.predict([var])[0]
     prob = model.predict_proba([var])[0][1]
+    probs_var.append(prob)
     print(f"'{var}'")
     print(f"  → {'Positivo' if pred == 1 else 'Negativo'} ({prob:.1%})\n")
+
+# Gráfico de sensibilidade: probabilidade de "Positivo" por variação
+rotulos = ["Original", "sem 'amazing'", "sem 'great'", "só acting",
+           "só 'fantastic'", "sem positivas"]
+cores = ['#2ca02c' if p >= 0.5 else '#d62728' for p in probs_var]
+
+plt.figure(figsize=(11, 5))
+plt.bar(rotulos, np.array(probs_var) * 100, color=cores)
+plt.axhline(50, color='black', linestyle='--', label='Limiar de decisão (50%)')
+plt.ylabel('Probabilidade de POSITIVO (%)')
+plt.title('Análise de Sensibilidade — Impacto de Remover Palavras',
+          fontsize=12, fontweight='bold')
+plt.xticks(rotation=30, ha='right')
+plt.legend()
+plt.tight_layout()
+plt.show()
+print("✅ Gráfico de análise de sensibilidade gerado.")

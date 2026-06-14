@@ -7,6 +7,7 @@
 import tensorflow as tf
 from tensorflow.keras import layers, models
 import numpy as np
+import pandas as pd  # usado na análise de sensibilidade ao ruído (seção 8)
 from tensorflow_privacy.privacy.optimizers import dp_optimizer_keras
 from tensorflow_privacy.privacy.analysis import compute_dp_sgd_privacy
 

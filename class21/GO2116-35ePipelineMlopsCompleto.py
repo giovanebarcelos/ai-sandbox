@@ -122,6 +122,7 @@ for config in models_config:
         plt.tight_layout()
 
         plot_path = f"{config['name'].replace(' ', '_')}_predictions.png"
+        plt.savefig(plot_path, dpi=100, bbox_inches='tight')  # salvar antes de exibir
         plt.show()
         mlflow.log_artifact(plot_path)
 
@@ -165,6 +166,7 @@ axes[1].tick_params(axis='x', rotation=45)
 axes[1].grid(True, alpha=0.3, axis='y')
 
 plt.tight_layout()
+plt.savefig('models_comparison.png', dpi=100, bbox_inches='tight')  # salvar antes de exibir
 plt.show()
 mlflow.log_artifact('models_comparison.png')
 print("✅ Comparação salva e logada no MLflow")
