@@ -25,7 +25,7 @@ except NameError:
 print("⚙️ Configurando hiperparâmetros...")
 
 BATCH_SIZE = 256
-EPOCHS = 100
+EPOCHS = 30
 NOISE_DIM = 100
 NUM_EXAMPLES_TO_GENERATE = 16
 
