@@ -7,6 +7,16 @@ import tensorflow as tf
 from tensorflow.keras import layers, models
 import numpy as np
 
+import matplotlib
+import matplotlib.pyplot as plt
+
+# Garante exibição inline em Colab/Jupyter mesmo que o backend tenha sido
+# alterado em sessões anteriores (ex: Agg definido e kernel não reiniciado)
+try:
+    get_ipython().run_line_magic('matplotlib', 'inline')
+except NameError:
+    pass  # Fora do Colab/Jupyter: plt.show() gerencia o display normalmente
+
 # ───────────────────────────────────────────────────────────────────
 # GENERATOR (Gerador)
 # ───────────────────────────────────────────────────────────────────
@@ -68,6 +78,24 @@ def build_discriminator():
     return model
 
 # ───────────────────────────────────────────────────────────────────
+# VISUALIZAÇÃO: grade de imagens geradas pelo Generator
+# ───────────────────────────────────────────────────────────────────
+
+def mostrar_imagens_geradas(generator, latent_dim, titulo, n=16):
+    """PONTO-CHAVE: amostra ruído -> Generator -> imagens 28x28"""
+    noise = np.random.normal(0, 1, (n, latent_dim))
+    imgs = generator.predict(noise, verbose=0)
+
+    fig, axes = plt.subplots(4, 4, figsize=(6, 6))
+    for i, ax in enumerate(axes.flat):
+        ax.imshow(imgs[i, :, :, 0], cmap='gray')
+        ax.axis('off')
+    plt.suptitle(titulo, fontsize=14, fontweight='bold')
+    plt.tight_layout()
+    plt.show()
+
+
+# ───────────────────────────────────────────────────────────────────
 # GAN COMPLETO
 # ───────────────────────────────────────────────────────────────────
 
@@ -103,6 +131,9 @@ if __name__ == "__main__":
     generator.summary()
     discriminator.summary()
 
+    # Generator com pesos aleatórios produz apenas ruído (ainda não treinou)
+    mostrar_imagens_geradas(generator, latent_dim, 'Generator ANTES do treino (ruído)')
+
     # ───────────────────────────────────────────────────────────────────
     # TREINAMENTO (simplificado)
     # ───────────────────────────────────────────────────────────────────
@@ -111,6 +142,8 @@ if __name__ == "__main__":
         """
         Treina GAN alternando entre discriminador e gerador
         """
+        d_losses, g_losses = [], []  # PONTO-CHAVE: histórico para o gráfico de losses
+
         for epoch in range(epochs):
             # ─── Treinar DISCRIMINADOR ───
 
@@ -133,13 +166,35 @@ if __name__ == "__main__":
             noise = np.random.normal(0, 1, (batch_size, latent_dim))
             g_loss = gan.train_on_batch(noise, np.ones((batch_size, 1)))
 
+            d_losses.append(d_loss)
+            g_losses.append(g_loss)
+
             # Log
             if epoch % 100 == 0:
                 print(f"Epoch {epoch}/{epochs} | D loss: {d_loss:.4f} | G loss: {g_loss:.4f}")
+
+        return d_losses, g_losses
 
     # Carregar MNIST e treinar
     (X_train, _), (_, _) = tf.keras.datasets.mnist.load_data()
     X_train = (X_train.astype('float32') - 127.5) / 127.5  # Normalizar [-1, 1]
     X_train = np.expand_dims(X_train, axis=-1)
 
-    # train_gan(gan, generator, discriminator, X_train, epochs=10000)
+    # Treino rápido de demonstração (poucas épocas só para ilustrar o gráfico;
+    # para resultados realistas use epochs=10000+)
+    d_losses, g_losses = train_gan(gan, generator, discriminator, X_train, epochs=200, batch_size=128)
+
+    # Gráfico de losses do Discriminator e Generator
+    plt.figure(figsize=(10, 5))
+    plt.plot(d_losses, label='Discriminator Loss', linewidth=2)
+    plt.plot(g_losses, label='Generator Loss', linewidth=2)
+    plt.xlabel('Época')
+    plt.ylabel('Loss')
+    plt.title('GAN para MNIST - Losses durante Treinamento', fontsize=14, fontweight='bold')
+    plt.legend()
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
+    plt.show()
+
+    # Generator após o (breve) treino
+    mostrar_imagens_geradas(generator, latent_dim, 'Generator DEPOIS do treino')
