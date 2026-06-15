@@ -1,4 +1,6 @@
 # GO2001-4MlflowTrackingDeExperimentos
+!pip install mlflow
+
 import mlflow
 import mlflow.sklearn
 from sklearn.ensemble import RandomForestClassifier
