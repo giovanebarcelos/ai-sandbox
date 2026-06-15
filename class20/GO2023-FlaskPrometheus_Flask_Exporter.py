@@ -1,5 +1,8 @@
 # GO2023-FlaskPrometheus_Flask_Exporter
 # src/predict_instrumented.py
+!pip install flask prometheus-flask-exporter
+
+import os
 from flask import Flask, request, jsonify
 from prometheus_flask_exporter import PrometheusMetrics
 from prometheus_client import Counter, Histogram, Gauge
@@ -55,6 +58,15 @@ production_accuracy_gauge = Gauge(
 # ═══════════════════════════════════════════════════════
 # 2. CARREGAR MODELO
 # ═══════════════════════════════════════════════════════
+
+if not os.path.exists('models/production.pkl'):
+    from sklearn.ensemble import RandomForestClassifier
+    from sklearn.datasets import load_iris
+    os.makedirs('models', exist_ok=True)
+    _X, _y = load_iris(return_X_y=True)
+    _clf = RandomForestClassifier(n_estimators=100, random_state=42).fit(_X, _y)
+    with open('models/production.pkl', 'wb') as f:
+        pickle.dump(_clf, f)
 
 with open('models/production.pkl', 'rb') as f:
     model = pickle.load(f)
@@ -124,4 +136,51 @@ metrics = PrometheusMetrics(app)
 metrics.info('ml_api_info', 'ML API Info', version=MODEL_VERSION)
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8080)
+    # Em produção: app.run(host='0.0.0.0', port=8080)
+    # Para demonstração no Colab, usamos o test_client do Flask
+    # (simula requisições HTTP sem precisar abrir uma porta).
+    import matplotlib.pyplot as plt
+    from sklearn.datasets import load_iris
+
+    client = app.test_client()
+
+    print(client.get('/health').get_json())
+
+    iris = load_iris()
+    latencias = []
+    confiancas = []
+    for amostra in iris.data[:20]:
+        resp = client.post('/predict', json={"features": amostra.tolist()})
+        body = resp.get_json()
+        latencias.append(body['latency_ms'])
+        confiancas.append(body['probability'])
+
+    print(f"\nÚltima predição: {body}")
+
+    # Verificar entrada inválida
+    resp_invalida = client.post('/predict', json={})
+    print(f"Resposta para entrada inválida: {resp_invalida.get_json()} (status {resp_invalida.status_code})")
+
+    # Conferir métricas expostas pelo Prometheus
+    metrics_text = client.get('/metrics').get_data(as_text=True)
+    linhas_relevantes = [l for l in metrics_text.splitlines() if l.startswith('ml_')]
+    print("\nMétricas Prometheus expostas (/metrics):")
+    for l in linhas_relevantes:
+        print(f"  {l}")
+
+    # Gráficos: latência e confiança das predições
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4))
+
+    axes[0].plot(latencias, marker='o', color='steelblue')
+    axes[0].set_title("Latência por predição")
+    axes[0].set_xlabel("Requisição")
+    axes[0].set_ylabel("Latência (ms)")
+
+    axes[1].plot(confiancas, marker='o', color='seagreen')
+    axes[1].set_title("Confiança (probabilidade) por predição")
+    axes[1].set_xlabel("Requisição")
+    axes[1].set_ylabel("Probabilidade")
+    axes[1].set_ylim(0, 1)
+
+    plt.tight_layout()
+    plt.show()

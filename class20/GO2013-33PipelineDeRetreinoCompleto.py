@@ -112,4 +112,22 @@ if __name__ == '__main__':
         else:
             print("  ❌ Novo modelo não melhorou.")
     else:
+        new_acc = current_acc
         print("  ✅ Modelo atual performando bem.")
+
+    # Gráfico comparando acurácia do modelo atual vs. retreinado
+    import matplotlib.pyplot as plt
+
+    plt.figure(figsize=(5, 4))
+    barras = plt.bar(["Modelo atual", "Modelo retreinado"], [current_acc, new_acc],
+                      color=["gray", "seagreen"])
+    plt.axhline(0.90, color="red", linestyle="--", label="Threshold (0.90)")
+    plt.ylim(0, 1)
+    plt.ylabel("Acurácia")
+    plt.title("Pipeline de retreino - comparação de acurácia")
+    plt.legend()
+    for bar, valor in zip(barras, [current_acc, new_acc]):
+        plt.text(bar.get_x() + bar.get_width() / 2, valor + 0.02, f"{valor:.4f}",
+                 ha="center")
+    plt.tight_layout()
+    plt.show()

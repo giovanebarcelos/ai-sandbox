@@ -148,6 +148,26 @@ if __name__ == '__main__':
 
     print(f"\n  Resultado: {passed} passou / {failed} falhou")
 
+    # Gráficos: resultado da suíte de testes + matriz de confusão do modelo
+    import matplotlib.pyplot as plt
+    from sklearn.metrics import ConfusionMatrixDisplay
+
+    fig, axes = plt.subplots(1, 2, figsize=(11, 4.5))
+
+    axes[0].bar(["Passou", "Falhou"], [passed, failed], color=["seagreen", "indianred"])
+    axes[0].set_title("Resultado da suíte de testes")
+    axes[0].set_ylabel("Quantidade")
+
+    ConfusionMatrixDisplay.from_estimator(
+        clf, X_test, y_test,
+        display_labels=load_iris().target_names,
+        ax=axes[1], colorbar=False
+    )
+    axes[1].set_title("Matriz de confusão (modelo testado)")
+
+    plt.tight_layout()
+    plt.show()
+
     # Limpar artefatos criados
     for f in ['models/latest.pkl', 'data/X_test.npy',
               'data/y_test.npy', 'data/gender_test.npy']:

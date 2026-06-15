@@ -1,7 +1,15 @@
 # GO2018-27OptunaFrameworkModernoDeOtimização
+!pip install optuna
+
 import optuna
+import matplotlib.pyplot as plt
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.model_selection import cross_val_score
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split, cross_val_score
+
+X, y = load_iris(return_X_y=True)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
 
 def objective(trial):
     """Função objetivo para Optuna"""
@@ -22,28 +30,35 @@ def objective(trial):
 
     return score
 
-# Criar study
-
 
 if __name__ == "__main__":
-    study = optuna.create_study(direction='maximize', 
+    # Criar study (n_trials reduzido para demonstração rápida)
+    study = optuna.create_study(direction='maximize',
                                 sampler=optuna.samplers.TPESampler(),
                                 pruner=optuna.pruners.MedianPruner())
 
     # Otimizar
-    study.optimize(objective, n_trials=100, show_progress_bar=True)
+    study.optimize(objective, n_trials=30, show_progress_bar=True)
 
     # Resultados
     print(f"\n🏆 Melhor F1-Score: {study.best_value:.4f}")
     print(f"🎯 Melhores parâmetros: {study.best_params}")
 
-    # Visualizar otimização
-    import optuna.visualization as vis
+    # Visualizar otimização (gráficos em matplotlib)
+    from optuna.visualization.matplotlib import (
+        plot_optimization_history,
+        plot_param_importances,
+        plot_parallel_coordinate,
+    )
 
-    fig1 = vis.plot_optimization_history(study)
-    fig2 = vis.plot_param_importances(study)
-    fig3 = vis.plot_parallel_coordinate(study)
+    plot_optimization_history(study)
+    plt.tight_layout()
+    plt.show()
 
-    fig1.show()
-    fig2.show()
-    fig3.show()
+    plot_param_importances(study)
+    plt.tight_layout()
+    plt.show()
+
+    plot_parallel_coordinate(study)
+    plt.tight_layout()
+    plt.show()

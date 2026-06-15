@@ -45,8 +45,21 @@ if __name__ == '__main__':
 
         data = json.loads(raw_data)['data']
         preds = model_local.predict(data).tolist()
+        probs = model_local.predict_proba(data)
 
         iris = load_iris()
         print(f"  Entrada: {amostra}")
         print(f"  Predições (índices): {preds}")
         print(f"  Classes: {[iris.target_names[p] for p in preds]}")
+
+        # Gráfico de probabilidades por amostra
+        import matplotlib.pyplot as plt
+
+        fig, axes = plt.subplots(1, len(amostra), figsize=(10, 4))
+        for i, ax in enumerate(axes):
+            ax.bar(iris.target_names, probs[i], color=["#4CAF50", "#2196F3", "#FF9800"])
+            ax.set_ylim(0, 1)
+            ax.set_title(f"Amostra {i+1}\n-> {iris.target_names[preds[i]]}")
+        fig.suptitle("Probabilidades preditas pelo endpoint Azure ML (demo local)")
+        plt.tight_layout()
+        plt.show()
